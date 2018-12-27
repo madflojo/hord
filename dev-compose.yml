@@ -7,17 +7,43 @@ services:
       - "9000:9000"
     depends_on:
       - cassandra
+      - cassandra-primary
     deploy:
       replicas: 2
-      update_config:
-        parallelism: 2
       restart_policy:
         condition: always
   tests:
     build: .
     depends_on:
       - cassandra
+      - cassandra-primary
     command: go test -v ./...
+  cassandra-primary:
+    image: cassandra:latest
+    command: /bin/bash -c "sleep 1 && /docker-entrypoint.sh cassandra -f"
+    expose:
+      - 7000
+      - 7001
+      - 7199
+      - 9042
+      - 9160
+    deploy:
+      restart_policy:
+        condition: always
   cassandra:
     image: cassandra:latest
-
+    command: /bin/bash -c "sleep 30 && /docker-entrypoint.sh cassandra -f"
+    environment:
+      - CASSANDRA_SEEDS=cassandra-primary
+    depends_on:
+      - cassandra-primary
+    expose:
+      - 7000
+      - 7001
+      - 7199
+      - 9042
+      - 9160
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: always
