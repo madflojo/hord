@@ -17,10 +17,12 @@ services:
     depends_on:
       - cassandra
       - cassandra-primary
-    command: go test -v ./...
+    command: /bin/bash -c "sleep 60 && go test -v ./..."
   cassandra-primary:
-    image: cassandra:latest
+    image: madflojo/cassandra:latest
     command: /bin/bash -c "sleep 1 && /docker-entrypoint.sh cassandra -f"
+    environment:
+      - CASSANDRA_KEYSPACE=hord
     expose:
       - 7000
       - 7001
@@ -31,10 +33,11 @@ services:
       restart_policy:
         condition: always
   cassandra:
-    image: cassandra:latest
-    command: /bin/bash -c "sleep 30 && /docker-entrypoint.sh cassandra -f"
+    image: madflojo/cassandra:latest
+    command: /bin/bash -c "sleep 15 && /docker-entrypoint.sh cassandra -f"
     environment:
       - CASSANDRA_SEEDS=cassandra-primary
+      - CASSANDRA_KEYSPACE=hord
     depends_on:
       - cassandra-primary
     expose:
