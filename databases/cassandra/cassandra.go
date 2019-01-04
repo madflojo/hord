@@ -150,6 +150,32 @@ func (db *Database) Delete(key string) error {
 	return nil
 }
 
+// Keys is called to retrieve a list of keys stored within the database. This function will query
+// the Cassandra cluster returning all Primary Keys used within the hord table.
+func (db *Database) Keys() ([]string, error) {
+	var keys []string
+	var key string
+
+	l := db.conn.Query("SELECT key from hord;").Iter()
+	for l.Scan(&key) {
+		keys = append(keys, key)
+	}
+
+	err := l.Close()
+	if err != nil {
+		return keys, err
+	}
+
+	return keys, nil
+}
+
+// HealthCheck is used to verify connectivity and health of the Cassandra cluster. This function
+// simply runs a generic query against Cassandra. If the query errors in any fashion this function
+// will also return an error.
 func (db *Database) HealthCheck() error {
+	err := db.conn.Query("SELECT now() FROM system.local;").Exec()
+	if err != nil {
+		return fmt.Errorf("Health check of Cassandra cluster failed")
+	}
 	return nil
 }

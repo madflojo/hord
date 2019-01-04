@@ -13,5 +13,6 @@ type Database interface {
 	Read(string) (*Data, error)
 	Set(string, *Data) error
 	Delete(string) error
+	Keys() ([]string, error)
 	HealthCheck() error
 }

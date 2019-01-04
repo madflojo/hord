@@ -1,6 +1,7 @@
 package cassandra
 
 import (
+	"fmt"
 	"github.com/madflojo/hord/databases"
 	"testing"
 	"time"
@@ -12,13 +13,13 @@ func TestDialandSetup(t *testing.T) {
 	if err != nil {
 		t.Errorf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
-	time.Sleep(30 * time.Second)
+	time.Sleep(15 * time.Second)
 
 	err = db.Initialize()
 	if err != nil {
 		t.Errorf("Got unexpected error when initializing cassandra cluster - %s", err)
 	}
-	time.Sleep(10 * time.Second)
+	time.Sleep(1 * time.Second)
 
 	ksMeta, err := db.conn.KeyspaceMetadata(db.config.Keyspace)
 	if err != nil {
@@ -50,7 +51,7 @@ func TestHappyPath(t *testing.T) {
 	if err != nil {
 		t.Errorf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
-	time.Sleep(30 * time.Second)
+	time.Sleep(10 * time.Second)
 
 	err = db.Initialize()
 	if err != nil {
@@ -97,6 +98,77 @@ func TestHappyPath(t *testing.T) {
 		err = db.conn.Query(`SELECT data, last_updated FROM hord WHERE key = ?;`, "test_happypath").Scan(&data.Data, &data.LastUpdated)
 		if err == nil {
 			t.Errorf("It does not appear data was completely deleted from table found - %+v", data)
+		}
+	})
+}
+
+func TestHealthCheck(t *testing.T) {
+	hosts := []string{"cassandra-primary", "cassandra"}
+	db, err := Dial(&Config{Hosts: hosts, Keyspace: "hord"})
+	if err != nil {
+		t.Errorf("Got unexpected error when connecting to a cassandra cluster - %s", err)
+	}
+	time.Sleep(10 * time.Second)
+
+	err = db.Initialize()
+	if err != nil {
+		t.Errorf("Got unexpected error when initializing cassandra cluster - %s", err)
+	}
+	time.Sleep(1 * time.Second)
+
+	err = db.HealthCheck()
+	if err != nil {
+		t.Errorf("Unexpected error when performing health check against cassandra cluster - %s", err)
+	}
+}
+
+func TestKeys(t *testing.T) {
+	hosts := []string{"cassandra-primary", "cassandra"}
+	db, err := Dial(&Config{Hosts: hosts, Keyspace: "hord"})
+	if err != nil {
+		t.Errorf("Got unexpected error when connecting to a cassandra cluster - %s", err)
+	}
+	time.Sleep(10 * time.Second)
+
+	err = db.Initialize()
+	if err != nil {
+		t.Errorf("Got unexpected error when initializing cassandra cluster - %s", err)
+	}
+	time.Sleep(1 * time.Second)
+
+	t.Run("No Keys", func(t *testing.T) {
+		keys, err := db.Keys()
+		if err != nil {
+			t.Errorf("Unexecpted error when obtaining a list of keys from the cassandra cluster - %s", err)
+		}
+
+		if len(keys) > 0 {
+			t.Errorf("Unexpected keys found in key list got - %+v", keys)
+		}
+	})
+
+	t.Run("5 keys", func(t *testing.T) {
+		// Setup
+		data := &databases.Data{}
+		for i := 0; i < 5; i++ {
+			now := time.Now()
+			data.LastUpdated = now.UnixNano()
+			_ = db.Set(fmt.Sprintf("Testing Keys %d", i), data)
+		}
+		time.Sleep(5 * time.Millisecond)
+
+		keys, err := db.Keys()
+		if err != nil {
+			t.Errorf("Unexecpted error when obtaining a list of keys from the cassandra cluster - %s", err)
+		}
+
+		if len(keys) != 5 {
+			t.Errorf("Unexpected number of keys found in key list got - %+v", keys)
+		}
+
+		// Tear down
+		for i := 0; i < 5; i++ {
+			_ = db.Delete(fmt.Sprintf("Testing Keys %d", i))
 		}
 	})
 }
