@@ -86,4 +86,17 @@ func TestHappyPath(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("Deleting data", func(t *testing.T) {
+		err := db.Delete("test_happypath")
+		if err != nil {
+			t.Errorf("Unexpected error when deleting data - %s", err)
+		}
+
+		var data databases.Data
+		err = db.conn.Query(`SELECT data, last_updated FROM hord WHERE key = ?;`, "test_happypath").Scan(&data.Data, &data.LastUpdated)
+		if err == nil {
+			t.Errorf("It does not appear data was completely deleted from table found - %+v", data)
+		}
+	})
 }

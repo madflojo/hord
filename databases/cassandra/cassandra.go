@@ -140,7 +140,13 @@ func (db *Database) Set(key string, data *databases.Data) error {
 	return err
 }
 
+// Delete is called when data within the database needs to be deleted. This function will delete
+// the data stored within the database for the specified Primary Key.
 func (db *Database) Delete(key string) error {
+	err := db.conn.Query(`DELETE FROM hord WHERE key = ?;`, key).Exec()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
