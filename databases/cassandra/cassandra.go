@@ -110,7 +110,7 @@ func (db *Database) Initialize() error {
 	if _, ok := ksMeta.Tables["hord"]; ok {
 		return nil
 	}
-	qry := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s.hord ( key text, data blob, timestamp bigint, PRIMARY KEY (key));",
+	qry := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s.hord ( key text, data blob, last_updated bigint, PRIMARY KEY (key));",
 		db.config.Keyspace)
 	err = db.conn.Query(qry).Exec()
 	if err != nil {
@@ -124,8 +124,11 @@ func (db *Database) Read(key string) (databases.Data, error) {
 	return databases.Data{}, nil
 }
 
-func (db *Database) Set(key string, data databases.Data) error {
-	return nil
+// Set is called when data within the database needs to be updated or inserted. This function will
+// take the data provided and create an entry within the database using the key as a lookup value.
+func (db *Database) Set(key string, data *databases.Data) error {
+	err := db.conn.Query(`UPDATE hord SET data = ?, last_updated = ? WHERE key = ?`, data.Data, data.LastUpdated, key).Exec()
+	return err
 }
 
 func (db *Database) Delete(key string) error {
