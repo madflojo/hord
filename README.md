@@ -10,4 +10,6 @@ It does this while giving the user a simple to use key/value based interface.
 
 ## Status: In Development
 
+[![Build Status](https://travis-ci.org/madflojo/hord.svg?branch=develop)](https://travis-ci.org/madflojo/hord)
+
 Hord is currently in development, it should not be used and expected to work... yet. This is a "for fun" project, development of this project will move at it's own pace, feel free to contribute if you want to see more.
