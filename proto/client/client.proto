@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package hord.client
+
+// Generic Status for meaningful replies
+message Status {
+  // Status Codes: 0 is OK anything else is an error
+  int32 code
+  // Long Description of status
+  string description
+}
+
+// Fetch data using key to lookup values
+message GetRequest {
+  // Lookup Key
+  string key = 1;
+}
+
+// Fetched data
+message GetResponse {
+  // Lookup Key
+  string key = 1;
+  // Data in byte array format
+  bytes data = 2;
+  // Epoch Nano integer representing the time this key was last updated
+  uint64 last_updated = 3;
+  // Request status message including code and description
+  Status status = 4;
+}
+
+message SetRequest {
+  // Lookup Key
+  string key = 1;
+  // Data in byte array format
+  bytes data = 2;
+  // Time to live value for data in cache, if non-zero the defined value in seconds will determine how long key is stored in cache
+  int64 ttl = 3;
+}
+
+message SetResponse {
+  // Lookup Key
+  string key = 1;
+  // Request status message including code and description
+  Status status = 2;
+}
+
+message DeleteRequest {
+  // Lookup Key
+  string key = 1;
+}
+
+message DeleteResponse {
+  // Lookup Key
+  string key = 1;
+  // Request status message including code and description
+  Status status = 2;
+}
+
+service Hord {
+  // Get() will retrieve data from the Hord Cache or backend Database
+  rpc Get(GetRequest) returns (GetResponse) {}
+
+  // Set() will write data to the Hord Cache and backend Database
+  rpc Set(SetRequest) returns (SetResponse) {}
+
+  // Delete() will delete the key from Cache and backend Database
+  rpc Delete(DeleteRequest) returns (DeleteResponse) {}
+}
