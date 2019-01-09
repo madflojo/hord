@@ -1,13 +1,13 @@
 syntax = "proto3";
 
-package hord.client
+package hord.client;
 
 // Generic Status for meaningful replies
 message Status {
   // Status Codes: 0 is OK anything else is an error
-  int32 code
+  int32 code = 1;
   // Long Description of status
-  string description
+  string description = 2;
 }
 
 // Fetch data using key to lookup values
