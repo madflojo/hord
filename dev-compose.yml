@@ -12,6 +12,7 @@ services:
       replicas: 2
       restart_policy:
         condition: always
+    command: --debug --database=cassandra-primary --database=cassandra -k hord
   tests:
     build: .
     depends_on:
