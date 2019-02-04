@@ -43,8 +43,8 @@ func Run(cfg *config.Config) error {
 			return fmt.Errorf("Unable to connect to cassandra database - %s", err)
 		}
 
-    // Assign d to db global
-    db = d
+		// Assign d to db global
+		db = d
 
 		// Start Health Checker
 		go func() {
