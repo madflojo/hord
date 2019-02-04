@@ -32,7 +32,7 @@ func main() {
 		GRPCPort:     opts.GRPCPort,
 		DatabaseType: "Cassandra",
 		Databases: config.Databases{
-			&cassandra.Config{
+			Cassandra: &cassandra.Config{
 				Hosts:    opts.Databases,
 				Keyspace: opts.Keyspace,
 			},
