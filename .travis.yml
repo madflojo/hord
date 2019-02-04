@@ -6,6 +6,6 @@ env:
 script:
   - gofmt -l ./
   - go vet -v ./...
-  - docker-compose -f dev-compose.yml up --build cassandra-primary cassandra
+  - docker-compose -f dev-compose.yml up -d cassandra-primary cassandra
   - sleep 30
   - docker-compose -f dev-compose.yml up --build tests
