@@ -120,9 +120,9 @@ func (db *Database) Initialize() error {
 	return nil
 }
 
-// Read is called to retrieve data from the database. This function will take in a key and return
+// Get is called to retrieve data from the database. This function will take in a key and return
 // the database.Data structure stored within the database.
-func (db *Database) Read(key string) (*databases.Data, error) {
+func (db *Database) Get(key string) (*databases.Data, error) {
 	var data databases.Data
 
 	err := db.conn.Query(`SELECT data, last_updated FROM hord WHERE key = ?;`, key).Scan(&data.Data, &data.LastUpdated)

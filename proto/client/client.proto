@@ -23,7 +23,7 @@ message GetResponse {
   // Data in byte array format
   bytes data = 2;
   // Epoch Nano integer representing the time this key was last updated
-  uint64 last_updated = 3;
+  int64 last_updated = 3;
   // Request status message including code and description
   Status status = 4;
 }

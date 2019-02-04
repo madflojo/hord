@@ -29,6 +29,10 @@
   branch = "master"
   name = "github.com/gocql/gocql"
 
+[[constraint]]
+  branch = "master"
+  name = "github.com/golang/protobuf"
+
 [prune]
   go-tests = true
   unused-packages = true

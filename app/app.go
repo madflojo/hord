@@ -18,7 +18,7 @@ import (
 var ErrShutdown = errors.New("System was shutdown")
 
 var Config *config.Config
-var db *databases.Database
+var db databases.Database
 var log *logrus.Logger
 
 func Run(cfg *config.Config) error {
@@ -38,10 +38,14 @@ func Run(cfg *config.Config) error {
 	// Setup DB connection
 	switch strings.ToLower(Config.DatabaseType) {
 	case "cassandra":
-		db, err := cassandra.Dial(Config.Databases.Cassandra)
+		d, err := cassandra.Dial(Config.Databases.Cassandra)
 		if err != nil {
 			return fmt.Errorf("Unable to connect to cassandra database - %s", err)
 		}
+
+    // Assign d to db global
+    db = d
+
 		// Start Health Checker
 		go func() {
 			for {

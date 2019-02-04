@@ -76,7 +76,7 @@ func TestHappyPath(t *testing.T) {
 	})
 
 	t.Run("Reading data", func(t *testing.T) {
-		data, err := db.Read("test_happypath")
+		data, err := db.Get("test_happypath")
 		if err != nil {
 			t.Errorf("Unexpected error when reading data - %s", err)
 		}

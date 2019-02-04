@@ -18,7 +18,8 @@ services:
     depends_on:
       - cassandra
       - cassandra-primary
-    command: /bin/bash -c "sleep 60 && go test -v ./..."
+    working_dir: /go/src/github.com/madflojo/hord
+    entrypoint: go test -v ./...
   cassandra-primary:
     image: madflojo/cassandra:latest
     command: /bin/bash -c "sleep 1 && /docker-entrypoint.sh cassandra -f"

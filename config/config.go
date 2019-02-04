@@ -13,6 +13,9 @@ type Config struct {
 	// Peers is a list of Peers identified from cli/configuration file. This list is used to seed the Memberlist which will discover new peers via the SWIM protocol.
 	Peers []string
 
+  // GRPC Port is the port used to listen for GRPC requests
+  GRPCPort string 
+
 	// DatabaseType is used to determine the database type to use for the backend data source.
 	DatabaseType string
 
