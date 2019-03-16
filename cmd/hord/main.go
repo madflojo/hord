@@ -11,6 +11,7 @@ import (
 
 type options struct {
 	Debug     bool     `long:"debug" description:"Enable debug logging"`
+	Listen    string   `long:"listen" description:"Set the listener address" default:"0.0.0.0"`
 	GRPCPort  string   `long:"grpcport" description:"Set custom GRPC Port" default:"9000"`
 	Peers     []string `short:"p" long:"peer" description:"Peer hord instances used for peer to peer cache notifications"`
 	Databases []string `short:"d" long:"database" description:"Database instances this hord instance should frontend"`
@@ -29,6 +30,7 @@ func main() {
 	cfg := &config.Config{
 		Debug:        opts.Debug,
 		Peers:        opts.Peers,
+		Listen:       opts.Listen,
 		GRPCPort:     opts.GRPCPort,
 		DatabaseType: "Cassandra",
 		Databases: config.Databases{

@@ -15,12 +15,19 @@ import (
 	"time"
 )
 
+// ErrShutdown is returned when a system shutdown was triggered under normal circumstances
 var ErrShutdown = errors.New("System was shutdown")
 
+// Config is a package wide global configuration object
 var Config *config.Config
+
+// db is a package global that is used to store databases
 var db databases.Database
+
+// log is a package global used for logging
 var log *logrus.Logger
 
+// Run is the primary runnable function. Call this function from the command line packaging
 func Run(cfg *config.Config) error {
 	Config = cfg
 
@@ -46,23 +53,30 @@ func Run(cfg *config.Config) error {
 		// Assign d to db global
 		db = d
 
-		// Start Health Checker
-		go func() {
-			for {
-				err = db.HealthCheck()
-				if err != nil {
-					log.Errorf("Database healthcheck failed - %s", err)
-				}
-				if Config.Debug {
-					log.Debug("Databases healthceck success")
-				}
-				time.Sleep(5 * time.Second)
-			}
-		}()
 	default:
 		return fmt.Errorf("%s is not a known Database type", Config.DatabaseType)
 	}
 
-	time.Sleep(1 * time.Minute)
+	// Start Health Checker
+	go func() {
+		for {
+			err := db.HealthCheck()
+			if err != nil {
+				log.Errorf("Database healthcheck failed - %s", err)
+			}
+			if Config.Debug {
+				log.Debug("Databases healthceck success")
+			}
+			time.Sleep(5 * time.Second)
+		}
+	}()
+
+	// Start GRPC Listener
+	log.WithFields(logrus.Fields{"listen": Config.Listen, "grpc_port": Config.GRPCPort}).Debugf("Starting GRPC listener")
+	err := grpcListener()
+	if err != nil {
+		log.WithFields(logrus.Fields{"error": err}).Errorf("Error returned from GRPC listener - %s", err)
+		return err
+	}
 	return ErrShutdown
 }
