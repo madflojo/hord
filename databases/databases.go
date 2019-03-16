@@ -10,6 +10,7 @@ type Data struct {
 
 // Database is an interface that is used to create a unified database access object
 type Database interface {
+	Initialize() error
 	Get(string) (*Data, error)
 	Set(string, *Data) error
 	Delete(string) error

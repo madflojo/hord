@@ -45,16 +45,19 @@ func Run(cfg *config.Config) error {
 	// Setup DB connection
 	switch strings.ToLower(Config.DatabaseType) {
 	case "cassandra":
-		d, err := cassandra.Dial(Config.Databases.Cassandra)
+		var err error
+		db, err = cassandra.Dial(Config.Databases.Cassandra)
 		if err != nil {
 			return fmt.Errorf("Unable to connect to cassandra database - %s", err)
 		}
-
-		// Assign d to db global
-		db = d
-
 	default:
 		return fmt.Errorf("%s is not a known Database type", Config.DatabaseType)
+	}
+
+	// Initialize the database
+	err := db.Initialize()
+	if err != nil {
+		return fmt.Errorf("Unable to initilize the database - %s", err)
 	}
 
 	// Start Health Checker
@@ -73,7 +76,7 @@ func Run(cfg *config.Config) error {
 
 	// Start GRPC Listener
 	log.WithFields(logrus.Fields{"listen": Config.Listen, "grpc_port": Config.GRPCPort}).Debugf("Starting GRPC listener")
-	err := grpcListener()
+	err = grpcListener()
 	if err != nil {
 		log.WithFields(logrus.Fields{"error": err}).Errorf("Error returned from GRPC listener - %s", err)
 		return err
