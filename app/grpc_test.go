@@ -31,10 +31,16 @@ func (db *mockDB) Get(key string) (*databases.Data, error) {
 }
 
 func (db *mockDB) Set(key string, data *databases.Data) error {
+	if key == "fail" {
+		return fmt.Errorf("Bad key yo")
+	}
 	return nil
 }
 
 func (db *mockDB) Delete(key string) error {
+	if key == "fail" {
+		return fmt.Errorf("Bad key yo")
+	}
 	return nil
 }
 
@@ -105,6 +111,39 @@ func TestGRPC(t *testing.T) {
 		}
 	})
 
+	t.Run("Set data without a key", func(t *testing.T) {
+		msg := &pb.SetRequest{
+			Data: []byte("hello"),
+			Ttl:  120,
+		}
+
+		m, err := client.Set(context.Background(), msg)
+		if err != nil {
+			t.Errorf("Unexpected failure when calling Set - %s", err)
+		}
+
+		if m.Status.Code != 4 {
+			t.Errorf("Unexpected error returned from Set call - %s", m.Status.Description)
+		}
+	})
+
+	t.Run("Set data with failed DB call", func(t *testing.T) {
+		msg := &pb.SetRequest{
+			Key:  "fail",
+			Data: []byte("hello"),
+			Ttl:  120,
+		}
+
+		m, err := client.Set(context.Background(), msg)
+		if err != nil {
+			t.Errorf("Unexpected failure when calling Set - %s", err)
+		}
+
+		if m.Status.Code != 5 {
+			t.Errorf("Unexpected error returned from Set call - %s", m.Status.Description)
+		}
+	})
+
 	t.Run("Get data from cache", func(t *testing.T) {
 		msg := &pb.GetRequest{
 			Key: "testing",
@@ -141,7 +180,7 @@ func TestGRPC(t *testing.T) {
 		}
 	})
 
-	t.Run("Get data with bad key", func(t *testing.T) {
+	t.Run("Get data with failed DB call", func(t *testing.T) {
 		msg := &pb.GetRequest{
 			Key: "fail",
 		}
@@ -172,6 +211,34 @@ func TestGRPC(t *testing.T) {
 
 		if msg.Key != m.Key {
 			t.Errorf("Delete function should echo key, it returned different results. Expected %s got %s", msg.Key, m.Key)
+		}
+	})
+
+	t.Run("Delete data from cache without a key", func(t *testing.T) {
+		msg := &pb.DeleteRequest{}
+
+		m, err := client.Delete(context.Background(), msg)
+		if err != nil {
+			t.Errorf("Unexpected failure when calling Delete - %s", err)
+		}
+
+		if m.Status.Code > 4 {
+			t.Errorf("Unexpected error returned from Delete call - %s", m.Status.Description)
+		}
+	})
+
+	t.Run("Delete data from cache with a bad DB call", func(t *testing.T) {
+		msg := &pb.DeleteRequest{
+			Key: "fail",
+		}
+
+		m, err := client.Delete(context.Background(), msg)
+		if err != nil {
+			t.Errorf("Unexpected failure when calling Delete - %s", err)
+		}
+
+		if m.Status.Code > 5 {
+			t.Errorf("Unexpected error returned from Delete call - %s", m.Status.Description)
 		}
 	})
 

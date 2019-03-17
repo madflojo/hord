@@ -74,9 +74,9 @@ func (s *grpcServer) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetRespon
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.WithFields(logrus.Fields{"key": msg.Key}).Tracef("Key %s is not defined", msg.Key)
+		log.Trace("Key is not defined within request")
 		r.Status.Code = 4
-		r.Status.Description = "Key must be defined"
+		r.Status.Description = "Key not defined in request"
 		return r, nil
 	}
 
@@ -110,9 +110,9 @@ func (s *grpcServer) Delete(ctx context.Context, msg *pb.DeleteRequest) (*pb.Del
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.WithFields(logrus.Fields{"key": msg.Key}).Tracef("Key %s is not defined", msg.Key)
+		log.Trace("Key is not defined within request")
 		r.Status.Code = 4
-		r.Status.Description = "Key must be defined"
+		r.Status.Description = "Key not defined in request"
 		return r, nil
 	}
 
