@@ -117,7 +117,6 @@ func (s *grpcServer) Delete(ctx context.Context, msg *pb.DeleteRequest) (*pb.Del
 	}
 
 	// Delete data from datastore
-	// TODO: More specific error checks
 	err := db.Delete(msg.Key)
 	if err != nil {
 		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to delete data for key - %s", err)
