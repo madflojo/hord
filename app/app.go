@@ -76,7 +76,7 @@ func Run(cfg *config.Config) error {
 
 	// Start GRPC Listener
 	log.WithFields(logrus.Fields{"listen": Config.Listen, "grpc_port": Config.GRPCPort}).Debugf("Starting GRPC listener")
-	err = grpcListener()
+	err = Listen()
 	if err != nil {
 		log.WithFields(logrus.Fields{"error": err}).Errorf("Error returned from GRPC listener - %s", err)
 		return err

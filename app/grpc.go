@@ -11,16 +11,16 @@ import (
 )
 
 // server is used to implement the client protobuf server interface
-type grpcServer struct{}
+type Server struct{}
 
-// grpcListener will start the grpc server listening on the defined port
-func grpcListener() error {
+// Listen will start the grpc server listening on the defined port
+func Listen() error {
 	lis, err := net.Listen("tcp", Config.Listen+":"+Config.GRPCPort)
 	if err != nil {
 		return err
 	}
 	srv := grpc.NewServer()
-	pb.RegisterHordServer(srv, &grpcServer{})
+	pb.RegisterHordServer(srv, &Server{})
 	err = srv.Serve(lis)
 	if err != nil {
 		return err
@@ -29,7 +29,7 @@ func grpcListener() error {
 }
 
 // Get will retrieve requested information from the datastore and return it
-func (s *grpcServer) Get(ctx context.Context, msg *pb.GetRequest) (*pb.GetResponse, error) {
+func (s *Server) Get(ctx context.Context, msg *pb.GetRequest) (*pb.GetResponse, error) {
 	// Define reply message
 	r := &pb.GetResponse{
 		Status: &pb.Status{
@@ -63,7 +63,7 @@ func (s *grpcServer) Get(ctx context.Context, msg *pb.GetRequest) (*pb.GetRespon
 }
 
 // Set will take the supplied data and store it within the datastore returning success or failure
-func (s *grpcServer) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetResponse, error) {
+func (s *Server) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetResponse, error) {
 	// Define reply message
 	r := &pb.SetResponse{
 		Status: &pb.Status{
@@ -99,7 +99,7 @@ func (s *grpcServer) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetRespon
 }
 
 // Delete will remove the specified key from the datastore and return success or failure
-func (s *grpcServer) Delete(ctx context.Context, msg *pb.DeleteRequest) (*pb.DeleteResponse, error) {
+func (s *Server) Delete(ctx context.Context, msg *pb.DeleteRequest) (*pb.DeleteResponse, error) {
 	// Define reply message
 	r := &pb.DeleteResponse{
 		Status: &pb.Status{

@@ -70,7 +70,7 @@ func TestGRPC(t *testing.T) {
 
 	// Start listener in background
 	go func() {
-		err := grpcListener()
+		err := Listen()
 		if err != nil {
 			t.Logf("Failed to start GRPC Listener - %s", err)
 			t.FailNow()
