@@ -1,3 +1,5 @@
+// Package databases is the modular database interface for Hord. This interface is designed to work with any database
+// backend. However, each implementation must conform to the defined Key/Value interface.
 package databases
 
 // Data is a structure that is returned for Gets and provided for Writes to the database

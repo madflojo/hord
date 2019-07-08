@@ -1,3 +1,27 @@
+// Package cassandra is a Hord database module for Cassandra. This package implements the Hord databases
+// package and like it's parent package. This package can be used within Hord or directly as a simple
+// interface to Cassandra.
+//
+//  db, err := cassandra.Dial(&cassandra.Config{})
+//  if err != nil {
+//    // do stuff
+//  }
+//
+//  err = db.Initialize()
+//  if err != nil {
+//    // do stuff
+//  }
+//
+//  err = db.Set("mykey", data)
+//  if err != nil {
+//    // do stuff
+//  }
+//
+//  d, err := db.Get("mykey")
+//  if err != nil {
+//    // do stuff
+//  }
+//
 package cassandra
 
 import (
