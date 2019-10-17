@@ -7,12 +7,14 @@ package app
 import (
 	"errors"
 	"fmt"
+	"string"
+	"time"
+
 	"github.com/madflojo/hord/config"
 	"github.com/madflojo/hord/databases"
 	"github.com/madflojo/hord/databases/cassandra"
+
 	"github.com/sirupsen/logrus"
-	"strings"
-	"time"
 )
 
 // ErrShutdown is returned when a system shutdown was triggered under normal circumstances

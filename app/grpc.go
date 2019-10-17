@@ -2,12 +2,15 @@ package app
 
 import (
 	"context"
-	"github.com/madflojo/hord/databases"
-	pb "github.com/madflojo/hord/proto/client"
-	"github.com/sirupsen/logrus"
-	"google.golang.org/grpc"
+	"hord/config"
 	"net"
 	"time"
+
+	"github.com/madflojo/hord/databases"
+	pb "github.com/madflojo/hord/proto/client"
+
+	"github.com/sirupsen/logrus"
+	"google.golang.org/grpc"
 )
 
 // server is used to implement the client protobuf server interface
@@ -40,18 +43,18 @@ func (s *Server) Get(ctx context.Context, msg *pb.GetRequest) (*pb.GetResponse, 
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.Trace("Key is not defined within request")
+		log.Trace(config.GrpcKeyNotDefine)
 		r.Status.Code = 4
-		r.Status.Description = "Key not defined in request"
+		r.Status.Description = config.GrpcKeyNotDefine
 		return r, nil
 	}
 
 	// Fetch data using key
 	d, err := db.Get(msg.Key)
 	if err != nil {
-		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to fetch data for key - %s", err)
+		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef(config.GrpcFailedToFetchData+" for key - %s", err)
 		r.Status.Code = 5
-		r.Status.Description = "Error fetching data from datastore"
+		r.Status.Description = config.GrpcFailedToFetchData
 		return r, nil
 	}
 
@@ -74,9 +77,9 @@ func (s *Server) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetResponse, 
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.Trace("Key is not defined within request")
+		log.Trace(config.GrpcKeyNotDefine)
 		r.Status.Code = 4
-		r.Status.Description = "Key not defined in request"
+		r.Status.Description = config.GrpcKeyNotDefine
 		return r, nil
 	}
 
@@ -88,9 +91,9 @@ func (s *Server) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetResponse, 
 	// Insert data into datastore
 	err := db.Set(msg.Key, d)
 	if err != nil {
-		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to store data for key - %s", err)
+		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef(config.GrpcFailedToStoreData+" for key - %s", err)
 		r.Status.Code = 5
-		r.Status.Description = "Error storing data within datastore"
+		r.Status.Description = config.GrpcFailedToStoreData
 		return r, nil
 	}
 
@@ -110,18 +113,18 @@ func (s *Server) Delete(ctx context.Context, msg *pb.DeleteRequest) (*pb.DeleteR
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.Trace("Key is not defined within request")
+		log.Trace(config.GrpcKeyNotDefine)
 		r.Status.Code = 4
-		r.Status.Description = "Key not defined in request"
+		r.Status.Description = config.GrpcKeyNotDefine
 		return r, nil
 	}
 
 	// Delete data from datastore
 	err := db.Delete(msg.Key)
 	if err != nil {
-		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to delete data for key - %s", err)
+		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef(config.GrpcFailedToDeleteData+" for key - %s", err)
 		r.Status.Code = 5
-		r.Status.Description = "Error deleting data"
+		r.Status.Description = config.GrpcFailedToDeleteData
 		return r, nil
 	}
 

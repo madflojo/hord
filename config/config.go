@@ -5,6 +5,14 @@ import (
 	"github.com/madflojo/hord/databases/cassandra"
 )
 
+var (
+	// For log use:
+	GrpcKeyNotDefine       = "Key is not defined within request"
+	GrpcFailedToFetchData  = "Failed to fetch data from datastore"
+	GrpcFailedToStoreData  = "Failed to store data within Datastore"
+	GrpcFailedToDeleteData = "Failed to delete data"
+)
+
 // Config is the configuration struct which will control the application.
 type Config struct {
 	// Debug is used to determine if Debug logging should be enabled or not.

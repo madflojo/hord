@@ -13,3 +13,6 @@
 
 # vim .swp files
 *.swp
+
+#Vendor folder
+/vendor
