@@ -90,11 +90,10 @@ func TestGRPC(t *testing.T) {
 	// Create grpc client
 	client := pb.NewHordClient(c)
 
-	t.Run("Set data to cache", func(t *testing.T) {
+	t.Run("Set data to DB", func(t *testing.T) {
 		msg := &pb.SetRequest{
 			Key:  "testing",
 			Data: []byte("hello"),
-			Ttl:  120,
 		}
 
 		m, err := client.Set(context.Background(), msg)
@@ -114,7 +113,6 @@ func TestGRPC(t *testing.T) {
 	t.Run("Set data without a key", func(t *testing.T) {
 		msg := &pb.SetRequest{
 			Data: []byte("hello"),
-			Ttl:  120,
 		}
 
 		m, err := client.Set(context.Background(), msg)
@@ -131,7 +129,6 @@ func TestGRPC(t *testing.T) {
 		msg := &pb.SetRequest{
 			Key:  "fail",
 			Data: []byte("hello"),
-			Ttl:  120,
 		}
 
 		m, err := client.Set(context.Background(), msg)
@@ -144,7 +141,7 @@ func TestGRPC(t *testing.T) {
 		}
 	})
 
-	t.Run("Get data from cache", func(t *testing.T) {
+	t.Run("Get data from DB", func(t *testing.T) {
 		msg := &pb.GetRequest{
 			Key: "testing",
 		}
@@ -195,7 +192,7 @@ func TestGRPC(t *testing.T) {
 		}
 	})
 
-	t.Run("Delete data from cache", func(t *testing.T) {
+	t.Run("Delete data from DB", func(t *testing.T) {
 		msg := &pb.DeleteRequest{
 			Key: "testing",
 		}
@@ -214,7 +211,7 @@ func TestGRPC(t *testing.T) {
 		}
 	})
 
-	t.Run("Delete data from cache without a key", func(t *testing.T) {
+	t.Run("Delete data from DB without a key", func(t *testing.T) {
 		msg := &pb.DeleteRequest{}
 
 		m, err := client.Delete(context.Background(), msg)
@@ -227,7 +224,7 @@ func TestGRPC(t *testing.T) {
 		}
 	})
 
-	t.Run("Delete data from cache with a bad DB call", func(t *testing.T) {
+	t.Run("Delete data with a bad DB call", func(t *testing.T) {
 		msg := &pb.DeleteRequest{
 			Key: "fail",
 		}

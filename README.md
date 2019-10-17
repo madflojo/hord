@@ -1,15 +1,25 @@
 # Hord
 
-Hord is a read-through/write-through caching service that sits in-front of any database.
+Hord is a REST & gRPC interface for any Key-Value datastore. Our mission is to 
+make managing data as simple as calling an API. 
 
-**Why Hord?** When applications need fast access to data they keep their data in a cache. We often describe this in simple terms such as **"putting a cache in front of the database"**.  But the reality of this is not so simple. With database caches, applications have to manage writing to both a cache and a database. They have to manage what to do when data doesn't exist in the cache, and how often data should live in cache.
+Designed to be a simple to use Key-Value service. Hord gives applications a 
+consistent method of accessing many database backends. Allowing users to 
+leverage different databases with a simple URI change.
 
-Hord aims to make this process much easier. It does this by giving a single service to call for reading and writing data. Hord manages what data to keep in memory, when to refresh that data and how to write data to the database.
+Hord is also here to manage the complexities of interacting with databases. 
 
-It does this while giving the user a simple to use key/value based interface.
+* Cluster Failover
+* Integration with Dynamic Credential backends
+* Transparent Data Encryption
+* and more...
 
 ## Status: In Development
 
-[![Build Status](https://travis-ci.org/madflojo/hord.svg?branch=develop)](https://travis-ci.org/madflojo/hord)
+[![Build 
+Status](https://travis-ci.org/madflojo/hord.svg?branch=develop)](
+https://travis-ci.org/madflojo/hord)
 
-Hord is currently in development, it should not be used and expected to work... yet. This is a "for fun" project, development of this project will move at it's own pace, feel free to contribute if you want to see more.
+Hord is currently in development, it should not be used and expected to work... 
+yet. This is a "for fun" project, development of this project will move at it's 
+own pace, feel free to contribute if you want to see more.
