@@ -11,6 +11,7 @@ import (
 
 type options struct {
 	Debug     bool     `long:"debug" description:"Enable debug logging"`
+	Trace     bool     `long:"trace" description:"Enable trace logging (this will impact performance)"`
 	Listen    string   `long:"listen" description:"Set the listener address" default:"0.0.0.0"`
 	GRPCPort  string   `long:"grpcport" description:"Set custom GRPC Port" default:"9000"`
 	Peers     []string `short:"p" long:"peer" description:"Peer hord instances used for peer to peer cache notifications"`
@@ -29,6 +30,7 @@ func main() {
 	// Setup config
 	cfg := &config.Config{
 		Debug:        opts.Debug,
+		Trace:        opts.Trace,
 		Peers:        opts.Peers,
 		Listen:       opts.Listen,
 		GRPCPort:     opts.GRPCPort,

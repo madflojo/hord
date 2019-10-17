@@ -40,7 +40,7 @@ func (s *Server) Get(ctx context.Context, msg *pb.GetRequest) (*pb.GetResponse, 
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.Trace("Key is not defined within request")
+		go log.Trace("Key is not defined within request")
 		r.Status.Code = 4
 		r.Status.Description = "Key not defined in request"
 		return r, nil
@@ -49,7 +49,7 @@ func (s *Server) Get(ctx context.Context, msg *pb.GetRequest) (*pb.GetResponse, 
 	// Fetch data using key
 	d, err := db.Get(msg.Key)
 	if err != nil {
-		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to fetch data for key - %s", err)
+		go log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to fetch data for key - %s", err)
 		r.Status.Code = 5
 		r.Status.Description = "Error fetching data from datastore"
 		return r, nil
@@ -74,7 +74,7 @@ func (s *Server) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetResponse, 
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.Trace("Key is not defined within request")
+		go log.Trace("Key is not defined within request")
 		r.Status.Code = 4
 		r.Status.Description = "Key not defined in request"
 		return r, nil
@@ -88,7 +88,7 @@ func (s *Server) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetResponse, 
 	// Insert data into datastore
 	err := db.Set(msg.Key, d)
 	if err != nil {
-		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to store data for key - %s", err)
+		go log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to store data for key - %s", err)
 		r.Status.Code = 5
 		r.Status.Description = "Error storing data within datastore"
 		return r, nil
@@ -110,7 +110,7 @@ func (s *Server) Delete(ctx context.Context, msg *pb.DeleteRequest) (*pb.DeleteR
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.Trace("Key is not defined within request")
+		go log.Trace("Key is not defined within request")
 		r.Status.Code = 4
 		r.Status.Description = "Key not defined in request"
 		return r, nil
@@ -119,7 +119,7 @@ func (s *Server) Delete(ctx context.Context, msg *pb.DeleteRequest) (*pb.DeleteR
 	// Delete data from datastore
 	err := db.Delete(msg.Key)
 	if err != nil {
-		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to delete data for key - %s", err)
+		go log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to delete data for key - %s", err)
 		r.Status.Code = 5
 		r.Status.Description = "Error deleting data"
 		return r, nil
