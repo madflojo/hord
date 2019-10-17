@@ -17,7 +17,7 @@ func TestDialandSetup(t *testing.T) {
 
 	err = db.Initialize()
 	if err != nil {
-		t.Errorf("Got unexpected error when initializing cassandra cluster - %s", err)
+		t.Fatalf("Got unexpected error when initializing cassandra cluster - %s", err)
 	}
 	time.Sleep(1 * time.Second)
 
@@ -58,6 +58,10 @@ func TestHappyPath(t *testing.T) {
 		t.Errorf("Got unexpected error when initializing cassandra cluster - %s", err)
 	}
 
+	if db == nil {
+		t.Fatalf("Database has not been configured , db = t %v", db)
+	}
+
 	t.Run("Writing data", func(t *testing.T) {
 		data := &databases.Data{}
 		data.Data = []byte("Testing")
@@ -66,7 +70,7 @@ func TestHappyPath(t *testing.T) {
 
 		err := db.Set("test_happypath", data)
 		if err != nil {
-			t.Errorf("Unexpected error when writing data - %s", err)
+			t.Fatalf("Unexpected error when writing data - %s", err)
 		}
 
 		err = db.conn.Query(`SELECT data, last_updated FROM hord WHERE key = ?;`, "test_happypath").Scan(&data.Data, &data.LastUpdated)
@@ -76,6 +80,7 @@ func TestHappyPath(t *testing.T) {
 	})
 
 	t.Run("Reading data", func(t *testing.T) {
+
 		data, err := db.Get("test_happypath")
 		if err != nil {
 			t.Errorf("Unexpected error when reading data - %s", err)
