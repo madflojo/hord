@@ -10,6 +10,9 @@ type Config struct {
 	// Debug is used to determine if Debug logging should be enabled or not.
 	Debug bool
 
+	// Trace is used to determine if Trace logging should be enabled or not.
+	Trace bool
+
 	// Peers is a list of Peers identified from cli/configuration file. This list is used to seed the Memberlist which will discover new peers via the SWIM protocol.
 	Peers []string
 
