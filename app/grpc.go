@@ -15,10 +15,10 @@ import (
 
 // Errors to return to user
 var (
-	keyNotDefined 	 = fmt.Error("Key not defined")
-	failedFetchData	 = fmt.Error("Failed to fetch data")
-	failedStoreData	 = fmt.Error("Failed to store data")
-	failedDeleteData = fmt.Error("Failed to delete data")
+	keyNotDefined 	 = fmt.Errorf("Key not defined")
+	failedFetchData	 = fmt.Errorf("Failed to fetch data")
+	failedStoreData	 = fmt.Errorf("Failed to store data")
+	failedDeleteData = fmt.Errorf("Failed to delete data")
 )
 
 // Server is used to implement the client protobuf server interface
