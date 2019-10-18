@@ -15,9 +15,9 @@ import (
 
 // Errors to return to user
 var (
-	keyNotDefined 	 = fmt.Errorf("Key not defined")
-	failedFetchData	 = fmt.Errorf("Failed to fetch data")
-	failedStoreData	 = fmt.Errorf("Failed to store data")
+	keyNotDefined    = fmt.Errorf("Key not defined")
+	failedFetchData  = fmt.Errorf("Failed to fetch data")
+	failedStoreData  = fmt.Errorf("Failed to store data")
 	failedDeleteData = fmt.Errorf("Failed to delete data")
 )
 
