@@ -139,11 +139,6 @@ func (db *Database) Initialize() error {
 		}
 	}
 
-	// if it got any error at all
-	if err != nil {
-		return fmt.Errorf("Unable to initialize data base - %s ", err)
-	}
-
 	// Check if table already exists, if not create it
 	if _, ok := ksMeta.Tables["hord"]; ok {
 		return nil
