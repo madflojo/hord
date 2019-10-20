@@ -15,9 +15,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/madflojo/hord v0.0.0-20191017100905-a13f7e8dcea4
 	github.com/sirupsen/logrus v1.3.0
-	golang.org/x/crypto v0.0.0-20190131182504-b8fe1690c613 // indirect
-	golang.org/x/net v0.0.0-20190125091013-d26f9f9a57f3 // indirect
-	golang.org/x/sys v0.0.0-20190203050204-7ae0202eb74c // indirect
+	golang.org/x/tools v0.0.0-20191017163857-e4d7c6f25b8e // indirect
 	google.golang.org/genproto v0.0.0-20190201180003-4b09977fb922 // indirect
 	google.golang.org/grpc v1.18.0
 )

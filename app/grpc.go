@@ -15,10 +15,10 @@ import (
 
 // Errors to return to user
 var (
-	keyNotDefined    = fmt.Errorf("Key not defined")
-	failedFetchData  = fmt.Errorf("Failed to fetch data")
-	failedStoreData  = fmt.Errorf("Failed to store data")
-	failedDeleteData = fmt.Errorf("Failed to delete data")
+	errKeyNotDefined    = fmt.Errorf("Key not defined")
+	errFailedFetchData  = fmt.Errorf("Failed to fetch data")
+	errFailedStoreData  = fmt.Errorf("Failed to store data")
+	errFailedDeleteData = fmt.Errorf("Failed to delete data")
 )
 
 // Server is used to implement the client protobuf server interface
@@ -51,18 +51,18 @@ func (s *Server) Get(ctx context.Context, msg *pb.GetRequest) (*pb.GetResponse, 
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.Tracef("%s", keyNotDefined)
+		log.Tracef("%s", errKeyNotDefined)
 		r.Status.Code = 4
-		r.Status.Description = fmt.Sprintf("%s", keyNotDefined)
+		r.Status.Description = fmt.Sprintf("%s", errKeyNotDefined)
 		return r, nil
 	}
 
 	// Fetch data using key
 	d, err := db.Get(msg.Key)
 	if err != nil {
-		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("%s - %s", failedFetchData, err)
+		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("%s - %s", errFailedFetchData, err)
 		r.Status.Code = 5
-		r.Status.Description = fmt.Sprintf("%s", failedFetchData)
+		r.Status.Description = fmt.Sprintf("%s", errFailedFetchData)
 		return r, nil
 	}
 
@@ -85,9 +85,9 @@ func (s *Server) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetResponse, 
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.Tracef("%s", keyNotDefined)
+		log.Tracef("%s", errKeyNotDefined)
 		r.Status.Code = 4
-		r.Status.Description = fmt.Sprintf("%s", keyNotDefined)
+		r.Status.Description = fmt.Sprintf("%s", errKeyNotDefined)
 		return r, nil
 	}
 
@@ -99,9 +99,9 @@ func (s *Server) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetResponse, 
 	// Insert data into datastore
 	err := db.Set(msg.Key, d)
 	if err != nil {
-		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("%s for key - %s", failedStoreData, err)
+		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("%s for key - %s", errFailedStoreData, err)
 		r.Status.Code = 5
-		r.Status.Description = fmt.Sprintf("%s", failedStoreData)
+		r.Status.Description = fmt.Sprintf("%s", errFailedStoreData)
 		return r, nil
 	}
 
@@ -121,18 +121,18 @@ func (s *Server) Delete(ctx context.Context, msg *pb.DeleteRequest) (*pb.DeleteR
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		log.Tracef("%s", keyNotDefined)
+		log.Tracef("%s", errKeyNotDefined)
 		r.Status.Code = 4
-		r.Status.Description = fmt.Sprintf("%s", keyNotDefined)
+		r.Status.Description = fmt.Sprintf("%s", errKeyNotDefined)
 		return r, nil
 	}
 
 	// Delete data from datastore
 	err := db.Delete(msg.Key)
 	if err != nil {
-		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("%s for key - %s", failedDeleteData, err)
+		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("%s for key - %s", errFailedDeleteData, err)
 		r.Status.Code = 5
-		r.Status.Description = fmt.Sprintf("%s", failedDeleteData)
+		r.Status.Description = fmt.Sprintf("%s", errFailedDeleteData)
 		return r, nil
 	}
 

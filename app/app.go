@@ -35,11 +35,6 @@ var (
 	unableInitDB    = "Unable initilize the Database"
 )
 
-// This part is for constant
-var (
-	cassandraName = "casandra"
-)
-
 // Run is the primary runnable function. Call this function from the command line packaging
 func Run(cfg *config.Config) error {
 	Config = cfg
@@ -62,11 +57,11 @@ func Run(cfg *config.Config) error {
 
 	// Setup DB connection
 	switch strings.ToLower(Config.DatabaseType) {
-	case cassandraName:
+	case "cassandra":
 		var err error
 		db, err = cassandra.Dial(Config.Databases.Cassandra)
 		if err != nil {
-			return fmt.Errorf("%s %s- %s", unableConnectDB, cassandraName, err)
+			return fmt.Errorf("%s %s- %s", unableConnectDB, "cassandra", err)
 		}
 	default:
 		return fmt.Errorf("%s is not a known Database type", Config.DatabaseType)
