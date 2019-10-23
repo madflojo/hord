@@ -5,7 +5,7 @@ env:
   - "PATH=/home/travis/gopath/bin:$PATH"
 script:
   - gofmt -l ./ | grep -v vendor | wc -l | grep -q 0
-  - env GO111MODULE=on go vet -v ./...
+  - go vet -v ./...
   - docker-compose -f dev-compose.yml up -d cassandra-primary cassandra
   - sleep 30
   - docker-compose -f dev-compose.yml up --exit-code-from tests --build tests
