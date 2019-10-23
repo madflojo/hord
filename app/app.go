@@ -7,12 +7,14 @@ package app
 import (
 	"errors"
 	"fmt"
-	"github.com/sirupsen/logrus"
+	"strings"
+	"time"
+
 	"hord/config"
 	"hord/databases"
 	"hord/databases/cassandra"
-	"strings"
-	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 // ErrShutdown is returned when a system shutdown was triggered under normal circumstances
@@ -27,6 +29,12 @@ var db databases.Database
 // log is a package global used for logging
 var log *logrus.Logger
 
+// This part is just for Errors
+var (
+	unableConnectDB = "Unable to connect to Database"
+	unableInitDB    = "Unable initilize the Database"
+)
+
 // Run is the primary runnable function. Call this function from the command line packaging
 func Run(cfg *config.Config) error {
 	Config = cfg
@@ -39,6 +47,11 @@ func Run(cfg *config.Config) error {
 		log.Debug("Enabling Debug logging mode")
 	}
 
+	if Config.Trace {
+		log.Level = logrus.TraceLevel
+		log.Trace("Enabling Trace logging mode")
+	}
+
 	// Dumping configuration for troubleshooting reasons
 	log.Debugf("Dumping Config: %+v", Config)
 
@@ -48,7 +61,7 @@ func Run(cfg *config.Config) error {
 		var err error
 		db, err = cassandra.Dial(Config.Databases.Cassandra)
 		if err != nil {
-			return fmt.Errorf("Unable to connect to cassandra database - %s", err)
+			return fmt.Errorf("%s %s- %s", unableConnectDB, "cassandra", err)
 		}
 	default:
 		return fmt.Errorf("%s is not a known Database type", Config.DatabaseType)
@@ -57,7 +70,7 @@ func Run(cfg *config.Config) error {
 	// Initialize the database
 	err := db.Initialize()
 	if err != nil {
-		return fmt.Errorf("Unable to initilize the database - %s", err)
+		return fmt.Errorf("%s - %s", unableInitDB, err)
 	}
 
 	// Start Health Checker
@@ -67,9 +80,7 @@ func Run(cfg *config.Config) error {
 			if err != nil {
 				log.Errorf("Database healthcheck failed - %s", err)
 			}
-			if Config.Debug {
-				log.Debug("Databases healthceck success")
-			}
+			go log.Trace("Databases healthceck success")
 			time.Sleep(5 * time.Second)
 		}
 	}()
