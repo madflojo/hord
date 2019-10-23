@@ -2,7 +2,7 @@ package cassandra
 
 import (
 	"fmt"
-	"github.com/madflojo/hord/databases"
+	"hord/databases"
 	"testing"
 	"time"
 )

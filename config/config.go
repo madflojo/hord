@@ -2,7 +2,7 @@
 package config
 
 import (
-	"github.com/madflojo/hord/databases/cassandra"
+	"hord/databases/cassandra"
 )
 
 // Config is the configuration struct which will control the application.
@@ -19,8 +19,11 @@ type Config struct {
 	// Listen is the address to bind to listen for GRPC and HTTP requests
 	Listen string
 
-	// GRPC Port is the port used to listen for GRPC requests
+	// GRPCPort is the port used to listen for GRPC requests
 	GRPCPort string
+
+	// HttpPort is the port used to listen for Http request
+	HttpPort string
 
 	// DatabaseType is used to determine the database type to use for the backend data source.
 	DatabaseType string
