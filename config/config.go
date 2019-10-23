@@ -2,7 +2,7 @@
 package config
 
 import (
-	"github.com/madflojo/hord/databases/cassandra"
+	"hord/databases/cassandra"
 )
 
 // Config is the configuration struct which will control the application.

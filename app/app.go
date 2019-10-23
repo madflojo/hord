@@ -7,10 +7,10 @@ package app
 import (
 	"errors"
 	"fmt"
-	"github.com/madflojo/hord/config"
-	"github.com/madflojo/hord/databases"
-	"github.com/madflojo/hord/databases/cassandra"
 	"github.com/sirupsen/logrus"
+	"hord/config"
+	"hord/databases"
+	"hord/databases/cassandra"
 	"strings"
 	"time"
 )

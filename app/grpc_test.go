@@ -3,11 +3,11 @@ package app
 import (
 	"context"
 	"fmt"
-	"github.com/madflojo/hord/config"
-	"github.com/madflojo/hord/databases"
-	pb "github.com/madflojo/hord/proto/client"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+	"hord/config"
+	"hord/databases"
+	pb "hord/proto/client"
 	"testing"
 	"time"
 )
