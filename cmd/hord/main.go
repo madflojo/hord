@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/jessevdk/go-flags"
+	"github.com/madflojo/hord/app"
+	"github.com/madflojo/hord/config"
+	"github.com/madflojo/hord/databases/cassandra"
 	log "github.com/sirupsen/logrus"
-	"hord/app"
-	"hord/config"
-	"hord/databases/cassandra"
 	"os"
 )
 

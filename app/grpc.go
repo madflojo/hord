@@ -6,9 +6,8 @@ import (
 	"net"
 	"time"
 
-	"hord/databases"
-	pb "hord/proto/client"
-
+	"github.com/madflojo/hord/databases"
+	pb "github.com/madflojo/hord/proto/client"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )

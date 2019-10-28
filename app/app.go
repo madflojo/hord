@@ -10,10 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"hord/config"
-	"hord/databases"
-	"hord/databases/cassandra"
-
+	"github.com/madflojo/hord/config"
+	"github.com/madflojo/hord/databases"
+	"github.com/madflojo/hord/databases/cassandra"
 	"github.com/sirupsen/logrus"
 )
 

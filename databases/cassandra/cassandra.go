@@ -27,7 +27,7 @@ package cassandra
 import (
 	"fmt"
 	"github.com/gocql/gocql"
-	"hord/databases"
+	"github.com/madflojo/hord/databases"
 )
 
 // Config is a generic configuration type that users can use to pass in configuration when Dialing the Cassandra
