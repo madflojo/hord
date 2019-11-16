@@ -2,15 +2,25 @@ package app
 
 import (
 	"context"
+	"fmt"
+	"net"
+	"time"
+
 	"github.com/madflojo/hord/databases"
 	pb "github.com/madflojo/hord/proto/client"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-	"net"
-	"time"
 )
 
-// server is used to implement the client protobuf server interface
+// Errors to return to user
+var (
+	errKeyNotDefined    = fmt.Errorf("Key not defined")
+	errFailedFetchData  = fmt.Errorf("Failed to fetch data")
+	errFailedStoreData  = fmt.Errorf("Failed to store data")
+	errFailedDeleteData = fmt.Errorf("Failed to delete data")
+)
+
+// Server is used to implement the client protobuf server interface
 type Server struct{}
 
 // Listen will start the grpc server listening on the defined port
@@ -40,18 +50,18 @@ func (s *Server) Get(ctx context.Context, msg *pb.GetRequest) (*pb.GetResponse, 
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		go log.Trace("Key is not defined within request")
+		log.Tracef("%s", errKeyNotDefined)
 		r.Status.Code = 4
-		r.Status.Description = "Key not defined in request"
+		r.Status.Description = fmt.Sprintf("%s", errKeyNotDefined)
 		return r, nil
 	}
 
 	// Fetch data using key
 	d, err := db.Get(msg.Key)
 	if err != nil {
-		go log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to fetch data for key - %s", err)
+		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("%s - %s", errFailedFetchData, err)
 		r.Status.Code = 5
-		r.Status.Description = "Error fetching data from datastore"
+		r.Status.Description = fmt.Sprintf("%s", errFailedFetchData)
 		return r, nil
 	}
 
@@ -74,9 +84,9 @@ func (s *Server) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetResponse, 
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		go log.Trace("Key is not defined within request")
+		log.Tracef("%s", errKeyNotDefined)
 		r.Status.Code = 4
-		r.Status.Description = "Key not defined in request"
+		r.Status.Description = fmt.Sprintf("%s", errKeyNotDefined)
 		return r, nil
 	}
 
@@ -88,9 +98,9 @@ func (s *Server) Set(ctx context.Context, msg *pb.SetRequest) (*pb.SetResponse, 
 	// Insert data into datastore
 	err := db.Set(msg.Key, d)
 	if err != nil {
-		go log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to store data for key - %s", err)
+		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("%s for key - %s", errFailedStoreData, err)
 		r.Status.Code = 5
-		r.Status.Description = "Error storing data within datastore"
+		r.Status.Description = fmt.Sprintf("%s", errFailedStoreData)
 		return r, nil
 	}
 
@@ -110,18 +120,18 @@ func (s *Server) Delete(ctx context.Context, msg *pb.DeleteRequest) (*pb.DeleteR
 
 	// Check key length
 	if len(msg.Key) == 0 {
-		go log.Trace("Key is not defined within request")
+		log.Tracef("%s", errKeyNotDefined)
 		r.Status.Code = 4
-		r.Status.Description = "Key not defined in request"
+		r.Status.Description = fmt.Sprintf("%s", errKeyNotDefined)
 		return r, nil
 	}
 
 	// Delete data from datastore
 	err := db.Delete(msg.Key)
 	if err != nil {
-		go log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("Failed to delete data for key - %s", err)
+		log.WithFields(logrus.Fields{"key": msg.Key, "error": err}).Tracef("%s for key - %s", errFailedDeleteData, err)
 		r.Status.Code = 5
-		r.Status.Description = "Error deleting data"
+		r.Status.Description = fmt.Sprintf("%s", errFailedDeleteData)
 		return r, nil
 	}
 

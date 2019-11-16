@@ -7,12 +7,13 @@ package app
 import (
 	"errors"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/madflojo/hord/config"
 	"github.com/madflojo/hord/databases"
 	"github.com/madflojo/hord/databases/cassandra"
 	"github.com/sirupsen/logrus"
-	"strings"
-	"time"
 )
 
 // ErrShutdown is returned when a system shutdown was triggered under normal circumstances
@@ -26,6 +27,12 @@ var db databases.Database
 
 // log is a package global used for logging
 var log *logrus.Logger
+
+// This part is just for Errors
+var (
+	unableConnectDB = "Unable to connect to Database"
+	unableInitDB    = "Unable initilize the Database"
+)
 
 // Run is the primary runnable function. Call this function from the command line packaging
 func Run(cfg *config.Config) error {
@@ -53,7 +60,7 @@ func Run(cfg *config.Config) error {
 		var err error
 		db, err = cassandra.Dial(Config.Databases.Cassandra)
 		if err != nil {
-			return fmt.Errorf("Unable to connect to cassandra database - %s", err)
+			return fmt.Errorf("%s %s- %s", unableConnectDB, "cassandra", err)
 		}
 	default:
 		return fmt.Errorf("%s is not a known Database type", Config.DatabaseType)
@@ -62,7 +69,7 @@ func Run(cfg *config.Config) error {
 	// Initialize the database
 	err := db.Initialize()
 	if err != nil {
-		return fmt.Errorf("Unable to initilize the database - %s", err)
+		return fmt.Errorf("%s - %s", unableInitDB, err)
 	}
 
 	// Start Health Checker

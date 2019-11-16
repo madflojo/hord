@@ -50,6 +50,11 @@ type Database struct {
 	config *Config
 }
 
+// this is for Errors and Loggings
+var (
+	dbNill = "Database has not been configured"
+)
+
 // Dial will establish a session to a Cassandra cluster and provide a Database interface that can be used to interact
 // with Cassandra.
 func Dial(conf *Config) (*Database, error) {
@@ -111,6 +116,10 @@ func Dial(conf *Config) (*Database, error) {
 // already been initialized this function will not execute but return with a nil error. If any issues occur
 // while initializing an error will be returned.
 func (db *Database) Initialize() error {
+	//
+	if db == nil {
+		return fmt.Errorf("%s , db = %v", dbNill, db)
+	}
 	ksMeta, err := db.conn.KeyspaceMetadata(db.config.Keyspace)
 
 	// If keyspace exists and there was an error dip out with an err
@@ -149,6 +158,10 @@ func (db *Database) Initialize() error {
 func (db *Database) Get(key string) (*databases.Data, error) {
 	var data databases.Data
 
+	if db == nil {
+		return &databases.Data{}, fmt.Errorf("%s , db = %v", dbNill, db)
+	}
+
 	err := db.conn.Query(`SELECT data, last_updated FROM hord WHERE key = ?;`, key).Scan(&data.Data, &data.LastUpdated)
 	if err != nil {
 		return &databases.Data{}, err
@@ -160,6 +173,9 @@ func (db *Database) Get(key string) (*databases.Data, error) {
 // Set is called when data within the database needs to be updated or inserted. This function will
 // take the data provided and create an entry within the database using the key as a lookup value.
 func (db *Database) Set(key string, data *databases.Data) error {
+	if db == nil {
+		return fmt.Errorf("%s , db = %v", dbNill, db)
+	}
 	err := db.conn.Query(`UPDATE hord SET data = ?, last_updated = ? WHERE key = ?`, data.Data, data.LastUpdated, key).Exec()
 	return err
 }
@@ -167,6 +183,9 @@ func (db *Database) Set(key string, data *databases.Data) error {
 // Delete is called when data within the database needs to be deleted. This function will delete
 // the data stored within the database for the specified Primary Key.
 func (db *Database) Delete(key string) error {
+	if db == nil {
+		return fmt.Errorf("%s , db = %v", dbNill, db)
+	}
 	err := db.conn.Query(`DELETE FROM hord WHERE key = ?;`, key).Exec()
 	if err != nil {
 		return err
@@ -179,6 +198,10 @@ func (db *Database) Delete(key string) error {
 func (db *Database) Keys() ([]string, error) {
 	var keys []string
 	var key string
+
+	if db == nil {
+		return keys, fmt.Errorf("%s , db = %v", dbNill, db)
+	}
 
 	l := db.conn.Query("SELECT key from hord;").Iter()
 	for l.Scan(&key) {
@@ -197,6 +220,9 @@ func (db *Database) Keys() ([]string, error) {
 // simply runs a generic query against Cassandra. If the query errors in any fashion this function
 // will also return an error.
 func (db *Database) HealthCheck() error {
+	if db == nil {
+		return fmt.Errorf("%s , db = %v", dbNill, db)
+	}
 	err := db.conn.Query("SELECT now() FROM system.local;").Exec()
 	if err != nil {
 		return fmt.Errorf("Health check of Cassandra cluster failed")
