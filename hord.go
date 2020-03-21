@@ -1,4 +1,4 @@
-// Package hord provides a modular key-value interface for interacting with databases. The goal is to provide a 
+// Package hord provides a modular key-value interface for interacting with databases. The goal is to provide a
 // consistent interface regardless, of the underlying database.
 //
 // With this package, users can switch out the underlying database without major refactoring.
