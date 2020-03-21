@@ -1,18 +1,5 @@
 version: "3"
 services:
-  hord:
-    build: .
-    ports:
-      - "443:8443"
-      - "9000:9000"
-    depends_on:
-      - cassandra
-      - cassandra-primary
-    deploy:
-      replicas: 2
-      restart_policy:
-        condition: always
-    command: --debug --database=cassandra-primary --database=cassandra -k hord
   tests:
     build: .
     depends_on:
