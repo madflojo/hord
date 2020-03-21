@@ -48,7 +48,10 @@ func TestDialErrors(t *testing.T) {
 	})
 
 	t.Run("No Replicas", func(t *testing.T) {
-		_, err := Dial(&Config{Hosts: []string{"cassandra-primary", "cassandra"}, ReplicationStrategy: "SimpleStrategy"})
+		_, err := Dial(&Config{
+			Hosts:               []string{"cassandra-primary", "cassandra"},
+			Port:                7000,
+			ReplicationStrategy: "SimpleStrategy"})
 		if err == nil {
 			t.Errorf("Expected error when specifying a RepliationStrategy without Replicas set")
 		}
@@ -61,6 +64,7 @@ func TestDialandSetup(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
+	defer db.Close()
 	time.Sleep(8 * time.Second)
 
 	err = db.Setup()
@@ -100,7 +104,6 @@ func TestUsage(t *testing.T) {
 	db, err := Dial(&Config{
 		Hosts:               hosts,
 		Keyspace:            "hord",
-		Port:                7000,
 		Consistency:         "Quorum",
 		ReplicationStrategy: "SimpleStrategy",
 		Replicas:            1,
@@ -108,6 +111,7 @@ func TestUsage(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
+	defer db.Close()
 	time.Sleep(8 * time.Second)
 
 	err = db.Setup()
@@ -180,6 +184,7 @@ func TestHealthCheck(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
+	defer db.Close()
 	time.Sleep(8 * time.Second)
 
 	err = db.Setup()
@@ -200,6 +205,7 @@ func TestKeys(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
+	defer db.Close()
 	time.Sleep(8 * time.Second)
 
 	err = db.Setup()
