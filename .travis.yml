@@ -3,9 +3,14 @@ os:
   - linux
 env:
   - "PATH=/home/travis/gopath/bin:$PATH"
+before_script:
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
 script:
   - gofmt -l ./ | grep -v vendor | wc -l | grep -q 0
   - go vet -v ./...
   - docker-compose -f dev-compose.yml up -d cassandra-primary cassandra
   - sleep 30
   - docker-compose -f dev-compose.yml up --exit-code-from tests --build tests
+after_success:
+  - goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN

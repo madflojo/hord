@@ -1,4 +1,4 @@
-// Package cassandra is a Hord database driver for Cassandra. This package implements the Hord interface
+// Package cassandra is a Hord database driver for Cassandra. This package satisfies the Hord interface
 // and can be used to interact with Cassandra database clusters.
 //
 //  // Connect to a Cassandra Cluster
@@ -32,29 +32,50 @@ import (
 	"github.com/gocql/gocql"
 )
 
-// Config is a generic configuration type that users can use to pass in configuration when Dialing the Cassandra
-// database.
+// Config is a generic configuration that is passed when Dialing the Cassandra cluster.
 type Config struct {
-	Hosts                      []string
-	User                       string
-	Password                   string
-	Port                       int
-	Keyspace                   string
-	Consistency                string
+	// Hosts is used to provide a list of Cassandra nodes. These hosts will be used to establish connectivity.
+	Hosts []string
+
+	// User provides the Username to authenticate with.
+	User string
+
+	// Password provides the User's password for authentication.
+	Password string
+
+	// Port specifies the listener port for Cassandra. This will be used to etablish connectivity.
+	Port int
+
+	// Keyspace defines the keyspace to use. The Keyspace will automatially be created when executing the Setup
+	// function.
+	Keyspace string
+
+	// Consistency defines the desired consistency to use with Cassandra. By default Quorum will be used.
+	Consistency string
+
+	// EnableHostnameVerification will validate TLS Certificates with the hostname provided.
 	EnableHostnameVerification bool
-	ReplicationStrategy        string
-	Replicas                   int
+
+	// ReplicationStrategy is used to define the Cassandra replication strategy for the specified keyspace. Default
+	// is SimpleStrategy.
+	ReplicationStrategy string
+
+	// Replicas is used to define the default number of replicas for data. Default is 1.
+	Replicas int
 }
 
-// Database is a interface struct that enables database functionality and stores configuration.
+// Database is used to interface with Cassandra. It also satisfies the Hord Database interface.
 type Database struct {
-	conn   *gocql.Session
+	// conn is the underlying Cassandra connection
+	conn *gocql.Session
+
+	// config is a copy of the Config used during initialization
 	config *Config
 }
 
-// this is for Errors and Loggings
+// Package level Errors
 var (
-	dbNill = "database has not been configured"
+	ErrNoDial = fmt.Errorf("no database connection defined, did you dial")
 )
 
 // Dial will establish a session to a Cassandra cluster and provide a Database interface that can be used to interact
@@ -114,13 +135,12 @@ func Dial(conf *Config) (*Database, error) {
 	return &db, nil
 }
 
-// Setup will setup the basic keyspace and tables required for a Hord database. If the database has
+// Setup will setup the basic keyspace and tables required for Hord to use Cassandra. If the database has
 // already been initialized this function will not execute but return with a nil error. If any issues occur
 // while initializing an error will be returned.
 func (db *Database) Setup() error {
-	//
 	if db == nil {
-		return fmt.Errorf("%s , db = %v", dbNill, db)
+		return ErrNoDial
 	}
 	ksMeta, err := db.conn.KeyspaceMetadata(db.config.Keyspace)
 
@@ -161,7 +181,7 @@ func (db *Database) Get(key string) ([]byte, error) {
 	var data []byte
 
 	if db == nil {
-		return data, fmt.Errorf("%s , db = %v", dbNill, db)
+		return data, ErrNoDial
 	}
 
 	err := db.conn.Query(`SELECT data FROM hord WHERE key = ?;`, key).Scan(&data)
@@ -176,20 +196,20 @@ func (db *Database) Get(key string) ([]byte, error) {
 // take the data provided and create an entry within the database using the key as a lookup value.
 func (db *Database) Set(key string, data []byte) error {
 	if db == nil {
-		return fmt.Errorf("%s , db = %v", dbNill, db)
+		return ErrNoDial
 	}
-  if len(data) == 0 {
-    return fmt.Errorf("data cannot be empty")
-  }
+	if len(data) == 0 {
+		return fmt.Errorf("data cannot be empty")
+	}
 	err := db.conn.Query(`UPDATE hord SET data = ? WHERE key = ?`, data, key).Exec()
 	return err
 }
 
 // Delete is called when data within the database needs to be deleted. This function will delete
-// the data stored within the database for the specified Primary Key.
+// the data stored within the database for the specified key.
 func (db *Database) Delete(key string) error {
 	if db == nil {
-		return fmt.Errorf("%s , db = %v", dbNill, db)
+		return ErrNoDial
 	}
 	err := db.conn.Query(`DELETE FROM hord WHERE key = ?;`, key).Exec()
 	if err != nil {
@@ -199,13 +219,13 @@ func (db *Database) Delete(key string) error {
 }
 
 // Keys is called to retrieve a list of keys stored within the database. This function will query
-// the Cassandra cluster returning all Primary Keys used within the hord table.
+// the Cassandra cluster returning all keys used within the hord database.
 func (db *Database) Keys() ([]string, error) {
 	var keys []string
 	var key string
 
 	if db == nil {
-		return keys, fmt.Errorf("%s , db = %v", dbNill, db)
+		return keys, ErrNoDial
 	}
 
 	l := db.conn.Query("SELECT key from hord;").Iter()
@@ -226,7 +246,7 @@ func (db *Database) Keys() ([]string, error) {
 // will also return an error.
 func (db *Database) HealthCheck() error {
 	if db == nil {
-		return fmt.Errorf("%s , db = %v", dbNill, db)
+		return ErrNoDial
 	}
 	err := db.conn.Query("SELECT now() FROM system.local;").Exec()
 	if err != nil {
