@@ -41,11 +41,16 @@ Our TODO list:
 
 ## Usage
 
+The below example shows using Hord to connect and interact with Cassandra.
+
 ```go
 import "github.com/madflojo/hord"
 import "github.com/madflojo/hord/driver/cassandra"
 
 func main() {
+  // Define our DB Interface
+  var db hord.Database
+
   // Connect to a Cassandra Cluster
   db, err := cassandra.Dial(&cassandra.Config{})
   if err != nil {

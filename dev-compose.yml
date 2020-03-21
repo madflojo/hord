@@ -18,9 +18,6 @@ services:
       - 7199
       - 9042
       - 9160
-    deploy:
-      restart_policy:
-        condition: always
   cassandra:
     image: madflojo/cassandra:latest
     command: /bin/bash -c "sleep 15 && /docker-entrypoint.sh cassandra -f"
@@ -35,7 +32,3 @@ services:
       - 7199
       - 9042
       - 9160
-    deploy:
-      replicas: 2
-      restart_policy:
-        condition: always
