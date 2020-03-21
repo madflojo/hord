@@ -13,4 +13,4 @@ script:
   - sleep 30
   - docker-compose -f dev-compose.yml up --exit-code-from tests --build tests
 after_success:
-  - goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN
+  - goveralls -coverprofile=coverage/coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN

@@ -6,7 +6,9 @@ services:
       - cassandra
       - cassandra-primary
     working_dir: /go/src/github.com/madflojo/hord
-    entrypoint: go test -v ./...
+    entrypoint: go test -v -covermode=count -coverprofile=coverage/coverage.out ./...
+    volumes:
+      - ./coverage:/go/src/github.com/madflojo/hord/coverage
   cassandra-primary:
     image: madflojo/cassandra:latest
     command: /bin/bash -c "sleep 1 && /docker-entrypoint.sh cassandra -f"
