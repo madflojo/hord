@@ -63,4 +63,7 @@ type Database interface {
 
 	// Keys will return a list of keys for the entire database. This operation can be expensive, use with caution.
 	Keys() ([]string, error)
+
+	// Close will close the database connection. After executing close all other functions should return an error.
+	Close()
 }

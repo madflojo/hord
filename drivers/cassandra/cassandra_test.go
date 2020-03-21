@@ -6,9 +6,42 @@ import (
 	"time"
 )
 
+func TestErrNoDial(t *testing.T) {
+	var db Database
+	err := db.Setup()
+	if err != ErrNoDial {
+		t.Errorf("Expected no dialing error but got - %s", err)
+	}
+
+	err = db.HealthCheck()
+	if err != ErrNoDial {
+		t.Errorf("Expected no dialing error but got - %s", err)
+	}
+
+	err = db.Set("key", []byte("test"))
+	if err != ErrNoDial {
+		t.Errorf("Expected no dialing error but got - %s", err)
+	}
+
+	_, err = db.Get("key")
+	if err != ErrNoDial {
+		t.Errorf("Expected no dialing error but got - %s", err)
+	}
+
+	err = db.Delete("key")
+	if err != ErrNoDial {
+		t.Errorf("Expected no dialing error but got - %s", err)
+	}
+
+	_, err = db.Keys()
+	if err != ErrNoDial {
+		t.Errorf("Expected no dialing error but got - %s", err)
+	}
+}
+
 func TestDialandSetup(t *testing.T) {
 	hosts := []string{"cassandra-primary", "cassandra"}
-	db, err := Dial(&Config{Hosts: hosts, Keyspace: "hord"})
+	db, err := Dial(&Config{Hosts: hosts})
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}

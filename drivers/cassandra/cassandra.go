@@ -139,7 +139,7 @@ func Dial(conf *Config) (*Database, error) {
 // already been initialized this function will not execute but return with a nil error. If any issues occur
 // while initializing an error will be returned.
 func (db *Database) Setup() error {
-	if db == nil {
+	if db.conn == nil {
 		return ErrNoDial
 	}
 	ksMeta, err := db.conn.KeyspaceMetadata(db.config.Keyspace)
@@ -180,7 +180,7 @@ func (db *Database) Setup() error {
 func (db *Database) Get(key string) ([]byte, error) {
 	var data []byte
 
-	if db == nil {
+	if db.conn == nil {
 		return data, ErrNoDial
 	}
 
@@ -195,7 +195,7 @@ func (db *Database) Get(key string) ([]byte, error) {
 // Set is called when data within the database needs to be updated or inserted. This function will
 // take the data provided and create an entry within the database using the key as a lookup value.
 func (db *Database) Set(key string, data []byte) error {
-	if db == nil {
+	if db.conn == nil {
 		return ErrNoDial
 	}
 	if len(data) == 0 {
@@ -208,7 +208,7 @@ func (db *Database) Set(key string, data []byte) error {
 // Delete is called when data within the database needs to be deleted. This function will delete
 // the data stored within the database for the specified key.
 func (db *Database) Delete(key string) error {
-	if db == nil {
+	if db.conn == nil {
 		return ErrNoDial
 	}
 	err := db.conn.Query(`DELETE FROM hord WHERE key = ?;`, key).Exec()
@@ -224,7 +224,7 @@ func (db *Database) Keys() ([]string, error) {
 	var keys []string
 	var key string
 
-	if db == nil {
+	if db.conn == nil {
 		return keys, ErrNoDial
 	}
 
@@ -245,7 +245,7 @@ func (db *Database) Keys() ([]string, error) {
 // simply runs a generic query against Cassandra. If the query errors in any fashion this function
 // will also return an error.
 func (db *Database) HealthCheck() error {
-	if db == nil {
+	if db.conn == nil {
 		return ErrNoDial
 	}
 	err := db.conn.Query("SELECT now() FROM system.local;").Exec()
@@ -253,4 +253,11 @@ func (db *Database) HealthCheck() error {
 		return fmt.Errorf("health check of Cassandra cluster failed")
 	}
 	return nil
+}
+
+// Close will close the connection to Cassandra.
+func (db *Database) Close() {
+	if db != nil {
+		db.conn.Close()
+	}
 }
