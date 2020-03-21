@@ -165,7 +165,7 @@ func (db *Database) Setup() error {
 	if _, ok := ksMeta.Tables["hord"]; ok {
 		return nil
 	}
-	qry := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s.hord ( key text, data blob PRIMARY KEY (key));",
+	qry := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s.hord ( key text, data blob, PRIMARY KEY (key));",
 		db.config.Keyspace)
 	err = db.conn.Query(qry).Exec()
 	if err != nil {
