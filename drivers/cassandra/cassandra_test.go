@@ -39,9 +39,18 @@ func TestErrNoDial(t *testing.T) {
 	}
 }
 
+func TestDialErrors(t *testing.T) {
+	t.Run("No Hosts", func(t *testing.T) {
+		_, err := Dial(&Config{})
+		if err == nil {
+			t.Errorf("Expected error when hosts are not specified, got nil")
+		}
+	})
+}
+
 func TestDialandSetup(t *testing.T) {
 	hosts := []string{"cassandra-primary", "cassandra"}
-	db, err := Dial(&Config{Hosts: hosts})
+	db, err := Dial(&Config{Hosts: hosts, Keyspace: "hord"})
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
@@ -81,7 +90,13 @@ func TestDialKeyspaceNotCreated(t *testing.T) {
 func TestUsage(t *testing.T) {
 	// Setup Environment
 	hosts := []string{"cassandra", "cassandra-primary"}
-	db, err := Dial(&Config{Hosts: hosts, Keyspace: "hord"})
+	db, err := Dial(&Config{
+		Hosts:               hosts,
+		Keyspace:            "hord",
+		Port:                7000,
+		Consistency:         "Quorum",
+		ReplicationStrategy: "SimpleStrategy",
+	})
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
