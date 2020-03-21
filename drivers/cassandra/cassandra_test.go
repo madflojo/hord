@@ -46,6 +46,13 @@ func TestDialErrors(t *testing.T) {
 			t.Errorf("Expected error when hosts are not specified, got nil")
 		}
 	})
+
+	t.Run("No Replicas", func(t *testing.T) {
+		_, err := Dial(&Config{Hosts: []string{"cassandra-primary", "cassandra"}, ReplicationStrategy: "SimpleStrategy"})
+		if err == nil {
+			t.Errorf("Expected error when specifying a RepliationStrategy without Replicas set")
+		}
+	})
 }
 
 func TestDialandSetup(t *testing.T) {
@@ -96,6 +103,7 @@ func TestUsage(t *testing.T) {
 		Port:                7000,
 		Consistency:         "Quorum",
 		ReplicationStrategy: "SimpleStrategy",
+		Replicas:            1,
 	})
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
