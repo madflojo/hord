@@ -1,6 +1,7 @@
 package redis
 
 import (
+	"crypto/tls"
 	"fmt"
 	"testing"
 	"time"
@@ -32,6 +33,14 @@ func TestConnectivity(t *testing.T) {
 		if err != nil {
 			t.Errorf("Failed to ping Redis server - %s", err)
 		}
+	})
+
+	t.Run("Fake TLS", func(t *testing.T) {
+		_, _ = Dial(Config{
+			ConnectTimeout: time.Duration(5) * time.Second,
+			Server:         "redis:6379",
+			TLSConfig:      &tls.Config{},
+		})
 	})
 
 	t.Run("Sentinel Connection No Master", func(t *testing.T) {
