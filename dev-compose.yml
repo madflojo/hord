@@ -11,6 +11,14 @@ services:
     entrypoint: go test -v -covermode=count -coverprofile=coverage/coverage.out ./...
     volumes:
       - ./coverage:/go/src/github.com/madflojo/hord/coverage
+  benchmarks:
+    build: .
+    depends_on:
+      - cassandra
+      - cassandra-primary
+      - redis
+    working_dir: /go/src/github.com/madflojo/hord
+    entrypoint: go test -run=BenchmarkDrivers -bench=.
   cassandra-primary:
     image: madflojo/cassandra:latest
     command: /bin/bash -c "sleep 1 && /docker-entrypoint.sh cassandra -f"

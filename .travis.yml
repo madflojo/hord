@@ -12,5 +12,7 @@ script:
   - docker-compose -f dev-compose.yml up -d cassandra-primary cassandra
   - sleep 30
   - docker-compose -f dev-compose.yml up --exit-code-from tests --build tests
+  - sleep 30
+  - docker-compose -f dev-compose.yml up --exit-code-from benchmarks --build benchmarks
 after_success:
   - goveralls -coverprofile=coverage/coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN

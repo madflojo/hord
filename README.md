@@ -26,10 +26,10 @@ import "github.com/madflojo/hord/driver/cassandra"
 Available [drivers](drivers) are a follows:
 
 * Cassandra
+* Redis 
 
 Our TODO list:
 
-* Redis 
 * Couchbase
 * CockRoachDB
 * MySQL
