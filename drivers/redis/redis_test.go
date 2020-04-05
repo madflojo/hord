@@ -68,6 +68,12 @@ func TestConnectivity(t *testing.T) {
 		if err != nil {
 			t.Errorf("Failed to ping Redis server - %s", err)
 		}
+
+		// Check TestOnBorrow
+		err = db.pool.TestOnBorrow(c, time.Now())
+		if err != nil {
+			t.Errorf("Error returned when testing pool connection - %s", err)
+		}
 	})
 }
 
