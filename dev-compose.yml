@@ -5,6 +5,8 @@ services:
     depends_on:
       - cassandra
       - cassandra-primary
+      - redis-sentinel
+      - redis
     working_dir: /go/src/github.com/madflojo/hord
     entrypoint: go test -v -covermode=count -coverprofile=coverage/coverage.out ./...
     volumes:
@@ -34,3 +36,13 @@ services:
       - 7199
       - 9042
       - 9160
+  redis:
+    image: bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  redis-sentinel:
+    image: bitnami/redis-sentinel:latest
+    depends_on:
+      - redis
+    environment:
+      - REDIS_MASTER_HOST=redis
