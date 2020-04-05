@@ -1,7 +1,6 @@
 package hord
 
 import (
-	"fmt"
 	"github.com/madflojo/hord/drivers/cassandra"
 	"github.com/madflojo/hord/drivers/redis"
 	"testing"
@@ -11,7 +10,7 @@ import (
 func TestCassandraDriver(t *testing.T) {
 	hosts := []string{"cassandra-primary", "cassandra"}
 	var db Database
-	db, err := cassandra.Dial(&cassandra.Config{Hosts: hosts, Keyspace: "hord"})
+	db, err := cassandra.Dial(cassandra.Config{Hosts: hosts, Keyspace: "hord"})
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
@@ -51,7 +50,7 @@ func BenchmarkDrivers(b *testing.B) {
 			case "Cassandra":
 				// Connect to Cassandra
 				hosts := []string{"cassandra-primary", "cassandra"}
-				db, err = cassandra.Dial(&cassandra.Config{Hosts: hosts, Keyspace: "hord"})
+				db, err = cassandra.Dial(cassandra.Config{Hosts: hosts, Keyspace: "hord"})
 				if err != nil {
 					b.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 				}
