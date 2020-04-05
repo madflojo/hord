@@ -1,6 +1,8 @@
 # github.com/FZambia/sentinel v1.1.0
+## explicit
 github.com/FZambia/sentinel
-# github.com/gocql/gocql v0.0.0-20200228163523-cd4b606dd2fb
+# github.com/gocql/gocql v0.0.0-20200324094621-6d895e38b0a5
+## explicit
 github.com/gocql/gocql
 github.com/gocql/gocql/internal/lru
 github.com/gocql/gocql/internal/murmur
@@ -8,6 +10,7 @@ github.com/gocql/gocql/internal/streams
 # github.com/golang/snappy v0.0.0-20170215233205-553a64147049
 github.com/golang/snappy
 # github.com/gomodule/redigo v2.0.0+incompatible
+## explicit
 github.com/gomodule/redigo/internal
 github.com/gomodule/redigo/redis
 # github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed
