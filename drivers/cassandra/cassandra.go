@@ -70,7 +70,7 @@ type Database struct {
 	conn *gocql.Session
 
 	// config is a copy of the Config used during initialization
-	config *Config
+	config Config
 }
 
 // Package level Errors
@@ -80,11 +80,10 @@ var (
 
 // Dial will establish a session to a Cassandra cluster and provide a Database interface that can be used to interact
 // with Cassandra.
-func Dial(conf *Config) (*Database, error) {
-	var db Database
-
-	// Inject the Database interface with provided configuration
-	db.config = conf
+func Dial(conf Config) (*Database, error) {
+	db := Database{
+		config: conf,
+	}
 
 	// Setup cluster hosts
 	if len(db.config.Hosts) < 1 {

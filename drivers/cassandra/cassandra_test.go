@@ -41,14 +41,14 @@ func TestErrNoDial(t *testing.T) {
 
 func TestDialErrors(t *testing.T) {
 	t.Run("No Hosts", func(t *testing.T) {
-		_, err := Dial(&Config{})
+		_, err := Dial(Config{})
 		if err == nil {
 			t.Errorf("Expected error when hosts are not specified, got nil")
 		}
 	})
 
 	t.Run("No Replicas", func(t *testing.T) {
-		_, err := Dial(&Config{
+		_, err := Dial(Config{
 			Hosts:               []string{"cassandra-primary", "cassandra"},
 			Port:                7000,
 			ReplicationStrategy: "SimpleStrategy"})
@@ -60,7 +60,7 @@ func TestDialErrors(t *testing.T) {
 
 func TestDialandSetup(t *testing.T) {
 	hosts := []string{"cassandra-primary", "cassandra"}
-	db, err := Dial(&Config{Hosts: hosts, Keyspace: "hord"})
+	db, err := Dial(Config{Hosts: hosts, Keyspace: "hord"})
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
@@ -92,7 +92,7 @@ func TestDialandSetup(t *testing.T) {
 
 func TestDialKeyspaceNotCreated(t *testing.T) {
 	hosts := []string{"cassandra", "cassandra-primary"}
-	_, err := Dial(&Config{Hosts: hosts, Keyspace: "notcreated"})
+	_, err := Dial(Config{Hosts: hosts, Keyspace: "notcreated"})
 	if err == nil {
 		t.Fatalf("Unexpected nil when connecting to database with unsetup keyspace")
 	}
@@ -101,7 +101,7 @@ func TestDialKeyspaceNotCreated(t *testing.T) {
 func TestUsage(t *testing.T) {
 	// Setup Environment
 	hosts := []string{"cassandra", "cassandra-primary"}
-	db, err := Dial(&Config{
+	db, err := Dial(Config{
 		Hosts:               hosts,
 		Keyspace:            "hord",
 		Consistency:         "Quorum",
@@ -180,7 +180,7 @@ func TestUsage(t *testing.T) {
 
 func TestHealthCheck(t *testing.T) {
 	hosts := []string{"cassandra-primary", "cassandra"}
-	db, err := Dial(&Config{Hosts: hosts, Keyspace: "hord"})
+	db, err := Dial(Config{Hosts: hosts, Keyspace: "hord"})
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
@@ -201,7 +201,7 @@ func TestHealthCheck(t *testing.T) {
 
 func TestKeys(t *testing.T) {
 	hosts := []string{"cassandra-primary", "cassandra"}
-	db, err := Dial(&Config{Hosts: hosts, Keyspace: "hord"})
+	db, err := Dial(Config{Hosts: hosts, Keyspace: "hord"})
 	if err != nil {
 		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 	}
