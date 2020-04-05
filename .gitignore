@@ -13,3 +13,8 @@
 
 # vim .swp files
 *.swp
+
+# Coverage
+coverage/*
+coverage.html
+coverage.out
