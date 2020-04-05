@@ -41,6 +41,9 @@ func BenchmarkDrivers(b *testing.B) {
 				// Connect to Redis
 				db, err = redis.Dial(redis.Config{
 					ConnectTimeout: time.Duration(5) * time.Second,
+					MaxActive:      500,
+					MaxIdle:        100,
+					IdleTimeout:    time.Duration(5) * time.Second,
 					Server:         "redis:6379",
 				})
 				if err != nil {
