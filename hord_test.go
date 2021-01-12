@@ -1,11 +1,11 @@
 package hord
 
 import (
+	"fmt"
 	"github.com/madflojo/hord/drivers/cassandra"
 	"github.com/madflojo/hord/drivers/redis"
 	"testing"
 	"time"
-  "fmt"
 )
 
 func TestCassandraDriver(t *testing.T) {
