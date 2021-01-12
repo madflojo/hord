@@ -74,7 +74,7 @@ func BenchmarkDrivers(b *testing.B) {
 
 				// Exec Benchmark
 				for i := 0; i < b.N; i++ {
-					err := db.Set("Test_Keys_"+string(i), data)
+					err := db.Set("Test_Keys_"+fmt.Sprintf("%d", i), data)
 					if err != nil {
 						b.Fatalf("Error when executing Benchmark test - %s", err)
 					}
@@ -93,7 +93,7 @@ func BenchmarkDrivers(b *testing.B) {
 				// Setup A Bunch of Keys
 				b.StopTimer()
 				for i := 0; i < 5000; i++ {
-					_ = db.Set("Test_Keys_"+string(i), data)
+					_ = db.Set("Test_Keys_"+fmt.Sprintf("%d", i), data)
 				}
 
 				// Exec Benchmark
@@ -103,7 +103,7 @@ func BenchmarkDrivers(b *testing.B) {
 					if count > 4999 {
 						count = 0
 					}
-					_, err := db.Get("Test_Keys_" + string(count))
+					_, err := db.Get("Test_Keys_" + fmt.Sprintf("%d", count))
 					if err != nil {
 						b.Fatalf("Error when executing Benchmark test - %s", err)
 					}
