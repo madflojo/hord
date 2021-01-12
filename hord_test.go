@@ -5,6 +5,7 @@ import (
 	"github.com/madflojo/hord/drivers/redis"
 	"testing"
 	"time"
+  "fmt"
 )
 
 func TestCassandraDriver(t *testing.T) {
