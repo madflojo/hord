@@ -206,8 +206,11 @@ func (db *Database) Get(key string) ([]byte, error) {
 	defer c.Close()
 
 	d, err := redis.Bytes(c.Do("GET", key))
-	if err != nil {
+	if err != nil && err != redis.ErrNil {
 		return nil, fmt.Errorf("unable to fetch data from Redis - %s", err)
+	}
+	if err == redis.ErrNil {
+		return []byte(""), nil
 	}
 	return d, nil
 }

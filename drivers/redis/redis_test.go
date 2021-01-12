@@ -139,7 +139,7 @@ func TestUsage(t *testing.T) {
 		}
 
 		data, err := db.Get("test_happypath")
-		if err == nil {
+		if err == nil && len(data) != 0 {
 			t.Fatalf("It does not appear data was completely deleted from table found - %+v", data)
 		}
 	})
