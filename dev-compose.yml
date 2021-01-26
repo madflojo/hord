@@ -18,7 +18,7 @@ services:
       - cassandra-primary
       - redis
     working_dir: /go/src/github.com/madflojo/hord
-    entrypoint: go test -run=BenchmarkDrivers -bench=.
+    entrypoint: go test -run=Benchmark  -bench=. ./...
   cassandra-primary:
     image: madflojo/cassandra:latest
     command: /bin/bash -c "sleep 1 && /docker-entrypoint.sh cassandra -f"

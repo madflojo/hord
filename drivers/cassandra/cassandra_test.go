@@ -2,6 +2,7 @@ package cassandra
 
 import (
 	"fmt"
+	"github.com/madflojo/hord"
 	"testing"
 	"time"
 )
@@ -9,32 +10,32 @@ import (
 func TestErrNoDial(t *testing.T) {
 	var db Database
 	err := db.Setup()
-	if err != ErrNoDial {
+	if err != hord.ErrNoDial {
 		t.Errorf("Expected no dialing error but got - %s", err)
 	}
 
 	err = db.HealthCheck()
-	if err != ErrNoDial {
+	if err != hord.ErrNoDial {
 		t.Errorf("Expected no dialing error but got - %s", err)
 	}
 
 	err = db.Set("key", []byte("test"))
-	if err != ErrNoDial {
+	if err != hord.ErrNoDial {
 		t.Errorf("Expected no dialing error but got - %s", err)
 	}
 
 	_, err = db.Get("key")
-	if err != ErrNoDial {
+	if err != hord.ErrNoDial {
 		t.Errorf("Expected no dialing error but got - %s", err)
 	}
 
 	err = db.Delete("key")
-	if err != ErrNoDial {
+	if err != hord.ErrNoDial {
 		t.Errorf("Expected no dialing error but got - %s", err)
 	}
 
 	_, err = db.Keys()
-	if err != ErrNoDial {
+	if err != hord.ErrNoDial {
 		t.Errorf("Expected no dialing error but got - %s", err)
 	}
 }
@@ -161,6 +162,13 @@ func TestUsage(t *testing.T) {
 			if v != data[i] {
 				t.Fatalf("Data mismatch from previously set data and data just read, got %+v expected %+v", data[i], v)
 			}
+		}
+	})
+
+	t.Run("Reading missing key", func(t *testing.T) {
+		_, err := db.Get("test_missingkey")
+		if err != nil && err != hord.ErrNil {
+			t.Fatalf("Unexpected error when reading data - %s", err)
 		}
 	})
 

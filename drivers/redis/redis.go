@@ -32,6 +32,7 @@ import (
 	"fmt"
 	"github.com/FZambia/sentinel"
 	"github.com/gomodule/redigo/redis"
+	"github.com/madflojo/hord"
 	"time"
 )
 
@@ -210,7 +211,7 @@ func (db *Database) Get(key string) ([]byte, error) {
 		return nil, fmt.Errorf("unable to fetch data from Redis - %s", err)
 	}
 	if err == redis.ErrNil {
-		return []byte(""), nil
+		return []byte(""), hord.ErrNil
 	}
 	return d, nil
 }

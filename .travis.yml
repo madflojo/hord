@@ -14,8 +14,8 @@ script:
   - go vet -v ./...
   - docker-compose -f dev-compose.yml up -d cassandra-primary cassandra redis
   - sleep 30
-  - docker-compose -f dev-compose.yml up --exit-code-from tests --build tests
+  - make tests
   - sleep 30
-  - docker-compose -f dev-compose.yml up --exit-code-from benchmarks --build benchmarks
+  - make bench
 after_success:
   - goveralls -coverprofile=coverage/coverage.out -service=travis-ci -repotoken $COVERALLS_TOKEN

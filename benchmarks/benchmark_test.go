@@ -1,22 +1,13 @@
-package hord
+package benchmarks
 
 import (
 	"fmt"
+	"github.com/madflojo/hord"
 	"github.com/madflojo/hord/drivers/cassandra"
 	"github.com/madflojo/hord/drivers/redis"
 	"testing"
 	"time"
 )
-
-func TestCassandraDriver(t *testing.T) {
-	hosts := []string{"cassandra-primary", "cassandra"}
-	var db Database
-	db, err := cassandra.Dial(cassandra.Config{Hosts: hosts, Keyspace: "hord"})
-	if err != nil {
-		t.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
-	}
-	defer db.Close()
-}
 
 func BenchmarkDrivers(b *testing.B) {
 	// Create some test data for Benchmarks
@@ -35,7 +26,7 @@ func BenchmarkDrivers(b *testing.B) {
 	// Loop through the various DBs and TestData
 	for _, driver := range drivers {
 		b.Run("Bench_"+driver, func(b *testing.B) {
-			var db Database
+			var db hord.Database
 			var err error
 			switch driver {
 			case "Redis":
@@ -63,6 +54,12 @@ func BenchmarkDrivers(b *testing.B) {
 				b.Fatalf("Unknown DB Driver Specified")
 			}
 			defer db.Close()
+
+			// Setup DB
+			err = db.Setup()
+			if err != nil {
+				b.Fatalf("Unknown error setting up DB - %s", err)
+			}
 
 			b.Run("SET", func(b *testing.B) {
 				// Clean up Keys Created for Test
