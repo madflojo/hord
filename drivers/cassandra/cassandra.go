@@ -180,8 +180,11 @@ func (db *Database) Get(key string) ([]byte, error) {
 	}
 
 	err := db.conn.Query(`SELECT data FROM hord WHERE key = ?;`, key).Scan(&data)
-	if err != nil {
+	if err != nil && err != gocql.ErrNotFound {
 		return data, err
+	}
+	if err == gocql.ErrNotFound {
+		return data, hord.ErrNil
 	}
 
 	return data, nil

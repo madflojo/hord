@@ -165,6 +165,13 @@ func TestUsage(t *testing.T) {
 		}
 	})
 
+	t.Run("Reading missing key", func(t *testing.T) {
+		_, err := db.Get("test_missingkey")
+		if err != nil && err != hord.ErrNil {
+			t.Fatalf("Unexpected error when reading data - %s", err)
+		}
+	})
+
 	t.Run("Deleting data", func(t *testing.T) {
 		err := db.Delete("test_happypath")
 		if err != nil {
