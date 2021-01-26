@@ -39,6 +39,8 @@
 //
 package hord
 
+import "fmt"
+
 // Database is an interface that is used to create a unified database access object
 type Database interface {
 	// Setup is used to setup and configure the underlying database. This can include setting optimal cluster
@@ -67,3 +69,9 @@ type Database interface {
 	// Close will close the database connection. After executing close all other functions should return an error.
 	Close()
 }
+
+// Common Errors Used by Hord Drivers
+var (
+	ErrNil    = fmt.Errorf("Nil value returned from database")
+	ErrNoDial = fmt.Errorf("No database connection defined, did you dial?")
+)
