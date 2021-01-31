@@ -1,8 +1,10 @@
 # Hord
 
-[![Build 
-Status](https://travis-ci.org/madflojo/hord.svg)](
-https://travis-ci.org/madflojo/hord) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/madflojo/hord) [![Coverage Status](https://coveralls.io/repos/github/madflojo/hord/badge.svg?branch=master)](https://coveralls.io/github/madflojo/hord?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/hord)](https://goreportcard.com/report/github.com/madflojo/hord) [![Documentation](https://godoc.org/github.com/madflojo/hord?status.svg)](http://godoc.org/github.com/madflojo/hord)
+[![Build Status](https://travis-ci.com/madflojo/hord.svg?branch=master)](https://travis-ci.com/madflojo/hord)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/madflojo/hord)
+[![Coverage Status](https://coveralls.io/repos/github/madflojo/hord/badge.svg?branch=master)](https://coveralls.io/github/madflojo/hord?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/hord)](https://goreportcard.com/report/github.com/madflojo/hord)
+[![Documentation](https://godoc.org/github.com/madflojo/hord?status.svg)](http://godoc.org/github.com/madflojo/hord)
 
 
 Hord provides a modular key-value interface for interacting with databases. The goal is to provide a consistent interface regardless, of the underlying database.
