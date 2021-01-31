@@ -6,7 +6,7 @@
 //
 // 	func TestMocking(t *testing.T) {
 // 	        var db hord.Database
-// 	        cfg := Config{
+// 	        cfg := mock.Config{
 // 	                // Create a fake GET function
 // 	                GetFunc: func(key string) ([]byte, error) {
 // 	                        if key == "works" {
@@ -23,7 +23,7 @@
 // 	                },
 // 	        }
 //
-// 	        db, err := Dial(cfg)
+// 	        db, err := mock.Dial(cfg)
 // 	        if err != nil {
 // 	                t.Errorf("Unexpected error when creating Mock interface - %s", err)
 // 	        }
@@ -112,7 +112,7 @@ type Database struct {
 // with a Hord Database.
 //
 //          var db hord.Database
-//          cfg := Config{
+//          cfg := mock.Config{
 //                  // Create a fake GET function
 //                  GetFunc: func(key string) ([]byte, error) {
 //                          if key == "works" {
@@ -129,7 +129,7 @@ type Database struct {
 //                  },
 //          }
 //
-//          db, err := Dial(cfg)
+//          db, err := mock.Dial(cfg)
 //          if err != nil {
 //                  t.Errorf("Unexpected error when creating Mock interface - %s", err)
 //          }
