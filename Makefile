@@ -3,6 +3,8 @@
 tests:
 	@echo "Launching Tests in Docker Compose"
 	docker-compose -f dev-compose.yml up --build tests
+
+cover:
 	@echo "Generating Coverage Report"
 	go tool cover -html=coverage/coverage.out -o coverage/coverage.html
 
