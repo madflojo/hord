@@ -5,7 +5,7 @@ on:
     tags:
       - v*
     branches:
-      - master
+      - actions
       - main
   pull_request:
 jobs:
