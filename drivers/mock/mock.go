@@ -4,36 +4,36 @@
 // In using this package, users can create custom functions executed when calling the Database interface methods. Rather
 // than writing a mock for the Hord interface, initialize this driver in place of a standard database driver.
 //
-// 	func TestMocking(t *testing.T) {
-// 	        var db hord.Database
-// 	        cfg := mock.Config{
-// 	                // Create a fake GET function
-// 	                GetFunc: func(key string) ([]byte, error) {
-// 	                        if key == "works" {
-// 	                                return []byte("Yes"), nil
-// 	                        }
-// 	                        return []byte{}, hord.ErrNil
-// 	                },
-// 	                // Create a fake SET function
-// 	                SetFunc: func(key string, data []byte) error {
-// 	                        if key == "works" {
-// 	                                return nil
-// 	                        }
-// 	                        return fmt.Errorf("Error inserting data")
-// 	                },
-// 	        }
+//	func TestMocking(t *testing.T) {
+//	        var db hord.Database
+//	        cfg := mock.Config{
+//	                // Create a fake GET function
+//	                GetFunc: func(key string) ([]byte, error) {
+//	                        if key == "works" {
+//	                                return []byte("Yes"), nil
+//	                        }
+//	                        return []byte{}, hord.ErrNil
+//	                },
+//	                // Create a fake SET function
+//	                SetFunc: func(key string, data []byte) error {
+//	                        if key == "works" {
+//	                                return nil
+//	                        }
+//	                        return fmt.Errorf("Error inserting data")
+//	                },
+//	        }
 //
-// 	        db, err := mock.Dial(cfg)
-// 	        if err != nil {
-// 	                t.Errorf("Unexpected error when creating Mock interface - %s", err)
-// 	        }
+//	        db, err := mock.Dial(cfg)
+//	        if err != nil {
+//	                t.Errorf("Unexpected error when creating Mock interface - %s", err)
+//	        }
 //
-// 	        t.Run("Validate Get", func(t *testing.T) {
-// 	                _, err := db.Get("works")
-// 	                if err != nil {
-// 	                        t.Errorf("Get mocked function did not work as expected err returned - %s", err)
-// 	                }
-// 	        })
+//	        t.Run("Validate Get", func(t *testing.T) {
+//	                _, err := db.Get("works")
+//	                if err != nil {
+//	                        t.Errorf("Get mocked function did not work as expected err returned - %s", err)
+//	                }
+//	        })
 //
 //	        t.Run("Validate Get Errors", func(t *testing.T) {
 //	                _, err := db.Get("doesntwork")
@@ -42,24 +42,23 @@
 //	                }
 //	        })
 //
-// 	        t.Run("Validate Set", func(t *testing.T) {
-// 	                err := db.Set("works", []byte{})
-// 	                if err != nil {
-// 	                        t.Errorf("Set mocked function did not work as expected err returned - %s", err)
-// 	                }
-// 	        })
+//	        t.Run("Validate Set", func(t *testing.T) {
+//	                err := db.Set("works", []byte{})
+//	                if err != nil {
+//	                        t.Errorf("Set mocked function did not work as expected err returned - %s", err)
+//	                }
+//	        })
 //
-// 	        t.Run("Validate Set Errors", func(t *testing.T) {
-// 	                err := db.Set("doesntwork", []byte{})
-// 	                if err == nil {
-// 	                        t.Errorf("Set mocked function did not work as expected err returned - %s", err)
-// 	                }
-// 	        })
-// 	}
+//	        t.Run("Validate Set Errors", func(t *testing.T) {
+//	                err := db.Set("doesntwork", []byte{})
+//	                if err == nil {
+//	                        t.Errorf("Set mocked function did not work as expected err returned - %s", err)
+//	                }
+//	        })
+//	}
 //
 // This package, by default, offers a happy path for each mocked function. Custom functions only must be defined to alter
 // the default behavior.
-//
 package mock
 
 // Config is passed to Dial to configure this mock. By default, mocked functions will return with a happy path scenario.
@@ -111,29 +110,28 @@ type Database struct {
 // Dial will mock connecting to a remote database. Users can use the returned Database object to fake interactions
 // with a Hord Database.
 //
-//          var db hord.Database
-//          cfg := mock.Config{
-//                  // Create a fake GET function
-//                  GetFunc: func(key string) ([]byte, error) {
-//                          if key == "works" {
-//                                  return []byte("Yes"), nil
-//                          }
-//                          return []byte{}, hord.ErrNil
-//                  },
-//                  // Create a fake SET function
-//                  SetFunc: func(key string, data []byte) error {
-//                          if key == "works" {
-//                                  return nil
-//                          }
-//                          return fmt.Errorf("Error inserting data")
-//                  },
-//          }
+//	var db hord.Database
+//	cfg := mock.Config{
+//	        // Create a fake GET function
+//	        GetFunc: func(key string) ([]byte, error) {
+//	                if key == "works" {
+//	                        return []byte("Yes"), nil
+//	                }
+//	                return []byte{}, hord.ErrNil
+//	        },
+//	        // Create a fake SET function
+//	        SetFunc: func(key string, data []byte) error {
+//	                if key == "works" {
+//	                        return nil
+//	                }
+//	                return fmt.Errorf("Error inserting data")
+//	        },
+//	}
 //
-//          db, err := mock.Dial(cfg)
-//          if err != nil {
-//                  t.Errorf("Unexpected error when creating Mock interface - %s", err)
-//          }
-//
+//	db, err := mock.Dial(cfg)
+//	if err != nil {
+//	        t.Errorf("Unexpected error when creating Mock interface - %s", err)
+//	}
 func Dial(c Config) (*Database, error) {
 	db := &Database{}
 	db.setupFunc = c.SetupFunc

@@ -1,30 +1,29 @@
 // Package redis is a Hord database driver for Redis. This package satisfies the Hord interface
 // and can be used to interact with both Open Source Redis and Enterprise Redis.
 //
-//  // Connect to Redis
-//  db, err := redis.Dial(&redis.Config{})
-//  if err != nil {
-//    // do stuff
-//  }
+//	// Connect to Redis
+//	db, err := redis.Dial(&redis.Config{})
+//	if err != nil {
+//	  // do stuff
+//	}
 //
-//  // Setup and Initialize the Keyspace if necessary
-//  err = db.Setup()
-//  if err != nil {
-//    // do stuff
-//  }
+//	// Setup and Initialize the Keyspace if necessary
+//	err = db.Setup()
+//	if err != nil {
+//	  // do stuff
+//	}
 //
-//  // Write data to the cluster
-//  err = db.Set("mykey", []byte("My Data"))
-//  if err != nil {
-//    // do stuff
-//  }
+//	// Write data to the cluster
+//	err = db.Set("mykey", []byte("My Data"))
+//	if err != nil {
+//	  // do stuff
+//	}
 //
-//  // Fetch the same data
-//  d, err := db.Get("mykey")
-//  if err != nil {
-//    // do stuff
-//  }
-//
+//	// Fetch the same data
+//	d, err := db.Get("mykey")
+//	if err != nil {
+//	  // do stuff
+//	}
 package redis
 
 import (

@@ -5,38 +5,37 @@
 //
 // The below example shows using Hord to connect and interact with Cassandra.
 //
-//  import "github.com/madflojo/hord"
-//  import "github.com/madflojo/hord/driver/cassandra"
+//	import "github.com/madflojo/hord"
+//	import "github.com/madflojo/hord/driver/cassandra"
 //
-//  func main() {
-//    // Define our DB Interface
-//    var db hord.Database
+//	func main() {
+//	  // Define our DB Interface
+//	  var db hord.Database
 //
-//    // Connect to a Cassandra Cluster
-//    db, err := cassandra.Dial(&cassandra.Config{})
-//    if err != nil {
-//      // do stuff
-//    }
+//	  // Connect to a Cassandra Cluster
+//	  db, err := cassandra.Dial(&cassandra.Config{})
+//	  if err != nil {
+//	    // do stuff
+//	  }
 //
-//    // Setup and Initialize the Keyspace if necessary
-//    err = db.Setup()
-//    if err != nil {
-//      // do stuff
-//    }
+//	  // Setup and Initialize the Keyspace if necessary
+//	  err = db.Setup()
+//	  if err != nil {
+//	    // do stuff
+//	  }
 //
-//    // Write data to the cluster
-//    err = db.Set("mykey", []byte("My Data"))
-//    if err != nil {
-//      // do stuff
-//    }
+//	  // Write data to the cluster
+//	  err = db.Set("mykey", []byte("My Data"))
+//	  if err != nil {
+//	    // do stuff
+//	  }
 //
-//    // Fetch the same data
-//    d, err := db.Get("mykey")
-//    if err != nil {
-//      // do stuff
-//    }
-//  }
-//
+//	  // Fetch the same data
+//	  d, err := db.Get("mykey")
+//	  if err != nil {
+//	    // do stuff
+//	  }
+//	}
 package hord
 
 import "fmt"

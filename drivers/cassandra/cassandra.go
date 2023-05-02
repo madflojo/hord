@@ -1,30 +1,29 @@
 // Package cassandra is a Hord database driver for Cassandra. This package satisfies the Hord interface
 // and can be used to interact with Cassandra database clusters.
 //
-//  // Connect to a Cassandra Cluster
-//  db, err := cassandra.Dial(&cassandra.Config{})
-//  if err != nil {
-//    // do stuff
-//  }
+//	// Connect to a Cassandra Cluster
+//	db, err := cassandra.Dial(&cassandra.Config{})
+//	if err != nil {
+//	  // do stuff
+//	}
 //
-//  // Setup and Initialize the Keyspace if necessary
-//  err = db.Setup()
-//  if err != nil {
-//    // do stuff
-//  }
+//	// Setup and Initialize the Keyspace if necessary
+//	err = db.Setup()
+//	if err != nil {
+//	  // do stuff
+//	}
 //
-//  // Write data to the cluster
-//  err = db.Set("mykey", []byte("My Data"))
-//  if err != nil {
-//    // do stuff
-//  }
+//	// Write data to the cluster
+//	err = db.Set("mykey", []byte("My Data"))
+//	if err != nil {
+//	  // do stuff
+//	}
 //
-//  // Fetch the same data
-//  d, err := db.Get("mykey")
-//  if err != nil {
-//    // do stuff
-//  }
-//
+//	// Fetch the same data
+//	d, err := db.Get("mykey")
+//	if err != nil {
+//	  // do stuff
+//	}
 package cassandra
 
 import (
