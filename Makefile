@@ -2,6 +2,8 @@
 
 tests:
 	@echo "Launching Tests in Docker Compose"
+	docker-compose -f dev-compose.yml up -d cassandra-primary cassandra redis
+	sleep 30
 	docker-compose -f dev-compose.yml up --build tests
 
 cover:
@@ -10,6 +12,8 @@ cover:
 
 bench:
 	@echo "Launching Benchmarks in Docker Compose"
+	docker-compose -f dev-compose.yml up -d cassandra-primary cassandra redis
+	sleep 30
 	docker-compose -f dev-compose.yml up --build benchmarks
 
 clean:
