@@ -34,8 +34,6 @@ jobs:
           - 7199
           - 9042
           - 9160
-        depends-on:
-          - cassandra-primary
     steps:
     - uses: actions/checkout@v3
     - name: Set up Go
