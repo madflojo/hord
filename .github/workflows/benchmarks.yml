@@ -29,6 +29,7 @@ jobs:
         env:
           CASSANDRA_SEEDS: cassandra-primary
           CASSANDRA_KEYSPACE: hord
+          SLEEP_TIMER: 15
         ports:
           - 7000
           - 7001
@@ -43,7 +44,7 @@ jobs:
         go-version: '1.19'
     - name: Execute Tests
       run: |
-        sleep 180
+        sleep 60
         go test -run=Benchmark -bench "BenchmarkDrivers/Bench_Cassandra" ./...
 
   redis:
