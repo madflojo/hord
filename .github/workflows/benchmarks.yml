@@ -41,7 +41,9 @@ jobs:
       with:
         go-version: '1.19'
     - name: Execute Tests
-      run: go test -run=Benchmark -bench "BenchmarkDrivers/Bench_Cassandra" ./...
+      run: |
+      sleep 120
+      go test -run=Benchmark -bench "BenchmarkDrivers/Bench_Cassandra" ./...
 
   redis:
     runs-on: ubuntu-latest
