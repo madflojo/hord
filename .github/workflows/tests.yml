@@ -44,11 +44,11 @@ jobs:
     - name: Install goveralls
       run: go install github.com/mattn/goveralls@latest
     - name: Execute Tests
-      run: go test -v -race -covermode=atomic -coverprofile=coverage/coverage.out ./drivers/cassandra
+      run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/cassandra
     - name: Update Coveralls
       env:
         COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: goveralls -coverprofile=coverage/coverage.out -service=github
+      run: goveralls -coverprofile=coverage.out -service=github
 
   redis:
     runs-on: ubuntu-latest
@@ -72,8 +72,8 @@ jobs:
     - name: Install goveralls
       run: go install github.com/mattn/goveralls@latest
     - name: Execute Tests
-      run: go test -v -race -covermode=atomic -coverprofile=coverage/coverage.out ./drivers/cassandra
+      run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/cassandra
     - name: Update Coveralls
       env:
         COVERALLS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: goveralls -coverprofile=coverage/coverage.out -service=github
+      run: goveralls -coverprofile=coverage.out -service=github
