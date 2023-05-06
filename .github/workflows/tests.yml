@@ -29,6 +29,7 @@ jobs:
         env:
           CASSANDRA_SEEDS: cassandra-primary
           CASSANDRA_KEYSPACE: hord
+          SLEEP_TIMER: 15
         ports:
           - 7000
           - 7001
