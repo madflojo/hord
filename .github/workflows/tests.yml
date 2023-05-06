@@ -46,7 +46,7 @@ jobs:
       run: go install github.com/mattn/goveralls@latest
     - name: Execute Tests
       run: |
-        sleep 60
+        sleep 120 
         go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/cassandra
     - name: Update Coveralls
       env:
