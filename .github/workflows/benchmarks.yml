@@ -11,6 +11,7 @@ on:
 jobs:
   cassandra:
     runs-on: ubuntu-latest
+    container: madflojo/ubuntu-build
     services:
       cassandra-primary:
         image: madflojo/cassandra:latest
@@ -42,11 +43,12 @@ jobs:
         go-version: '1.19'
     - name: Execute Tests
       run: |
-        sleep 120
+        sleep 180
         go test -run=Benchmark -bench "BenchmarkDrivers/Bench_Cassandra" ./...
 
   redis:
     runs-on: ubuntu-latest
+    container: madflojo/ubuntu-build
     services:
       redis:
         image: bitnami/redis:latest
