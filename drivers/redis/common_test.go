@@ -2,6 +2,7 @@ package redis
 
 import (
 	"testing"
+  "time"
 
 	"github.com/madflojo/hord"
 )
@@ -77,7 +78,7 @@ func TestInterfaceHappyPath(t *testing.T) {
 
 				// Delete a Missing Key
 				t.Run("Delete Missing Key", func(t *testing.T) {
-					_, err := db.Delete("404notfound")
+					err := db.Delete("404notfound")
 					if err != nil {
 						t.Errorf("Expected nil when deleting nonexistent key - %s", err)
 					}
@@ -256,7 +257,7 @@ func TestInterfaceFail(t *testing.T) {
 				})
 				// Get a Key
 				t.Run("Get a Key", func(t *testing.T) {
-					data, err := db.Get("test_key")
+					_, err := db.Get("test_key")
 					if err == nil {
 						t.Errorf("Expected error when using data with no connection...")
 					}
