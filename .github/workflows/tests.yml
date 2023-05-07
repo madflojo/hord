@@ -19,7 +19,7 @@ jobs:
         go-version: '1.19'
     - name: Execute Tests
       run: |
-        go test -v -race -covermode=atomic -coverprofile=coverage.out .
+        go test -v -race -covermode=atomic -coverprofile=coverage.out . ./commontests
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
     
