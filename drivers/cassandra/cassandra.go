@@ -178,6 +178,10 @@ func (db *Database) Get(key string) ([]byte, error) {
 		return data, hord.ErrNoDial
 	}
 
+	if err := hord.ValidKey(key); err != nil {
+		return data, err
+	}
+
 	err := db.conn.Query(`SELECT data FROM hord WHERE key = ?;`, key).Scan(&data)
 	if err != nil && err != gocql.ErrNotFound {
 		return data, err
@@ -195,9 +199,15 @@ func (db *Database) Set(key string, data []byte) error {
 	if db.conn == nil {
 		return hord.ErrNoDial
 	}
-	if len(data) == 0 {
-		return fmt.Errorf("data cannot be empty")
+
+	if err := hord.ValidKey(key); err != nil {
+		return err
 	}
+
+	if err := hord.ValidData(data); err != nil {
+		return err
+	}
+
 	err := db.conn.Query(`UPDATE hord SET data = ? WHERE key = ?`, data, key).Exec()
 	return err
 }
@@ -208,10 +218,16 @@ func (db *Database) Delete(key string) error {
 	if db.conn == nil {
 		return hord.ErrNoDial
 	}
+
+	if err := hord.ValidKey(key); err != nil {
+		return err
+	}
+
 	err := db.conn.Query(`DELETE FROM hord WHERE key = ?;`, key).Exec()
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 

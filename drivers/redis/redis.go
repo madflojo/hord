@@ -198,8 +198,8 @@ func (db *Database) Setup() error {
 // Get is called to retrieve data from the database. This function will take in a key and return
 // the data or any errors received from querying the database.
 func (db *Database) Get(key string) ([]byte, error) {
-	if key == "" {
-		return nil, fmt.Errorf("key must not be empty")
+	if err := hord.ValidKey(key); err != nil {
+		return nil, err
 	}
 
 	c := db.pool.Get()
@@ -212,17 +212,19 @@ func (db *Database) Get(key string) ([]byte, error) {
 	if err == redis.ErrNil {
 		return []byte(""), hord.ErrNil
 	}
+
 	return d, nil
 }
 
 // Set is called when data within the database needs to be updated or inserted. This function will
 // take the data provided and create an entry within the database using the key as a lookup value.
 func (db *Database) Set(key string, data []byte) error {
-	if key == "" {
-		return fmt.Errorf("key must not be empty")
+	if err := hord.ValidKey(key); err != nil {
+		return err
 	}
-	if len(data) == 0 {
-		return fmt.Errorf("data must not be empty")
+
+	if err := hord.ValidData(data); err != nil {
+		return err
 	}
 
 	c := db.pool.Get()
@@ -239,8 +241,8 @@ func (db *Database) Set(key string, data []byte) error {
 // Delete is called when data within the database needs to be deleted. This function will delete
 // the data stored within the database for the specified key.
 func (db *Database) Delete(key string) error {
-	if key == "" {
-		return fmt.Errorf("key must not be empty")
+	if err := hord.ValidKey(key); err != nil {
+		return err
 	}
 
 	c := db.pool.Get()
@@ -250,6 +252,7 @@ func (db *Database) Delete(key string) error {
 	if err != nil {
 		return fmt.Errorf("unable to remove key from Redis - %s", err)
 	}
+
 	return nil
 }
 
@@ -263,6 +266,7 @@ func (db *Database) Keys() ([]string, error) {
 	if err != nil {
 		return keys, fmt.Errorf("unable to fetch keys from Redis - %s", err)
 	}
+
 	return keys, nil
 }
 

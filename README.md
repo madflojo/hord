@@ -1,43 +1,24 @@
 # Hord
 
-[![Build Status](https://travis-ci.com/madflojo/hord.svg?branch=master)](https://travis-ci.com/madflojo/hord)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/madflojo/hord)
 [![Coverage Status](https://coveralls.io/repos/github/madflojo/hord/badge.svg?branch=master)](https://coveralls.io/github/madflojo/hord?branch=master)
 [![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/hord)](https://goreportcard.com/report/github.com/madflojo/hord)
 [![Documentation](https://godoc.org/github.com/madflojo/hord?status.svg)](http://godoc.org/github.com/madflojo/hord)
 
+Hord is a simple-to-use key-value interface for Go. Store & retrieve data from Cassandra, ScyllaDB, Redis, and more with easy-to-use Get, Set, & Delete functions. It even provides a mock database driver for effortless testing.
 
-Hord provides a modular key-value interface for interacting with databases. The goal is to provide a consistent interface regardless, of the underlying database.
+## Database Drivers:
 
-With this package, users can switch out the underlying database without major refactoring.
-
-## Installation
-
-To use Hord within your project you must first import the Hord interface itself.
-
-```go
-import "github.com/madflojo/hord"
-```
-
-Then import the database driver you wish to use
-
-```go
-import "github.com/madflojo/hord/driver/cassandra"
-```
-
-Available [drivers](drivers) are a follows:
-
-* Cassandra
-* Redis 
-
-Our TODO list:
-
-* Couchbase
-* CockRoachDB
-* MySQL
-* TiKV
-* PostgreSQL
-
+| Database | Support | Comments |
+| -------- | ------- | -------- |
+| BoltDB | Pending | |
+| Cassandra | ✅ | |
+| Couchbase | Pending ||
+| DynamoDB | Pending ||
+| Hashmap | ✅ ||
+| NATS | Pending ||
+| Redis | ✅ ||
+| ScyllaDB | ✅ | via Cassandra Driver | 
 
 ## Usage
 
