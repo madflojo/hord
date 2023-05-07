@@ -1,7 +1,11 @@
-// Package hord provides a modular key-value interface for interacting with databases. The goal is to provide a
-// consistent interface regardless, of the underlying database.
+// Hord is a user-friendly and reliable interface for Go that enables storing and retrieving data from various key-value
+// databases. It offers a straightforward approach to interacting with database backends, prioritizing essential
+// functions like `Get`, `Set`, `Delete`, and `Keys`. Hord also supports multiple storage backends through a suite of
+// drivers, allowing you to choose the one that best suits your needs.
 //
-// With this package, users can switch out the underlying database without major refactoring.
+// Additionally, to facilitate testing, Hord includes a mock driver package that enables users to define custom
+// functions and simulate interactions with a Hord driver, making it easier to write unit tests and validate
+// functionality.
 //
 // The below example shows using Hord to connect and interact with Cassandra.
 //

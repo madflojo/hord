@@ -2,7 +2,6 @@ package redis
 
 import (
 	"crypto/tls"
-	"fmt"
 	"testing"
 	"time"
 )

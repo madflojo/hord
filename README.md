@@ -5,7 +5,9 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/hord)](https://goreportcard.com/report/github.com/madflojo/hord)
 [![Documentation](https://godoc.org/github.com/madflojo/hord?status.svg)](http://godoc.org/github.com/madflojo/hord)
 
-Hord is a simple-to-use key-value interface for Go. Store & retrieve data from Cassandra, ScyllaDB, Redis, and more with easy-to-use Get, Set, & Delete functions. It even provides a mock database driver for effortless testing.
+Hord is a user-friendly and reliable interface for Go that enables storing and retrieving data from various key-value databases. It offers a straightforward approach to interacting with database backends, prioritizing essential functions like `Get`, `Set`, `Delete`, and `Keys`. Hord also supports multiple storage backends through a suite of drivers, allowing you to choose the one that best suits your needs. 
+
+Additionally, to facilitate testing, Hord includes a mock driver package that enables users to define custom functions and simulate interactions with a Hord driver, making it easier to write unit tests and validate functionality.
 
 ## Database Drivers:
 
@@ -16,6 +18,7 @@ Hord is a simple-to-use key-value interface for Go. Store & retrieve data from C
 | Couchbase | Pending ||
 | DynamoDB | Pending ||
 | Hashmap | ✅ ||
+| Mock | ✅ | Mock Database interactions within unit tests |
 | NATS | Pending ||
 | Redis | ✅ ||
 | ScyllaDB | ✅ | via Cassandra Driver | 
