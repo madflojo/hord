@@ -1,14 +1,16 @@
-package hashmap
+package commontests
 
 import (
 	"fmt"
 	"testing"
 	"time"
+
+  "github.com/madflojo/hord/drivers/hashmap"
 )
 
 func TestUsage(t *testing.T) {
 	// Setup Environment
-	db, err := Dial(Config{})
+	db, err := hashmap.Dial(hashmap.Config{})
 	if err != nil {
 		t.Fatalf("Failed to connect to Hashmap - %s", err)
 	}
@@ -64,7 +66,7 @@ func TestUsage(t *testing.T) {
 
 func TestHealthCheck(t *testing.T) {
 	// Setup Environment
-	db, err := Dial(Config{})
+	db, err := hashmap.Dial(hashmap.Config{})
 	if err != nil {
 		t.Fatalf("Failed to connect to Hashmap - %s", err)
 	}
@@ -84,7 +86,7 @@ func TestHealthCheck(t *testing.T) {
 
 func TestKeys(t *testing.T) {
 	// Setup Environment
-	db, err := Dial(Config{})
+	db, err := hashmap.Dial(hashmap.Config{})
 	if err != nil {
 		t.Fatalf("Failed to connect to Hashmap - %s", err)
 	}
@@ -147,7 +149,7 @@ func TestKeys(t *testing.T) {
 
 func TestBlanks(t *testing.T) {
 	// Setup Environment
-	db, err := Dial(Config{})
+	db, err := hashmap.Dial(hashmap.Config{})
 	if err != nil {
 		t.Fatalf("Failed to connect to Hashmap - %s", err)
 	}
