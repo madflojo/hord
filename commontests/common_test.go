@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-  "github.com/madflojo/hord/drivers/hashmap"
+	"github.com/madflojo/hord/drivers/hashmap"
 )
 
 func TestUsage(t *testing.T) {
