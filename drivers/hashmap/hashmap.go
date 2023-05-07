@@ -7,18 +7,18 @@ import (
 )
 
 // Config represents the configuration for the hashmap database.
-type Config struct {}
+type Config struct{}
 
 // Database is an in-memory hashmap implementation of the hord.Database interface.
 type Database struct {
 	sync.RWMutex
-  
-  // data is used to store data in a simple map
+
+	// data is used to store data in a simple map
 	data map[string][]byte
 }
 
 // Dial initializes and returns a new hashmap database instance.
-func Dial(conf Config) (*Database, error) {
+func Dial(_ Config) (*Database, error) {
 	db := &Database{}
 	db.data = make(map[string][]byte)
 	return db, nil
@@ -98,4 +98,3 @@ func (db *Database) Close() {
 	defer db.Unlock()
 	db.data = make(map[string][]byte)
 }
-
