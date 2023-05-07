@@ -21,7 +21,7 @@ func TestInterfaceHappyPath(t *testing.T) {
 			Master:  "mymaster",
 		},
 	}
-	cfgs["Redis with optimized settings"] = redis.Config{
+	cfgs["Redis with optimized settings"] = Config{
 		ConnectTimeout: time.Duration(5) * time.Second,
 		MaxActive:      500,
 		MaxIdle:        100,
