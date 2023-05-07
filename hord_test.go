@@ -50,4 +50,3 @@ func TestValidations(t *testing.T) {
 		}
 	})
 }
-
