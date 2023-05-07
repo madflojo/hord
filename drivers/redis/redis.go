@@ -117,7 +117,7 @@ func Dial(conf Config) (*Database, error) {
 
 	// Verify that Either Server or Sentinel Servers is set
 	if db.config.Server == "" && len(db.config.SentinelConfig.Servers) == 0 {
-		return nil, fmt.Errorf("must specify either a Redis Server or Sentinel Pool")
+		return db, fmt.Errorf("must specify either a Redis Server or Sentinel Pool")
 	}
 
 	// Setup Redis DailOptions
@@ -213,6 +213,10 @@ func (db *Database) Get(key string) ([]byte, error) {
 		return nil, err
 	}
 
+	if db == nil || db.pool == nil {
+		return nil, hord.ErrNoDial
+	}
+
 	c := db.pool.Get()
 	defer c.Close()
 
@@ -238,6 +242,10 @@ func (db *Database) Set(key string, data []byte) error {
 		return err
 	}
 
+	if db == nil || db.pool == nil {
+		return hord.ErrNoDial
+	}
+
 	c := db.pool.Get()
 	defer c.Close()
 
@@ -256,6 +264,10 @@ func (db *Database) Delete(key string) error {
 		return err
 	}
 
+	if db == nil || db.pool == nil {
+		return hord.ErrNoDial
+	}
+
 	c := db.pool.Get()
 	defer c.Close()
 
@@ -270,6 +282,9 @@ func (db *Database) Delete(key string) error {
 // Keys is called to retrieve a list of keys stored within the database. This function will query
 // the database returning all keys used within the hord database.
 func (db *Database) Keys() ([]string, error) {
+	if db == nil || db.pool == nil {
+		return []string{}, hord.ErrNoDial
+	}
 	c := db.pool.Get()
 	defer c.Close()
 
@@ -285,6 +300,11 @@ func (db *Database) Keys() ([]string, error) {
 // simply runs a generic ping against the database. If the ping errors in any fashion this
 // function will return an error.
 func (db *Database) HealthCheck() error {
+	// Return error if pool is not created
+	if db == nil || db.pool == nil {
+		return hord.ErrNoDial
+	}
+
 	c := db.pool.Get()
 	defer c.Close()
 
