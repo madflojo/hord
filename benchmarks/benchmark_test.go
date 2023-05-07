@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/madflojo/hord"
 	"github.com/madflojo/hord/drivers/cassandra"
+	"github.com/madflojo/hord/drivers/hashmap"
 	"github.com/madflojo/hord/drivers/redis"
 	"testing"
 	"time"
@@ -21,7 +22,7 @@ func BenchmarkDrivers(b *testing.B) {
   `)
 
 	// Create a Set of drivers to benchmark
-	drivers := []string{"Redis", "Cassandra"}
+	drivers := []string{"Redis", "Cassandra", "Hashmap"}
 
 	// Loop through the various DBs and TestData
 	for _, driver := range drivers {
@@ -50,6 +51,12 @@ func BenchmarkDrivers(b *testing.B) {
 					b.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
 				}
 
+			case "Hashmap":
+				db, err = hashmap.Dial(hashmap.Config{})
+				if err != nil {
+					b.Fatalf("Got unexpected error when initializing hashmap - %s", err)
+				}
+
 			default:
 				b.Fatalf("Unknown DB Driver Specified")
 			}
@@ -59,6 +66,12 @@ func BenchmarkDrivers(b *testing.B) {
 			err = db.Setup()
 			if err != nil {
 				b.Fatalf("Unknown error setting up DB - %s", err)
+			}
+
+			// Execute HealthCheck
+			err = db.HealthCheck()
+			if err != nil {
+				b.Fatalf("Error while checking health of DB - %s", err)
 			}
 
 			b.Run("SET", func(b *testing.B) {
