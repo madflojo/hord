@@ -1,8 +1,9 @@
 package redis
 
 import (
+	"fmt"
 	"testing"
-  "time"
+	"time"
 
 	"github.com/madflojo/hord"
 )
