@@ -187,11 +187,22 @@ func Dial(conf Config) (*Database, error) {
 		},
 	}
 
+	// Execute HealthCheck to verify connectivity
+	err := db.HealthCheck()
+	if err != nil {
+		return db, fmt.Errorf("connection is unhealthy, failed ping %s", err)
+	}
+
 	return db, nil
 }
 
 // Setup does nothing with Redis, this is only here to meet interface requirements.
 func (db *Database) Setup() error {
+	// Execute HealthCheck to verify connectivity
+	err := db.HealthCheck()
+	if err != nil {
+		return fmt.Errorf("connection is unhealthy, failed ping %s", err)
+	}
 	return nil
 }
 

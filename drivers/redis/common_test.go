@@ -14,6 +14,20 @@ func TestInterfaceHappyPath(t *testing.T) {
 		ConnectTimeout: time.Duration(5) * time.Second,
 		Server:         "redis:6379",
 	}
+	cfgs["Redis with Sentinel"] = Config{
+		ConnectTimeout: time.Duration(5) * time.Second,
+		SentinelConfig: SentinelConfig{
+			Servers: []string{"redis-sentinel:26379"},
+			Master:  "mymaster",
+		},
+	}
+	cfgs["Redis with optimized settings"] = redis.Config{
+		ConnectTimeout: time.Duration(5) * time.Second,
+		MaxActive:      500,
+		MaxIdle:        100,
+		IdleTimeout:    time.Duration(5) * time.Second,
+		Server:         "redis:6379",
+	}
 
 	// Loop through valid Configs and validate the driver adheres to the Hord interface
 	for name, cfg := range cfgs {
@@ -211,6 +225,11 @@ func TestInterfaceFail(t *testing.T) {
 		ConnectTimeout: time.Duration(5) * time.Second,
 		Server:         "redis:9000",
 	}
+	cfgs["Sentinel without Master"] = Config{
+		ConnectTimeout: time.Duration(5) * time.Second,
+		SentinelConfig: SentinelConfig{
+			Servers: []string{"redis-sentinel:26379"},
+		}}
 
 	// Loop through invalid Configs and validate the driver reacts appropriately
 	for name, cfg := range cfgs {
