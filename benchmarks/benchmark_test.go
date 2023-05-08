@@ -7,6 +7,7 @@ import (
 	"github.com/madflojo/hord/drivers/cassandra"
 	"github.com/madflojo/hord/drivers/hashmap"
 	"github.com/madflojo/hord/drivers/redis"
+	"os"
 	"testing"
 	"time"
 )
