@@ -22,7 +22,7 @@ func TmpFn() string {
 
 func TestBBoltConnectivity(t *testing.T) {
 	// Create Directory for Test Execution
-	tmpDir := TmpFn()
+	tmpDir := "/tmp/" + TmpFn()
 	err := os.Mkdir(tmpDir, 0750)
 	if err != nil {
 		t.Fatalf("Unable to create test directory - %s", err)
@@ -35,8 +35,26 @@ func TestBBoltConnectivity(t *testing.T) {
 			passSetup: true,
 			cfg: Config{
 				Bucketname:  "test",
-				Filename:    tmpDir + "/" + TmpFn(),
+				Filename:    tmpDir + "/" + TmpFn() + "happy",
 				Timeout:     time.Duration(15 * time.Second),
+				Permissions: 0600,
+			},
+		},
+		"Default Permissions": {
+			passDial:  true,
+			passSetup: true,
+			cfg: Config{
+				Bucketname: "test",
+				Filename:   tmpDir + "/" + TmpFn() + "perms",
+				Timeout:    time.Duration(15 * time.Second),
+			},
+		},
+		"Default Timeout": {
+			passDial:  true,
+			passSetup: true,
+			cfg: Config{
+				Bucketname:  "test",
+				Filename:    tmpDir + "/" + TmpFn() + "timeout",
 				Permissions: 0600,
 			},
 		},
@@ -44,7 +62,7 @@ func TestBBoltConnectivity(t *testing.T) {
 			passDial:  false,
 			passSetup: false,
 			cfg: Config{
-				Filename:    tmpDir + "/" + TmpFn(),
+				Filename:    tmpDir + "/" + TmpFn() + "nobucket",
 				Timeout:     time.Duration(15 * time.Second),
 				Permissions: 0600,
 			},

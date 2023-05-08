@@ -206,6 +206,111 @@ func TestInterfaceHappyPath(t *testing.T) {
 						t.Errorf("Invalid Number of Keys returned %d", len(keys))
 					}
 				})
+				// Concurrent Reads and Writes
+				t.Run("Concurrent Reads and Writes", func(t *testing.T) {
+					ctx, cancel := context.WithCancel(context.Background())
+					defer cancel()
+					go func() {
+						// Verify Context is not canceled
+						if ctx.Err() != nil {
+							return
+						}
+
+						// Fetch Keys
+						keys, err := db.Keys()
+						if err != nil {
+							if ctx.Err() != nil {
+								return
+							}
+							t.Fatalf("Unexpected error fetching keys with concurrent database access - %s", err)
+						}
+
+						for _, k := range keys {
+							if ctx.Err() != nil {
+								return
+							}
+							err := db.Set(k, []byte("Testing"))
+							if err != nil && ctx.Err() == nil {
+								t.Fatalf("Unexpected error writing keys with concurrent database access - %s", err)
+							}
+						}
+					}()
+					go func() {
+						// Verify Context is not canceled
+						if ctx.Err() != nil {
+							return
+						}
+
+						// Fetch Keys
+						keys, err := db.Keys()
+						if err != nil {
+							if ctx.Err() != nil {
+								return
+							}
+							t.Fatalf("Unexpected error fetching keys with concurrent database access - %s", err)
+						}
+
+						for _, k := range keys {
+							if ctx.Err() != nil {
+								return
+							}
+							_, err := db.Get(k)
+							if err != nil && ctx.Err() == nil {
+								t.Fatalf("Unexpected error writing keys with concurrent database access - %s", err)
+							}
+						}
+					}()
+					<-time.After(30 * time.Second)
+				})
+			})
+
+			t.Run("Closed DB Execution", func(t *testing.T) {
+
+				db.Close()
+
+				// Perform HealthCheck
+				t.Run("Validate Database Health", func(t *testing.T) {
+					err = db.HealthCheck()
+					if err == nil {
+						t.Errorf("Unexpected success when performing task on closed database - %s", err)
+					}
+				})
+
+				// Single Key Execution
+				t.Run("Single Key Execution", func(t *testing.T) {
+					// Set a Key
+					t.Run("Set a Key", func(t *testing.T) {
+						err := db.Set("test_key", []byte("Testing"))
+						if err == nil {
+							t.Errorf("Unexpected success when performing task on closed database - %s", err)
+						}
+					})
+
+					// Get a Key
+					t.Run("Get a Key", func(t *testing.T) {
+						_, err := db.Get("test_key")
+						if err == nil {
+							t.Errorf("Unexpected success when performing task on closed database - %s", err)
+						}
+					})
+
+					// Get list of Keys
+					t.Run("Get a list of Keys", func(t *testing.T) {
+						_, err := db.Keys()
+						if err == nil {
+							t.Errorf("Unexpected success when performing task on closed database - %s", err)
+						}
+					})
+
+					// Delete a Key
+					t.Run("Delete a Key", func(t *testing.T) {
+						err := db.Delete("test_key")
+						if err == nil {
+							t.Errorf("Unexpected success when performing task on closed database - %s", err)
+						}
+					})
+
+				})
 			})
 
 		})

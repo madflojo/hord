@@ -50,7 +50,7 @@ type Config struct {
 	Permissions os.FileMode
 
 	// Timeout specifies the timeout duration for opening obtaining a file lock on the database file.
-	// When set to zero, file lock operations will wait indefinitely on Darwin and Linux systems.
+	// Default value is 5 Seconds, a value of 0 is invalid.
 	Timeout time.Duration
 }
 
@@ -81,6 +81,11 @@ func Dial(cfg Config) (*Database, error) {
 	// Set Default Permissions
 	if cfg.Permissions == 0 {
 		cfg.Permissions = 0600
+	}
+
+	// Set Default Timeout
+	if cfg.Timeout == time.Duration(0) {
+		cfg.Timeout = time.Duration(5 * time.Second)
 	}
 
 	// Open database

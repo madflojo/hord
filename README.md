@@ -13,7 +13,7 @@ Additionally, to facilitate testing, Hord includes a mock driver package that en
 
 | Database | Support | Comments |
 | -------- | ------- | -------- |
-| BoltDB | Pending | |
+| BoltDB | ✅ | |
 | Cassandra | ✅ | |
 | Couchbase | Pending ||
 | DynamoDB | Pending ||
