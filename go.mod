@@ -6,10 +6,12 @@ require (
 	github.com/FZambia/sentinel v1.1.1
 	github.com/gocql/gocql v1.4.0
 	github.com/gomodule/redigo v1.8.9
+	go.etcd.io/bbolt v1.3.7
 )
 
 require (
 	github.com/golang/snappy v0.0.3 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
+	golang.org/x/sys v0.4.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 )

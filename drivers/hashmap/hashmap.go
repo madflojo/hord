@@ -1,3 +1,32 @@
+// Package hashmap is a Hord database driver that creates a hashmap-based in-memory key-value store.
+//
+//	// Connect to Hashmap
+//	db, err := hashmap.Dial(&hashmap.Config{})
+//	if err != nil {
+//	  // do stuff
+//	}
+//
+//	// Setup and Initialize the Keyspace if necessary
+//	err = db.Setup()
+//	if err != nil {
+//	  // do stuff
+//	}
+//
+//	// Write data to the cluster
+//	err = db.Set("mykey", []byte("My Data"))
+//	if err != nil {
+//	  // do stuff
+//	}
+//
+//	// Fetch the same data
+//	d, err := db.Get("mykey")
+//	if err != nil {
+//	  // do stuff
+//	}
+//
+// The hashmap driver in the Hord package allows you to quickly work with an embedded in-memory hashmap in your Go
+// applications. It provides methods to store and retrieve key-value pairs, enabling efficient goroutine safe data
+// management.
 package hashmap
 
 import (

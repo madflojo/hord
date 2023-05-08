@@ -317,11 +317,17 @@ func (db *Database) HealthCheck() error {
 
 // Close will close all connections to Redis and clean up the pool.
 func (db *Database) Close() {
-	if db == nil {
+	if db == nil || db.pool == nil {
 		return
 	}
-	defer db.pool.Close()
+	err := db.pool.Close()
+	if err != nil {
+		defer db.pool.Close()
+	}
 	if db.sentinel != nil {
-		defer db.sentinel.Close()
+		err = db.sentinel.Close()
+		if err != nil {
+			defer db.sentinel.Close()
+		}
 	}
 }
