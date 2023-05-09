@@ -67,6 +67,10 @@ func (db *Database) Get(key string) ([]byte, error) {
 
 	db.RLock()
 	defer db.RUnlock()
+	if db.data == nil {
+		return []byte(""), hord.ErrNoDial
+	}
+
 	v, ok := db.data[key]
 	if ok {
 		return v, nil
@@ -87,6 +91,10 @@ func (db *Database) Set(key string, data []byte) error {
 
 	db.Lock()
 	defer db.Unlock()
+	if db.data == nil {
+		return hord.ErrNoDial
+	}
+
 	db.data[key] = data
 	return nil
 }
@@ -100,6 +108,10 @@ func (db *Database) Delete(key string) error {
 
 	db.Lock()
 	defer db.Unlock()
+	if db.data == nil {
+		return hord.ErrNoDial
+	}
+
 	delete(db.data, key)
 	return nil
 }
@@ -108,6 +120,10 @@ func (db *Database) Delete(key string) error {
 func (db *Database) Keys() ([]string, error) {
 	db.RLock()
 	defer db.RUnlock()
+	if db.data == nil {
+		return []string{}, hord.ErrNoDial
+	}
+
 	var keys []string
 	for k := range db.data {
 		keys = append(keys, k)
@@ -118,6 +134,10 @@ func (db *Database) Keys() ([]string, error) {
 // HealthCheck performs a health check on the hashmap database.
 // Since the hashmap database is an in-memory implementation, it always returns nil.
 func (db *Database) HealthCheck() error {
+	if db.data == nil {
+		return hord.ErrNoDial
+	}
+
 	return nil
 }
 
@@ -125,5 +145,5 @@ func (db *Database) HealthCheck() error {
 func (db *Database) Close() {
 	db.Lock()
 	defer db.Unlock()
-	db.data = make(map[string][]byte)
+	db.data = nil
 }
