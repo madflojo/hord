@@ -1,43 +1,27 @@
 # Hord
 
-[![Build Status](https://travis-ci.com/madflojo/hord.svg?branch=master)](https://travis-ci.com/madflojo/hord)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/madflojo/hord)
-[![Coverage Status](https://coveralls.io/repos/github/madflojo/hord/badge.svg?branch=master)](https://coveralls.io/github/madflojo/hord?branch=master)
+[![codecov](https://codecov.io/gh/madflojo/hord/branch/main/graph/badge.svg?token=0TTTEWHLVN)](https://codecov.io/gh/madflojo/hord)
 [![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/hord)](https://goreportcard.com/report/github.com/madflojo/hord)
 [![Documentation](https://godoc.org/github.com/madflojo/hord?status.svg)](http://godoc.org/github.com/madflojo/hord)
 
+Hord is a user-friendly and reliable interface for Go that enables storing and retrieving data from various key-value databases. It offers a straightforward approach to interacting with database backends, prioritizing essential functions like `Get`, `Set`, `Delete`, and `Keys`. Hord also supports multiple storage backends through a suite of drivers, allowing you to choose the one that best suits your needs. 
 
-Hord provides a modular key-value interface for interacting with databases. The goal is to provide a consistent interface regardless, of the underlying database.
+Additionally, to facilitate testing, Hord includes a mock driver package that enables users to define custom functions and simulate interactions with a Hord driver, making it easier to write unit tests and validate functionality.
 
-With this package, users can switch out the underlying database without major refactoring.
+## Database Drivers:
 
-## Installation
-
-To use Hord within your project you must first import the Hord interface itself.
-
-```go
-import "github.com/madflojo/hord"
-```
-
-Then import the database driver you wish to use
-
-```go
-import "github.com/madflojo/hord/driver/cassandra"
-```
-
-Available [drivers](drivers) are a follows:
-
-* Cassandra
-* Redis 
-
-Our TODO list:
-
-* Couchbase
-* CockRoachDB
-* MySQL
-* TiKV
-* PostgreSQL
-
+| Database | Support | Comments |
+| -------- | ------- | -------- |
+| BoltDB | ✅ | |
+| Cassandra | ✅ | |
+| Couchbase | Pending ||
+| DynamoDB | Pending ||
+| Hashmap | ✅ ||
+| Mock | ✅ | Mock Database interactions within unit tests |
+| NATS | Pending ||
+| Redis | ✅ ||
+| ScyllaDB | ✅ | via Cassandra Driver | 
 
 ## Usage
 

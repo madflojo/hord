@@ -133,7 +133,7 @@ func Dial(conf Config) (*Database, error) {
 // already been initialized this function will not execute but return with a nil error. If any issues occur
 // while initializing an error will be returned.
 func (db *Database) Setup() error {
-	if db.conn == nil {
+	if db == nil || db.conn == nil {
 		return hord.ErrNoDial
 	}
 	ksMeta, err := db.conn.KeyspaceMetadata(db.config.Keyspace)
@@ -174,8 +174,12 @@ func (db *Database) Setup() error {
 func (db *Database) Get(key string) ([]byte, error) {
 	var data []byte
 
-	if db.conn == nil {
+	if db == nil || db.conn == nil {
 		return data, hord.ErrNoDial
+	}
+
+	if err := hord.ValidKey(key); err != nil {
+		return data, err
 	}
 
 	err := db.conn.Query(`SELECT data FROM hord WHERE key = ?;`, key).Scan(&data)
@@ -192,12 +196,18 @@ func (db *Database) Get(key string) ([]byte, error) {
 // Set is called when data within the database needs to be updated or inserted. This function will
 // take the data provided and create an entry within the database using the key as a lookup value.
 func (db *Database) Set(key string, data []byte) error {
-	if db.conn == nil {
+	if db == nil || db.conn == nil {
 		return hord.ErrNoDial
 	}
-	if len(data) == 0 {
-		return fmt.Errorf("data cannot be empty")
+
+	if err := hord.ValidKey(key); err != nil {
+		return err
 	}
+
+	if err := hord.ValidData(data); err != nil {
+		return err
+	}
+
 	err := db.conn.Query(`UPDATE hord SET data = ? WHERE key = ?`, data, key).Exec()
 	return err
 }
@@ -205,13 +215,19 @@ func (db *Database) Set(key string, data []byte) error {
 // Delete is called when data within the database needs to be deleted. This function will delete
 // the data stored within the database for the specified key.
 func (db *Database) Delete(key string) error {
-	if db.conn == nil {
+	if db == nil || db.conn == nil {
 		return hord.ErrNoDial
 	}
+
+	if err := hord.ValidKey(key); err != nil {
+		return err
+	}
+
 	err := db.conn.Query(`DELETE FROM hord WHERE key = ?;`, key).Exec()
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -221,7 +237,7 @@ func (db *Database) Keys() ([]string, error) {
 	var keys []string
 	var key string
 
-	if db.conn == nil {
+	if db == nil || db.conn == nil {
 		return keys, hord.ErrNoDial
 	}
 
@@ -242,7 +258,7 @@ func (db *Database) Keys() ([]string, error) {
 // simply runs a generic query against Cassandra. If the query errors in any fashion this function
 // will also return an error.
 func (db *Database) HealthCheck() error {
-	if db.conn == nil {
+	if db == nil || db.conn == nil {
 		return hord.ErrNoDial
 	}
 	err := db.conn.Query("SELECT now() FROM system.local;").Exec()

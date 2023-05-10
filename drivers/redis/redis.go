@@ -117,7 +117,7 @@ func Dial(conf Config) (*Database, error) {
 
 	// Verify that Either Server or Sentinel Servers is set
 	if db.config.Server == "" && len(db.config.SentinelConfig.Servers) == 0 {
-		return nil, fmt.Errorf("must specify either a Redis Server or Sentinel Pool")
+		return db, fmt.Errorf("must specify either a Redis Server or Sentinel Pool")
 	}
 
 	// Setup Redis DailOptions
@@ -187,19 +187,34 @@ func Dial(conf Config) (*Database, error) {
 		},
 	}
 
+	// Execute HealthCheck to verify connectivity
+	err := db.HealthCheck()
+	if err != nil {
+		return db, fmt.Errorf("connection is unhealthy, failed ping %s", err)
+	}
+
 	return db, nil
 }
 
 // Setup does nothing with Redis, this is only here to meet interface requirements.
 func (db *Database) Setup() error {
+	// Execute HealthCheck to verify connectivity
+	err := db.HealthCheck()
+	if err != nil {
+		return fmt.Errorf("connection is unhealthy, failed ping %s", err)
+	}
 	return nil
 }
 
 // Get is called to retrieve data from the database. This function will take in a key and return
 // the data or any errors received from querying the database.
 func (db *Database) Get(key string) ([]byte, error) {
-	if key == "" {
-		return nil, fmt.Errorf("key must not be empty")
+	if err := hord.ValidKey(key); err != nil {
+		return nil, err
+	}
+
+	if db == nil || db.pool == nil {
+		return nil, hord.ErrNoDial
 	}
 
 	c := db.pool.Get()
@@ -212,17 +227,23 @@ func (db *Database) Get(key string) ([]byte, error) {
 	if err == redis.ErrNil {
 		return []byte(""), hord.ErrNil
 	}
+
 	return d, nil
 }
 
 // Set is called when data within the database needs to be updated or inserted. This function will
 // take the data provided and create an entry within the database using the key as a lookup value.
 func (db *Database) Set(key string, data []byte) error {
-	if key == "" {
-		return fmt.Errorf("key must not be empty")
+	if err := hord.ValidKey(key); err != nil {
+		return err
 	}
-	if len(data) == 0 {
-		return fmt.Errorf("data must not be empty")
+
+	if err := hord.ValidData(data); err != nil {
+		return err
+	}
+
+	if db == nil || db.pool == nil {
+		return hord.ErrNoDial
 	}
 
 	c := db.pool.Get()
@@ -239,8 +260,12 @@ func (db *Database) Set(key string, data []byte) error {
 // Delete is called when data within the database needs to be deleted. This function will delete
 // the data stored within the database for the specified key.
 func (db *Database) Delete(key string) error {
-	if key == "" {
-		return fmt.Errorf("key must not be empty")
+	if err := hord.ValidKey(key); err != nil {
+		return err
+	}
+
+	if db == nil || db.pool == nil {
+		return hord.ErrNoDial
 	}
 
 	c := db.pool.Get()
@@ -250,12 +275,16 @@ func (db *Database) Delete(key string) error {
 	if err != nil {
 		return fmt.Errorf("unable to remove key from Redis - %s", err)
 	}
+
 	return nil
 }
 
 // Keys is called to retrieve a list of keys stored within the database. This function will query
 // the database returning all keys used within the hord database.
 func (db *Database) Keys() ([]string, error) {
+	if db == nil || db.pool == nil {
+		return []string{}, hord.ErrNoDial
+	}
 	c := db.pool.Get()
 	defer c.Close()
 
@@ -263,6 +292,7 @@ func (db *Database) Keys() ([]string, error) {
 	if err != nil {
 		return keys, fmt.Errorf("unable to fetch keys from Redis - %s", err)
 	}
+
 	return keys, nil
 }
 
@@ -270,6 +300,11 @@ func (db *Database) Keys() ([]string, error) {
 // simply runs a generic ping against the database. If the ping errors in any fashion this
 // function will return an error.
 func (db *Database) HealthCheck() error {
+	// Return error if pool is not created
+	if db == nil || db.pool == nil {
+		return hord.ErrNoDial
+	}
+
 	c := db.pool.Get()
 	defer c.Close()
 
@@ -282,7 +317,7 @@ func (db *Database) HealthCheck() error {
 
 // Close will close all connections to Redis and clean up the pool.
 func (db *Database) Close() {
-	if db == nil {
+	if db == nil || db.pool == nil {
 		return
 	}
 	defer db.pool.Close()
