@@ -320,14 +320,8 @@ func (db *Database) Close() {
 	if db == nil || db.pool == nil {
 		return
 	}
-	err := db.pool.Close()
-	if err != nil {
-		defer db.pool.Close()
-	}
+	defer db.pool.Close()
 	if db.sentinel != nil {
-		err = db.sentinel.Close()
-		if err != nil {
-			defer db.sentinel.Close()
-		}
+		defer db.sentinel.Close()
 	}
 }
