@@ -69,6 +69,12 @@ jobs:
     services:
       redis:
         image: bitnami/redis:latest
+        # Set health checks to wait until redis has started
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
         env:
           ALLOW_EMPTY_PASSWORD: yes
 
