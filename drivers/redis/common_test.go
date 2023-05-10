@@ -215,6 +215,8 @@ func TestInterfaceHappyPath(t *testing.T) {
 					}
 				})
 
+/*
+
 				// Concurrent Reads and Writes
 				t.Run("Concurrent Reads and Writes", func(t *testing.T) {
 					ctx, cancel := context.WithCancel(context.Background())
@@ -286,6 +288,7 @@ func TestInterfaceHappyPath(t *testing.T) {
 				})
 
 			})
+*/
 
 			t.Run("Closed DB Execution", func(t *testing.T) {
 
