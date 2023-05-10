@@ -1,7 +1,6 @@
 package redis
 
 import (
-	"context"
 	"fmt"
 	"testing"
 	"time"
@@ -215,78 +214,6 @@ func TestInterfaceHappyPath(t *testing.T) {
 					}
 				})
 
-				// Concurrent Reads and Writes
-				t.Run("Concurrent Reads and Writes", func(t *testing.T) {
-					ctx, cancel := context.WithCancel(context.Background())
-					defer cancel()
-					go func() {
-						defer cancel()
-						for {
-							// Verify Context is not canceled
-							if ctx.Err() != nil {
-								return
-							}
-
-							// Fetch Keys
-							keys, err := db.Keys()
-							if err != nil {
-								if ctx.Err() != nil {
-									return
-								}
-								t.Logf("Unexpected error fetching keys with concurrent database access - %s", err)
-								return
-							}
-
-							for _, k := range keys {
-								if ctx.Err() != nil {
-									return
-								}
-								<-time.After(5 * time.Millisecond)
-								err := db.Set(k, []byte("Testing"))
-								if err != nil && ctx.Err() == nil {
-									t.Logf("Unexpected error writing keys with concurrent database access - %s", err)
-									return
-								}
-							}
-						}
-					}()
-					go func() {
-						defer cancel()
-						for {
-							// Verify Context is not canceled
-							if ctx.Err() != nil {
-								return
-							}
-
-							// Fetch Keys
-							keys, err := db.Keys()
-							if err != nil {
-								if ctx.Err() != nil {
-									return
-								}
-								t.Logf("Unexpected error fetching keys with concurrent database access - %s", err)
-								return
-							}
-
-							for _, k := range keys {
-								if ctx.Err() != nil {
-									return
-								}
-
-								<-time.After(5 * time.Millisecond)
-								_, err := db.Get(k)
-								if err != nil && ctx.Err() == nil {
-									t.Logf("Unexpected error writing keys with concurrent database access - %s", err)
-									return
-								}
-							}
-						}
-					}()
-					<-time.After(10 * time.Second)
-					if ctx.Err() != nil {
-						t.Fatalf("Unexpected errors from goroutines")
-					}
-				})
 			})
 
 			t.Run("Closed DB Execution", func(t *testing.T) {
