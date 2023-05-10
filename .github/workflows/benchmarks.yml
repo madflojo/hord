@@ -67,7 +67,9 @@ jobs:
       with:
         go-version: '1.19'
     - name: Execute Benchmarks
-      run: go test -run=Benchmark -bench "BenchmarkDrivers/Bench_Redis" ./...
+      run: |
+        sleep 60
+        go test -run=Benchmark -bench "BenchmarkDrivers/Bench_Redis" ./...
 
   hashmap:
     runs-on: ubuntu-latest
