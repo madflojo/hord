@@ -1,7 +1,7 @@
 package redis
 
 import (
-//	"context"
+	"context"
 	"fmt"
 	"testing"
 	"time"
@@ -194,8 +194,8 @@ func TestInterfaceHappyPath(t *testing.T) {
 				})
 
 				// Create a ton of keys
-				t.Run("Create 1000 keys", func(t *testing.T) {
-					for i := 0; i < 1000; i++ {
+				t.Run("Create 100 keys", func(t *testing.T) {
+					for i := 0; i < 100; i++ {
 						err := db.Set(fmt.Sprintf("Testing 1000 keys with key number %d", i), []byte("Testing"))
 						if err != nil {
 							t.Fatalf("Error setting up test keys - %s", err)
@@ -204,90 +204,86 @@ func TestInterfaceHappyPath(t *testing.T) {
 				})
 
 				// Count Keys
-				t.Run("Ensure 1000 keys exist", func(t *testing.T) {
+				t.Run("Ensure 100 keys exist", func(t *testing.T) {
 					keys, err := db.Keys()
 					if err != nil {
 						t.Fatalf("Error fetcing keys from database - %s", err)
 					}
 
-					if len(keys) != 1000 {
+					if len(keys) != 100 {
 						t.Errorf("Invalid Number of Keys returned %d", len(keys))
 					}
 				})
 
-				/*
-
-					// Concurrent Reads and Writes
-					t.Run("Concurrent Reads and Writes", func(t *testing.T) {
-						ctx, cancel := context.WithCancel(context.Background())
+				// Concurrent Reads and Writes
+				t.Run("Concurrent Reads and Writes", func(t *testing.T) {
+					ctx, cancel := context.WithCancel(context.Background())
+					defer cancel()
+					go func() {
 						defer cancel()
-						go func() {
-							defer cancel()
-							for {
-								// Verify Context is not canceled
+						for {
+							// Verify Context is not canceled
+							if ctx.Err() != nil {
+								return
+							}
+
+							// Fetch Keys
+							keys, err := db.Keys()
+							if err != nil {
 								if ctx.Err() != nil {
 									return
 								}
-
-								// Fetch Keys
-								keys, err := db.Keys()
-								if err != nil {
-									if ctx.Err() != nil {
-										return
-									}
-									t.Logf("Unexpected error fetching keys with concurrent database access - %s", err)
-									return
-								}
-
-								for _, k := range keys {
-									if ctx.Err() != nil {
-										return
-									}
-									err := db.Set(k, []byte("Testing"))
-									if err != nil && ctx.Err() == nil {
-										t.Logf("Unexpected error writing keys with concurrent database access - %s", err)
-										return
-									}
-								}
+								t.Logf("Unexpected error fetching keys with concurrent database access - %s", err)
+								return
 							}
-						}()
-						go func() {
-							defer cancel()
-							for {
-								// Verify Context is not canceled
+
+							for _, k := range keys {
 								if ctx.Err() != nil {
 									return
 								}
-
-								// Fetch Keys
-								keys, err := db.Keys()
-								if err != nil {
-									if ctx.Err() != nil {
-										return
-									}
-									t.Logf("Unexpected error fetching keys with concurrent database access - %s", err)
+								err := db.Set(k, []byte("Testing"))
+								if err != nil && ctx.Err() == nil {
+									t.Logf("Unexpected error writing keys with concurrent database access - %s", err)
 									return
 								}
-
-								for _, k := range keys {
-									if ctx.Err() != nil {
-										return
-									}
-									_, err := db.Get(k)
-									if err != nil && ctx.Err() == nil {
-										t.Logf("Unexpected error writing keys with concurrent database access - %s", err)
-										return
-									}
-								}
 							}
-						}()
-						<-time.After(30 * time.Second)
-						if ctx.Err() != nil {
-							t.Fatalf("Unexpected errors from goroutines")
 						}
-					})
-				*/
+					}()
+					go func() {
+						defer cancel()
+						for {
+							// Verify Context is not canceled
+							if ctx.Err() != nil {
+								return
+							}
 
+							// Fetch Keys
+							keys, err := db.Keys()
+							if err != nil {
+								if ctx.Err() != nil {
+									return
+								}
+								t.Logf("Unexpected error fetching keys with concurrent database access - %s", err)
+								return
+							}
+
+							for _, k := range keys {
+								if ctx.Err() != nil {
+									return
+								}
+								_, err := db.Get(k)
+								if err != nil && ctx.Err() == nil {
+									t.Logf("Unexpected error writing keys with concurrent database access - %s", err)
+									return
+								}
+							}
+						}
+					}()
+					<-time.After(30 * time.Second)
+					if ctx.Err() != nil {
+						t.Fatalf("Unexpected errors from goroutines")
+					}
+				})
 			})
 
 			t.Run("Closed DB Execution", func(t *testing.T) {
