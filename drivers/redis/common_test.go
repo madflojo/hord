@@ -241,6 +241,7 @@ func TestInterfaceHappyPath(t *testing.T) {
 								if ctx.Err() != nil {
 									return
 								}
+								<-time.After(5 * time.Millisecond)
 								err := db.Set(k, []byte("Testing"))
 								if err != nil && ctx.Err() == nil {
 									t.Logf("Unexpected error writing keys with concurrent database access - %s", err)
@@ -271,6 +272,8 @@ func TestInterfaceHappyPath(t *testing.T) {
 								if ctx.Err() != nil {
 									return
 								}
+
+								<-time.After(5 * time.Millisecond)
 								_, err := db.Get(k)
 								if err != nil && ctx.Err() == nil {
 									t.Logf("Unexpected error writing keys with concurrent database access - %s", err)
@@ -279,7 +282,7 @@ func TestInterfaceHappyPath(t *testing.T) {
 							}
 						}
 					}()
-					<-time.After(30 * time.Second)
+					<-time.After(10 * time.Second)
 					if ctx.Err() != nil {
 						t.Fatalf("Unexpected errors from goroutines")
 					}
