@@ -256,5 +256,8 @@ func (db *Database) Close() {
 	}
 
 	// Drain the NATS connection to close it gracefully
-	db.conn.Drain()
+	err := db.conn.Drain()
+	if err != nil {
+		db.conn.Close()
+	}
 }
