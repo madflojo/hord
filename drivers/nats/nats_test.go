@@ -20,6 +20,14 @@ func TestNATSConnectivity(t *testing.T) {
 				Bucket: "test",
 			},
 		},
+		"No JetStream Config": {
+			passDial:  false,
+			passSetup: false,
+			cfg: Config{
+				URL:    "nojsnats",
+				Bucket: "test",
+			},
+		},
 		"No Bucket": {
 			passDial:  false,
 			passSetup: false,
@@ -36,6 +44,22 @@ func TestNATSConnectivity(t *testing.T) {
 			passDial:  false,
 			passSetup: false,
 			cfg: Config{
+				Bucket: "test",
+			},
+		},
+		"Invalid Bucket Name": {
+			passDial:  false,
+			passSetup: false,
+			cfg: Config{
+				URL:    "nats",
+				Bucket: "invalid_bucket_123",
+			},
+		},
+		"Invalid URL": {
+			passDial:  false,
+			passSetup: false,
+			cfg: Config{
+				URL:    "",
 				Bucket: "test",
 			},
 		},

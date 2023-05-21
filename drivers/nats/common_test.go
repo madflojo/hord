@@ -325,6 +325,7 @@ func TestInterfaceHappyPath(t *testing.T) {
 func TestInterfaceFail(t *testing.T) {
 	cfgs := make(map[string]Config)
 	cfgs["Empty Config"] = Config{}
+	cfgs["Bad URL"] = Config{URL: "notnats", Bucket: "hord"}
 
 	// Loop through invalid Configs and validate the driver reacts appropriately
 	for name, cfg := range cfgs {

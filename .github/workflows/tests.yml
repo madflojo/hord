@@ -106,6 +106,10 @@ jobs:
           - 8222
         env:
           NATS_EXTRA_FLAGS: -js
+      nojsnats:
+        image: madflojo/nats
+        ports:
+          - 8222
 
     steps:
     - uses: actions/checkout@v3

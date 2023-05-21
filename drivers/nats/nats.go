@@ -51,9 +51,6 @@ type Config struct {
 type Database struct {
 	sync.RWMutex
 
-	// bucket name for the key-value store bucket
-	bucket string
-
 	// conn provides a NATS connection
 	conn *nats.Conn
 
@@ -67,7 +64,7 @@ var reBucket = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
 // Dial initializes and returns a new NATS database instance.
 func Dial(cfg Config) (*Database, error) {
 	var err error
-	db := &Database{bucket: cfg.Bucket}
+	db := &Database{}
 
 	// Validate Config
 	if cfg.URL == "" {
@@ -233,13 +230,9 @@ func (db *Database) HealthCheck() error {
 	}
 
 	// Check the status of the NATS key-value store
-	status, err := db.kv.Status()
+	_, err := db.kv.Status()
 	if err != nil {
 		return fmt.Errorf("kv store unhealthy - %s", err)
-	}
-
-	if status.Bucket() != db.bucket {
-		return fmt.Errorf("kv store returned an unhealthy response")
 	}
 
 	return nil
