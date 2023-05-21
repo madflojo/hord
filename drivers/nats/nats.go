@@ -23,16 +23,14 @@
 //	if err != nil {
 //	  // do stuff
 //	}
-//
-// The nats driver in the Hord package allows you to quickly use nats to store data with your Go
-// applications. It provides methods to store and retrieve key-value pairs, enabling efficient goroutine safe data
-// management.
 package nats
 
 import (
 	"fmt"
 	"regexp"
+	"strings"
 	"sync"
+	"time"
 
 	"github.com/madflojo/hord"
 	"github.com/nats-io/nats.go"
@@ -40,11 +38,29 @@ import (
 
 // Config represents the configuration for the NATS database connection.
 type Config struct {
-	// URL of the NATS server
+	// URL specifies the URL to connect to the NATS server. This URL follows the format
+	// of `nats://user:pass@example:8222` with supported protocols being `nats`,  `tls`, or `ws` for web sockets.
 	URL string
 
-	// Bucket name for the key-value store bucket
+	// Bucket name for the key-value store. If Bucket does not exist on the NATS server side,
+	// NATS will automatically create the bucket with the first key creation. Bucket names must adhere
+	// to the `^[a-zA-Z0-9_-]+$` regex.
 	Bucket string
+
+	// Servers enables connectivity to a cluster of NATS servers. Each entry must follow the NATS URL format.
+	Servers []string
+
+	// SkipTLSVerify will disable the TLS hostname checking. Warning, using this setting opens the risk of
+	// man-in-the-middle attacks.
+	SkipTLSVerify bool
+
+	// TLSConfig allows users to specify TLS settings for connecting to NATS. This is a standard TLS configuration
+	// and can be used to configure 2-way TLS for NATS.
+	TLSConfig *tls.Config
+
+	// Options extend the connection options available within NATS. NATS has many advanced configuration options;
+	// use Options to modify those options.
+	Options nats.Options
 }
 
 // Database is an in-memory NATS implementation of the hord.Database interface.
@@ -67,8 +83,8 @@ func Dial(cfg Config) (*Database, error) {
 	db := &Database{}
 
 	// Validate Config
-	if cfg.URL == "" {
-		return db, fmt.Errorf("URL cannot be empty")
+	if cfg.URL == "" && len(cfg.Servers) < 1 {
+		return db, fmt.Errorf("URL and Servers cannot be empty")
 	}
 
 	// Validate Bucket
@@ -76,8 +92,29 @@ func Dial(cfg Config) (*Database, error) {
 		return db, fmt.Errorf("Bucket name is invalid")
 	}
 
+	// Build URL for cluster of servers
+	if len(cfg.Servers) > 0 {
+		cfg.URL := strings.Join(cfg.Servers, ",")
+	}
+
+	// Set Default Connection Parameters if nothing else is set
+	if cfg.Options == nil {
+		cfg.Options = nats.Options{
+			AllowReconnect: true,
+			MaxReconnect:   10,
+			ReconnectWait:  5 * time.Second,
+			Timeout:        1 * time.Second,
+		}
+	}
+
+	// Set TLS Config
+	if cfg.TLSConfig != nil {
+		cfg.Options.TLSConfig = cfg.TLSConfig
+		cfg.Options.Secure = cfg.SkipTLSVerify
+	}
+
 	// Connect to the NATS server
-	db.conn, err = nats.Connect(cfg.URL)
+	db.conn, err = nats.Connect(cfg.URL, cfg.Options)
 	if err != nil {
 		return db, fmt.Errorf("unable to connect to NATS server - %s", err)
 	}

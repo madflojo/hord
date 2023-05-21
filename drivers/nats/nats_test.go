@@ -1,6 +1,7 @@
 package nats
 
 import (
+	"crypto/tls"
 	"testing"
 )
 
@@ -52,7 +53,7 @@ func TestNATSConnectivity(t *testing.T) {
 			passSetup: false,
 			cfg: Config{
 				URL:    "nats",
-				Bucket: "invalid_bucket_123",
+				Bucket: "invalid bucket 123",
 			},
 		},
 		"Invalid URL": {
@@ -61,6 +62,22 @@ func TestNATSConnectivity(t *testing.T) {
 			cfg: Config{
 				URL:    "",
 				Bucket: "test",
+			},
+		},
+		"TLS with no Cert": {
+			PassDial:  false,
+			PassSetup: false,
+			Cfg: Config{
+				URL:           "tls://nats",
+				Bucket:        "test",
+				SkipTLSVerify: true,
+				TLSConfig:     tls.Config{},
+				Options: nats.Options{
+					AllowReconnect: true,
+					MaxReconnect:   10,
+					ReconnectWait:  5 * time.Second,
+					Timeout:        1 * time.Second,
+				},
 			},
 		},
 	}
