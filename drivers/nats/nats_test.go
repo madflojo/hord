@@ -16,7 +16,7 @@ func TestNATSConnectivity(t *testing.T) {
 			passDial:  true,
 			passSetup: true,
 			cfg: Config{
-				URL:        "nats",
+				URL:    "nats",
 				Bucket: "test",
 			},
 		},
