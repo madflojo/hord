@@ -111,15 +111,14 @@ func (db *Database) Get(key string) ([]byte, error) {
 	// Retrieve the value from the NATS key-value store
 	r, err := db.kv.Get(key)
 	if err != nil {
+		if err == nats.ErrKeyNotFound {
+			// Return an error if the value is nil
+			return []byte(""), hord.ErrNil
+		}
 		return []byte(""), fmt.Errorf("unable to fetch key - %s", err)
 	}
 
-	if len(r.Value()) > 0 {
-		return r.Value(), nil
-	}
-
-	// Return an error if the value is nil
-	return []byte(""), hord.ErrNil
+	return r.Value(), nil
 }
 
 // Set inserts or updates data in the NATS database based on the provided key.
@@ -193,6 +192,10 @@ func (db *Database) Keys() ([]string, error) {
 	// Retrieve the keys from the NATS key-value store
 	keys, err := db.kv.Keys()
 	if err != nil {
+		// If no keys, return empty list
+		if err == nats.ErrNoKeysFound {
+			return []string{}, nil
+		}
 		return []string{}, fmt.Errorf("unable to fetch keys - %s", err)
 	}
 
