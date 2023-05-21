@@ -179,7 +179,7 @@ func TestInterfaceHappyPath(t *testing.T) {
 				// Create a ton of keys
 				t.Run("Create 1000 keys", func(t *testing.T) {
 					for i := 0; i < 1000; i++ {
-						err := db.Set(fmt.Sprintf("Testing 1000 keys with key number %d", i), []byte("Testing"))
+						err := db.Set(fmt.Sprintf("Testing_1000_keys_with_key_number_%d", i), []byte("Testing"))
 						if err != nil {
 							t.Fatalf("Error setting up test keys - %s", err)
 						}
