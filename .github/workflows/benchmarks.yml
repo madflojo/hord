@@ -71,6 +71,41 @@ jobs:
         sleep 60
         /usr/local/go/bin/go test -run=Benchmark -bench "BenchmarkDrivers/Bench_Redis" ./...
 
+  dragonfly:
+    runs-on: ubuntu-latest
+    container: madflojo/ubuntu-build
+    services:
+      dragonfly:
+        image: docker.dragonflydb.io/dragonflydb/dragonfly
+        options: --ulimit memlock=-1
+    steps:
+    - uses: actions/checkout@v3
+    # Using this instead of actions/setup-go to get around an issue with act
+    - name: Install Go
+      run: |
+           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+    - name: Execute Benchmarks
+      run: |
+        sleep 60
+        /usr/local/go/bin/go test -run=Benchmark -bench "BenchmarkDrivers/Bench_Dragonfly" ./...
+
+  keydb:
+    runs-on: ubuntu-latest
+    container: madflojo/ubuntu-build
+    services:
+      keydb:
+        image: eqalpha/keydb
+    steps:
+    - uses: actions/checkout@v3
+    # Using this instead of actions/setup-go to get around an issue with act
+    - name: Install Go
+      run: |
+           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+    - name: Execute Benchmarks
+      run: |
+        sleep 60
+        /usr/local/go/bin/go test -run=Benchmark -bench "BenchmarkDrivers/Bench_KeyDB" ./...
+
   nats:
     runs-on: ubuntu-latest
     container: madflojo/ubuntu-build

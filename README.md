@@ -11,17 +11,15 @@ Additionally, to facilitate testing, Hord includes a mock driver package that en
 
 ## Database Drivers:
 
-| Database | Support | Comments |
-| -------- | ------- | -------- |
-| BoltDB | ✅ | |
-| Cassandra | ✅ | |
-| Couchbase | Pending ||
-| DynamoDB | Pending ||
-| Hashmap | ✅ ||
-| Mock | ✅ | Mock Database interactions within unit tests |
-| NATS | ✅ | Experimental |
-| Redis | ✅ ||
-| ScyllaDB | ✅ | Experimental | 
+| Database | Support | Comments | Protocol Compatible Alternatives |
+| -------- | ------- | -------- | -------------------------------- |
+| [BoltDB](https://github.com/etcd-io/bbolt) | ✅ | | |
+| [Cassandra](https://cassandra.apache.org/) | ✅ | | [ScyllaDB](https://www.scylladb.com/), [YugabyteDB](https://www.yugabyte.com/), [Azure Cosmos DB](https://learn.microsoft.com/en-us/azure/cosmos-db/introduction) |
+| [Couchbase](https://www.couchbase.com/) | Pending |||
+| Hashmap | ✅ |||
+| Mock | ✅ | Mock Database interactions within unit tests ||
+| [NATS](https://nats.io/) | ✅ | Experimental ||
+| [Redis](https://redis.io/) | ✅ || [Dragonfly](https://www.dragonflydb.io/), [KeyDB](https://docs.keydb.dev/) |
 
 ## Usage
 

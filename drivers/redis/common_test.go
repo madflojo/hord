@@ -28,6 +28,20 @@ func TestInterfaceHappyPath(t *testing.T) {
 		IdleTimeout:    time.Duration(5) * time.Second,
 		Server:         "redis:6379",
 	}
+	cfgs["Dragonfly with optimized settings"] = Config{
+		ConnectTimeout: time.Duration(5) * time.Second,
+		MaxActive:      500,
+		MaxIdle:        100,
+		IdleTimeout:    time.Duration(5) * time.Second,
+		Server:         "dragonfly:6379",
+	}
+	cfgs["KeyDB with optimized settings"] = Config{
+		ConnectTimeout: time.Duration(5) * time.Second,
+		MaxActive:      500,
+		MaxIdle:        100,
+		IdleTimeout:    time.Duration(5) * time.Second,
+		Server:         "keydb:6379",
+	}
 
 	// Loop through valid Configs and validate the driver adheres to the Hord interface
 	for name, cfg := range cfgs {
