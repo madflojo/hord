@@ -22,19 +22,19 @@ func TestNATSConnectivity(t *testing.T) {
 		},
 		"No Bucket": {
 			passDial:  false,
-			passSetup: true,
+			passSetup: false,
 			cfg: Config{
 				URL: "nats",
 			},
 		},
 		"Empty Config": {
 			passDial:  false,
-			passSetup: true,
+			passSetup: false,
 			cfg:       Config{},
 		},
 		"No URL": {
 			passDial:  false,
-			passSetup: true,
+			passSetup: false,
 			cfg: Config{
 				Bucket: "test",
 			},
