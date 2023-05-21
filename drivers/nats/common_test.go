@@ -2,11 +2,13 @@ package nats
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"testing"
 	"time"
 
 	"github.com/madflojo/hord"
+	"github.com/nats-io/nats.go"
 )
 
 func TestInterfaceHappyPath(t *testing.T) {
@@ -326,6 +328,18 @@ func TestInterfaceFail(t *testing.T) {
 	cfgs := make(map[string]Config)
 	cfgs["Empty Config"] = Config{}
 	cfgs["Bad URL"] = Config{URL: "notnats", Bucket: "hord"}
+	cfgs["No TLS but TLS configured"] = Config{
+		URL:           "tls://nats",
+		Bucket:        "test",
+		SkipTLSVerify: true,
+		TLSConfig:     &tls.Config{},
+		Options: nats.Options{
+			AllowReconnect: true,
+			MaxReconnect:   10,
+			ReconnectWait:  5 * time.Second,
+			Timeout:        1 * time.Second,
+		},
+	}
 
 	// Loop through invalid Configs and validate the driver reacts appropriately
 	for name, cfg := range cfgs {

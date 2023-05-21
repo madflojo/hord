@@ -26,11 +26,11 @@
 package nats
 
 import (
+	"crypto/tls"
 	"fmt"
 	"regexp"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/madflojo/hord"
 	"github.com/nats-io/nats.go"
@@ -82,30 +82,21 @@ func Dial(cfg Config) (*Database, error) {
 	var err error
 	db := &Database{}
 
-	// Validate Config
-	if cfg.URL == "" && len(cfg.Servers) < 1 {
-		return db, fmt.Errorf("URL and Servers cannot be empty")
-	}
-
 	// Validate Bucket
 	if cfg.Bucket == "" || !reBucket.MatchString(cfg.Bucket) {
 		return db, fmt.Errorf("Bucket name is invalid")
 	}
 
 	// Build URL for cluster of servers
-	if len(cfg.Servers) > 0 {
-		cfg.URL := strings.Join(cfg.Servers, ",")
+	if cfg.URL == "" && len(cfg.Servers) < 1 {
+		return db, fmt.Errorf("URL and Servers cannot be empty")
 	}
 
-	// Set Default Connection Parameters if nothing else is set
-	if cfg.Options == nil {
-		cfg.Options = nats.Options{
-			AllowReconnect: true,
-			MaxReconnect:   10,
-			ReconnectWait:  5 * time.Second,
-			Timeout:        1 * time.Second,
-		}
+	if len(cfg.Servers) > 0 {
+		cfg.URL = strings.Join(cfg.Servers, ",")
 	}
+
+	cfg.Options.Url = cfg.URL
 
 	// Set TLS Config
 	if cfg.TLSConfig != nil {
@@ -114,7 +105,7 @@ func Dial(cfg Config) (*Database, error) {
 	}
 
 	// Connect to the NATS server
-	db.conn, err = nats.Connect(cfg.URL, cfg.Options)
+	db.conn, err = cfg.Options.Connect()
 	if err != nil {
 		return db, fmt.Errorf("unable to connect to NATS server - %s", err)
 	}

@@ -3,6 +3,9 @@ package nats
 import (
 	"crypto/tls"
 	"testing"
+	"time"
+
+	"github.com/nats-io/nats.go"
 )
 
 type TestCase struct {
@@ -19,6 +22,14 @@ func TestNATSConnectivity(t *testing.T) {
 			cfg: Config{
 				URL:    "nats",
 				Bucket: "test",
+			},
+		},
+		"Happy Path Config Servers": {
+			passDial:  true,
+			passSetup: true,
+			cfg: Config{
+				Bucket:  "test",
+				Servers: []string{"nats", "nats"},
 			},
 		},
 		"No JetStream Config": {
@@ -65,13 +76,13 @@ func TestNATSConnectivity(t *testing.T) {
 			},
 		},
 		"TLS with no Cert": {
-			PassDial:  false,
-			PassSetup: false,
-			Cfg: Config{
+			passDial:  false,
+			passSetup: false,
+			cfg: Config{
 				URL:           "tls://nats",
 				Bucket:        "test",
 				SkipTLSVerify: true,
-				TLSConfig:     tls.Config{},
+				TLSConfig:     &tls.Config{},
 				Options: nats.Options{
 					AllowReconnect: true,
 					MaxReconnect:   10,
