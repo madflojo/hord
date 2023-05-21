@@ -31,6 +31,7 @@ package nats
 
 import (
 	"fmt"
+	"regexp"
 	"sync"
 
 	"github.com/madflojo/hord"
@@ -60,10 +61,23 @@ type Database struct {
 	kv nats.KeyValue
 }
 
+// reBucket is used to validate bucket names
+var reBucket = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`)
+
 // Dial initializes and returns a new NATS database instance.
 func Dial(cfg Config) (*Database, error) {
 	var err error
 	db := &Database{bucket: cfg.Bucket}
+
+	// Validate Config
+	if cfg.URL == "" {
+		return db, fmt.Errorf("URL cannot be empty")
+	}
+
+	// Validate Bucket
+	if cfg.Bucket == "" || !reBucket.MatchString(cfg.Bucket) {
+		return db, fmt.Errorf("Bucket name is invalid")
+	}
 
 	// Connect to the NATS server
 	db.conn, err = nats.Connect(cfg.URL)
