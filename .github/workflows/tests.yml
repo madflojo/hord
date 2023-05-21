@@ -101,9 +101,11 @@ jobs:
     container: madflojo/ubuntu-build
     services:
       nats:
-        image: bitnami/nats
+        image: madflojo/nats
         ports:
           - 8222
+        env:
+          NATS_EXTRA_FLAGS: -js
 
     steps:
     - uses: actions/checkout@v3
