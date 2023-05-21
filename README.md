@@ -5,9 +5,18 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/hord)](https://goreportcard.com/report/github.com/madflojo/hord)
 [![Documentation](https://godoc.org/github.com/madflojo/hord?status.svg)](http://godoc.org/github.com/madflojo/hord)
 
-Hord is a user-friendly and reliable interface for Go that enables storing and retrieving data from various key-value databases. It offers a straightforward approach to interacting with database backends, prioritizing essential functions like `Get`, `Set`, `Delete`, and `Keys`. Hord also supports multiple storage backends through a suite of drivers, allowing you to choose the one that best suits your needs. 
+Package hord provides a simple and extensible interface for interacting with various database systems in a uniform way.
 
-Additionally, to facilitate testing, Hord includes a mock driver package that enables users to define custom functions and simulate interactions with a Hord driver, making it easier to write unit tests and validate functionality.
+Hord is designed to be a database-agnostic library that provides a common interface for interacting with different database systems. It allows developers to write code that is decoupled from the underlying database technology, making it easier to switch between databases or support multiple databases in the same application.
+
+## Features
+
+- **Driver-based**: Hord follows a driver-based architecture, where each database system is implemented as a separate driver. This allows for easy extensibility to support new databases.
+- **Uniform API**: Hord provides a common API for database operations, including key-value operations, setup, and configuration. The API is designed to be simple and intuitive.
+- **Pluggable**: Developers can choose and configure the desired database driver based on their specific needs.
+- **Error handling**: Hord provides error types and constants for consistent error handling across drivers.
+- **Testing with Mock Driver**: Hord provides a mock driver in the `mock` package, which can be used for testing purposes. The `mock` driver allows users to define custom functions executed when calling the `Database` interface methods, making it easier to test code that relies on the Hord interface.
+- **Documentation**: Each driver comes with its own package documentation, providing guidance on how to use and configure the driver.
 
 ## Database Drivers:
 
@@ -23,41 +32,55 @@ Additionally, to facilitate testing, Hord includes a mock driver package that en
 
 ## Usage
 
-The below example shows using Hord to connect and interact with Cassandra.
+To use Hord, import it as follows:
+
+    import "github.com/madflojo/hord"
+
+### Creating a Database Client
+
+To create a database client, you need to import and use the appropriate driver package along with the `hord` package.
+
+For example, to use the Redis driver:
 
 ```go
-import "github.com/madflojo/hord"
-import "github.com/madflojo/hord/driver/cassandra"
+import (
+    "github.com/madflojo/hord"
+    "github.com/madflojo/hord/redis"
+)
 
 func main() {
-  // Define our DB Interface
-  var db hord.Database
+    var db hord.Database
+    db, err := redis.Dial(redis.Config{})
+    if err != nil {
+        // Handle connection error
+    }
 
-  // Connect to a Cassandra Cluster
-  db, err := cassandra.Dial(&cassandra.Config{})
-  if err != nil {
-    // do stuff
-  }
-
-  // Setup and Initialize the Keyspace if necessary
-  err = db.Setup()
-  if err != nil {
-    // do stuff
-  }
-
-  // Write data to the cluster
-  err = db.Set("mykey", []byte("My Data"))
-  if err != nil {
-    // do stuff
-  }
-
-  // Fetch the same data
-  d, err := db.Get("mykey")
-  if err != nil {
-    // do stuff
-  }
+    // Use the db client for database operations
+    // ...
 }
 ```
+
+Each driver provides its own `Dial` function to establish a connection to the database. Refer to the specific driver documentation for more details.
+
+### Database Operations
+
+Once you have a database client, you can use it to perform various database operations. The API is consistent across different drivers.
+
+```go
+// Set a value
+err = db.Set("key", []byte("value"))
+if err != nil {
+    // Handle error
+}
+
+// Retrieve a value
+value, err := db.Get("key")
+if err != nil {
+    // Handle error
+}
+```
+
+Refer to the `hord.Database` interface documentation for a complete list of available methods.
 
 ## Contributing
 Thank you for your interest in helping develop Hord. The time, skills, and perspectives you contribute to this project are valued.

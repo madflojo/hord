@@ -1,45 +1,66 @@
-// Hord is a user-friendly and reliable interface for Go that enables storing and retrieving data from various key-value
-// databases. It offers a straightforward approach to interacting with database backends, prioritizing essential
-// functions like `Get`, `Set`, `Delete`, and `Keys`. Hord also supports multiple storage backends through a suite of
-// drivers, allowing you to choose the one that best suits your needs.
-//
-// Additionally, to facilitate testing, Hord includes a mock driver package that enables users to define custom
-// functions and simulate interactions with a Hord driver, making it easier to write unit tests and validate
-// functionality.
-//
-// The below example shows using Hord to connect and interact with Cassandra.
-//
-//	import "github.com/madflojo/hord"
-//	import "github.com/madflojo/hord/driver/cassandra"
-//
-//	func main() {
-//	  // Define our DB Interface
-//	  var db hord.Database
-//
-//	  // Connect to a Cassandra Cluster
-//	  db, err := cassandra.Dial(&cassandra.Config{})
-//	  if err != nil {
-//	    // do stuff
-//	  }
-//
-//	  // Setup and Initialize the Keyspace if necessary
-//	  err = db.Setup()
-//	  if err != nil {
-//	    // do stuff
-//	  }
-//
-//	  // Write data to the cluster
-//	  err = db.Set("mykey", []byte("My Data"))
-//	  if err != nil {
-//	    // do stuff
-//	  }
-//
-//	  // Fetch the same data
-//	  d, err := db.Get("mykey")
-//	  if err != nil {
-//	    // do stuff
-//	  }
-//	}
+/*
+Package hord provides a simple and extensible interface for interacting with various database systems in a uniform way.
+
+# Overview
+
+Hord is designed to be a database-agnostic library that provides a common interface for interacting with different database systems. It allows developers to write code that is decoupled from the underlying database technology, making it easier to switch between databases or support multiple databases in the same application.
+
+# Usage
+
+To use Hord, import it as follows:
+
+	import "github.com/madflojo/hord"
+
+# Creating a Database Client
+
+To create a database client, you need to import and use the appropriate driver package along with the `hord` package.
+
+For example, to use the Redis driver:
+
+	import (
+	    "github.com/madflojo/hord"
+	    "github.com/madflojo/hord/redis"
+	)
+
+	func main() {
+	    var db hord.Database
+	    db, err := redis.Dial(redis.Config{})
+	    if err != nil {
+	        // Handle connection error
+	    }
+
+	    // Use the db client for database operations
+	    // ...
+	}
+
+Each driver provides its own `Dial` function to establish a connection to the database. Refer to the specific driver documentation for more details.
+
+# Database Operations
+
+Once you have a database client, you can use it to perform various database operations. The API is consistent across different drivers.
+
+	// Set a value
+	err = db.Set("key", []byte("value"))
+	if err != nil {
+	    // Handle error
+	}
+
+	// Retrieve a value
+	value, err := db.Get("key")
+	if err != nil {
+	    // Handle error
+	}
+
+Refer to the `hord.Database` interface documentation for a complete list of available methods.
+
+# Error Handling
+
+Hord provides common error types and constants for consistent error handling across drivers. Refer to the `hord` package documentation for more information on error handling.
+
+# Contributing
+
+Contributions to Hord are welcome! If you want to add support for a new database driver or improve the existing codebase, please refer to the contribution guidelines in the project's repository.
+*/
 package hord
 
 import "fmt"
