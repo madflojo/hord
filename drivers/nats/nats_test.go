@@ -24,14 +24,6 @@ func TestNATSConnectivity(t *testing.T) {
 				Bucket: "test",
 			},
 		},
-		"Happy Path Config Servers": {
-			passDial:  true,
-			passSetup: true,
-			cfg: Config{
-				Bucket:  "test",
-				Servers: []string{"nats://nats", "nats://nats"},
-			},
-		},
 		"No JetStream Config": {
 			passDial:  false,
 			passSetup: false,

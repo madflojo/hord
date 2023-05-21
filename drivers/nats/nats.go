@@ -91,12 +91,8 @@ func Dial(cfg Config) (*Database, error) {
 	if cfg.URL == "" && len(cfg.Servers) < 1 {
 		return db, fmt.Errorf("URL and Servers cannot be empty")
 	}
-
-	if len(cfg.Servers) > 0 {
-		cfg.URL = strings.Join(cfg.Servers, ",")
-	}
-
 	cfg.Options.Url = cfg.URL
+	cfg.Options.Servers = cfg.Servers
 
 	// Set TLS Config
 	if cfg.TLSConfig != nil {
