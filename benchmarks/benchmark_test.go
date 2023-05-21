@@ -26,7 +26,7 @@ func BenchmarkDrivers(b *testing.B) {
   `)
 
 	// Create a Set of drivers to benchmark
-	drivers := []string{"Redis", "Cassandra", "Hashmap", "BoltDB", "NATS"}
+	drivers := []string{"Redis", "Cassandra", "Hashmap", "BoltDB", "NATS", "Dragonfly", "KeyDB"}
 
 	// Loop through the various DBs and TestData
 	for _, driver := range drivers {
@@ -34,7 +34,17 @@ func BenchmarkDrivers(b *testing.B) {
 			var db hord.Database
 			var err error
 			switch driver {
-			case "Redis":
+			case "Redis", "Dragonfly", "KeyDB":
+				server = "redis:6379"
+				// Connect to Dragonfly
+				if driver == "Dragonfly" {
+					server = "dragonfly:6379"
+				}
+				// Connect to KeyDB
+				if driver == "KeyDB" {
+					server = "keydb:6379"
+				}
+
 				// Connect to Redis
 				db, err = redis.Dial(redis.Config{
 					ConnectTimeout: time.Duration(5) * time.Second,
