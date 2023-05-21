@@ -8,18 +8,19 @@ on:
       - actions
       - main
   pull_request:
+
 jobs:
   hord:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.19'
+    # Using this instead of actions/setup-go to get around an issue with act
+    - name: Install Go
+      run: |
+           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Tests
       run: |
-        go test -v -race -covermode=atomic -coverprofile=coverage.out .
+        /usr/local/go/bin/go test -v -race -covermode=atomic -coverprofile=coverage.out .
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
     
@@ -52,14 +53,14 @@ jobs:
           - 9160
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.19'
+    # Using this instead of actions/setup-go to get around an issue with act
+    - name: Install Go
+      run: |
+           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Tests
       run: |
         sleep 120 
-        go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/cassandra
+        /usr/local/go/bin/go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/cassandra
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
 
@@ -84,13 +85,34 @@ jobs:
           REDIS_URL: redis://redis:6379
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.19'
+    # Using this instead of actions/setup-go to get around an issue with act
+    - name: Install Go
+      run: |
+           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Tests
       run: |
-        go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/redis
+        /usr/local/go/bin/go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/redis
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+
+  nats:
+    runs-on: ubuntu-latest
+    container: madflojo/ubuntu-build
+    services:
+      nats:
+        image: bitnami/nats
+        ports:
+          - 8222
+
+    steps:
+    - uses: actions/checkout@v3
+    # Using this instead of actions/setup-go to get around an issue with act
+    - name: Install Go
+      run: |
+           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+    - name: Execute Tests
+      run: |
+        /usr/local/go/bin/go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/nats
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
 
@@ -98,12 +120,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.19'
+    # Using this instead of actions/setup-go to get around an issue with act
+    - name: Install Go
+      run: |
+           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Tests
-      run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/mock
+      run: /usr/local/go/bin/go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/mock
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
 
@@ -111,12 +133,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.19'
+    # Using this instead of actions/setup-go to get around an issue with act
+    - name: Install Go
+      run: |
+           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Tests
-      run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/hashmap
+      run: /usr/local/go/bin/go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/hashmap
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
 
@@ -124,11 +146,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.19'
+    # Using this instead of actions/setup-go to get around an issue with act
+    - name: Install Go
+      run: |
+           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Tests
-      run: go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/bbolt
+      run: /usr/local/go/bin/go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/bbolt
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

@@ -134,6 +134,8 @@ func (db *Database) Keys() ([]string, error) {
 // HealthCheck performs a health check on the hashmap database.
 // Since the hashmap database is an in-memory implementation, it always returns nil.
 func (db *Database) HealthCheck() error {
+	db.RLock()
+	defer db.RUnlock()
 	if db.data == nil {
 		return hord.ErrNoDial
 	}
