@@ -35,7 +35,7 @@ func BenchmarkDrivers(b *testing.B) {
 			var err error
 			switch driver {
 			case "Redis", "Dragonfly", "KeyDB":
-				server = "redis:6379"
+				server := "redis:6379"
 				// Connect to Dragonfly
 				if driver == "Dragonfly" {
 					server = "dragonfly:6379"
@@ -51,7 +51,7 @@ func BenchmarkDrivers(b *testing.B) {
 					MaxActive:      500,
 					MaxIdle:        100,
 					IdleTimeout:    time.Duration(5) * time.Second,
-					Server:         "redis:6379",
+					Server:         server,
 				})
 				if err != nil {
 					b.Fatalf("Got unexpected error when connecting to Redis - %s", err)
