@@ -1,28 +1,61 @@
-// Package nats is a Hord database driver that interacts with a nats key-value store.
-//
-//	// Connect to NATS
-//	db, err := nats.Dial(&nats.Config{})
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-//	// Setup and Initialize the Keyspace if necessary
-//	err = db.Setup()
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-//	// Write data to the cluster
-//	err = db.Set("mykey", []byte("My Data"))
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-//	// Fetch the same data
-//	d, err := db.Get("mykey")
-//	if err != nil {
-//	  // do stuff
-//	}
+/*
+Package nats provides a Hord database driver for the NATS key-value store.
+
+The NATS driver allows interacting with the NATS key-value store, which is a distributed key-value store built on top of the NATS messaging system. To use this driver, import it as follows:
+
+    import (
+        "github.com/madflojo/hord"
+        "github.com/madflojo/hord/nats"
+    )
+
+Connecting to the Database
+
+Use the Dial() function to create a new client for interacting with the NATS driver.
+
+    var db hord.Database
+    db, err := nats.Dial(nats.Config{})
+    if err != nil {
+        // Handle connection error
+    }
+
+Initialize database
+
+Hord provides a Setup() function for preparing the database. This function is safe to execute after every Dial().
+
+    err := db.Setup()
+    if err != nil {
+        // Handle setup error
+    }
+
+Database Operations
+
+Hord provides a simple abstraction for working with the NATS driver, with easy-to-use methods such as Get() and Set() to read and write values.
+
+Here are some examples demonstrating common usage patterns for the NATS driver.
+
+    // Connect to the NATS database
+    db, err := nats.Dial(nats.Config{})
+    if err != nil {
+        // Handle connection error
+    }
+
+    err := db.Setup()
+    if err != nil {
+        // Handle setup error
+    }
+
+    // Set a value
+    err = db.Set("key", []byte("value"))
+    if err != nil {
+        // Handle error
+    }
+
+    // Retrieve a value
+    value, err := db.Get("key")
+    if err != nil {
+        // Handle error
+    }
+*/
 package nats
 
 import (
@@ -62,7 +95,7 @@ type Config struct {
 	Options nats.Options
 }
 
-// Database is an in-memory NATS implementation of the hord.Database interface.
+// Database is a NATS implementation of the hord.Database interface.
 type Database struct {
 	sync.RWMutex
 
@@ -241,7 +274,6 @@ func (db *Database) Keys() ([]string, error) {
 }
 
 // HealthCheck performs a health check on the NATS database.
-// Since the NATS database is an in-memory implementation, it always returns nil.
 func (db *Database) HealthCheck() error {
 	// Acquire a read lock to ensure data consistency during health check
 	db.RLock()

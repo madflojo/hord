@@ -1,32 +1,59 @@
-// Package hashmap is a Hord database driver that creates a hashmap-based in-memory key-value store.
-//
-//	// Connect to Hashmap
-//	db, err := hashmap.Dial(&hashmap.Config{})
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-//	// Setup and Initialize the Keyspace if necessary
-//	err = db.Setup()
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-//	// Write data to the cluster
-//	err = db.Set("mykey", []byte("My Data"))
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-//	// Fetch the same data
-//	d, err := db.Get("mykey")
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-// The hashmap driver in the Hord package allows you to quickly work with an embedded in-memory hashmap in your Go
-// applications. It provides methods to store and retrieve key-value pairs, enabling efficient goroutine safe data
-// management.
+/*
+Package hashmap provides a Hord database driver for an in-memory hashmap.
+
+The Hashmap driver is a simple, in-memory key-value store that stores data in a hashmap structure. To use this driver, import it as follows:
+
+    import (
+        "github.com/madflojo/hord"
+        "github.com/madflojo/hord/hashmap"
+    )
+
+Connecting to the Database
+
+Use the Dial() function to create a new client for interacting with the hashmap driver.
+
+    var db hord.Database
+    db, err := hashmap.Dial(hashmap.Config{})
+    if err != nil {
+        // Handle connection error
+    }
+
+Initialize database
+
+Hord provides a Setup() function for preparing a database. This function is safe to execute after every Dial().
+
+    err := db.Setup()
+    if err != nil {
+        // Handle setup error
+    }
+
+Database Operations
+
+Hord provides a simple abstraction for working with the hashmap driver, with easy-to-use methods such as Get() and Set() to read and write values.
+
+    // Connect to the hashmap database
+    db, err := hashmap.Dial(hashmap.Config{})
+    if err != nil {
+        // Handle connection error
+    }
+
+    err := db.Setup()
+    if err != nil {
+        // Handle setup error
+    }
+
+    // Set a value
+    err = db.Set("key", []byte("value"))
+    if err != nil {
+        // Handle error
+    }
+
+    // Retrieve a value
+    value, err := db.Get("key")
+    if err != nil {
+        // Handle error
+    }
+*/
 package hashmap
 
 import (

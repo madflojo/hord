@@ -1,32 +1,59 @@
-// Package hashmap is a Hord database driver that creates a hashmap-based in-memory key-value store.
-//
-//	// Connect to Hashmap
-//	db, err := hashmap.Dial(&hashmap.Config{})
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-//	// Setup and Initialize the Keyspace if necessary
-//	err = db.Setup()
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-//	// Write data to the cluster
-//	err = db.Set("mykey", []byte("My Data"))
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-//	// Fetch the same data
-//	d, err := db.Get("mykey")
-//	if err != nil {
-//	  // do stuff
-//	}
-//
-// The hashmap driver in the Hord package allows you to quickly work with an embedded in-memory hashmap in your Go
-// applications. It provides methods to store and retrieve key-value pairs, enabling efficient goroutine safe data
-// management.
+/*
+Package bbolt provides a Hord database driver for BoltDB.
+
+BoltDB is an embedded key-value database that persists data on disk. To use this driver, import it as follows:
+
+    import (
+        "github.com/madflojo/hord"
+        "github.com/madflojo/hord/bbolt"
+    )
+
+Connecting to the Database
+
+Use the Dial() function to create a new client for interacting with BoltDB.
+
+    var db hord.Database
+    db, err := bbolt.Dial(bbolt.Config{})
+    if err != nil {
+        // Handle connection error
+    }
+
+Initialize database
+
+Hord provides a Setup() function for preparing a database. This function is safe to execute after every Dial().
+
+    err := db.Setup()
+    if err != nil {
+        // Handle setup error
+    }
+
+Database Operations
+
+Hord provides a simple abstraction for working with BoltDB, with easy-to-use methods such as Get() and Set() to read and write values.
+
+    // Connect to the BoltDB database
+    db, err := bbolt.Dial(bbolt.Config{})
+    if err != nil {
+        // Handle connection error
+    }
+
+    err := db.Setup()
+    if err != nil {
+        // Handle setup error
+    }
+
+    // Set a value
+    err = db.Set("key", []byte("value"))
+    if err != nil {
+        // Handle error
+    }
+
+    // Retrieve a value
+    value, err := db.Get("key")
+    if err != nil {
+        // Handle error
+    }
+*/
 package bbolt
 
 import (
@@ -54,7 +81,7 @@ type Config struct {
 	Timeout time.Duration
 }
 
-// Database is an embedded bbolt implementation of the hord.Database interface.
+// Database is an bbolt implementation of the hord.Database interface.
 type Database struct {
 	// cfg provides a reference to the dial configuration.
 	cfg Config
@@ -97,7 +124,8 @@ func Dial(cfg Config) (*Database, error) {
 	return db, nil
 }
 
-// Setup sets up the bbolt database. This function does nothing for the bbolt driver.
+// Setup initializes the database by creating the necessary bucket if it doesn't exist.
+// Returns an error if the database is not connected or if there is an error creating the bucket.
 func (db *Database) Setup() error {
 	// Verify DB is connected
 	if db == nil || db.db == nil {
@@ -261,7 +289,6 @@ func (db *Database) Keys() ([]string, error) {
 }
 
 // HealthCheck performs a health check on the bbolt database.
-// Since the bbolt database is an embedded implementation, it always returns nil.
 func (db *Database) HealthCheck() error {
 	// Verify DB is connected
 	if db == nil || db.db == nil {
