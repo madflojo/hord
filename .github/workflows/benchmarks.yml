@@ -71,6 +71,28 @@ jobs:
         sleep 60
         /usr/local/go/bin/go test -run=Benchmark -bench "BenchmarkDrivers/Bench_Redis" ./...
 
+  nats:
+    runs-on: ubuntu-latest
+    container: madflojo/ubuntu-build
+    services:
+      nats:
+        image: madflojo/nats
+        ports:
+          - 8222
+        env:
+          NATS_EXTRA_FLAGS: -js
+
+    steps:
+    - uses: actions/checkout@v3
+    # Using this instead of actions/setup-go to get around an issue with act
+    - name: Install Go
+      run: |
+           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+    - name: Execute Benchmarks
+      run: |
+        sleep 60
+        /usr/local/go/bin/go test -run=Benchmark -bench "BenchmarkDrivers/Bench_NATS" ./...
+
   hashmap:
     runs-on: ubuntu-latest
     container: madflojo/ubuntu-build
