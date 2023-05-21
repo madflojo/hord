@@ -3,58 +3,58 @@ Package nats provides a Hord database driver for the NATS key-value store.
 
 The NATS driver allows interacting with the NATS key-value store, which is a distributed key-value store built on top of the NATS messaging system. To use this driver, import it as follows:
 
-    import (
-        "github.com/madflojo/hord"
-        "github.com/madflojo/hord/nats"
-    )
+	import (
+	    "github.com/madflojo/hord"
+	    "github.com/madflojo/hord/nats"
+	)
 
-Connecting to the Database
+# Connecting to the Database
 
 Use the Dial() function to create a new client for interacting with the NATS driver.
 
-    var db hord.Database
-    db, err := nats.Dial(nats.Config{})
-    if err != nil {
-        // Handle connection error
-    }
+	var db hord.Database
+	db, err := nats.Dial(nats.Config{})
+	if err != nil {
+	    // Handle connection error
+	}
 
-Initialize database
+# Initialize database
 
 Hord provides a Setup() function for preparing the database. This function is safe to execute after every Dial().
 
-    err := db.Setup()
-    if err != nil {
-        // Handle setup error
-    }
+	err := db.Setup()
+	if err != nil {
+	    // Handle setup error
+	}
 
-Database Operations
+# Database Operations
 
 Hord provides a simple abstraction for working with the NATS driver, with easy-to-use methods such as Get() and Set() to read and write values.
 
 Here are some examples demonstrating common usage patterns for the NATS driver.
 
-    // Connect to the NATS database
-    db, err := nats.Dial(nats.Config{})
-    if err != nil {
-        // Handle connection error
-    }
+	// Connect to the NATS database
+	db, err := nats.Dial(nats.Config{})
+	if err != nil {
+	    // Handle connection error
+	}
 
-    err := db.Setup()
-    if err != nil {
-        // Handle setup error
-    }
+	err := db.Setup()
+	if err != nil {
+	    // Handle setup error
+	}
 
-    // Set a value
-    err = db.Set("key", []byte("value"))
-    if err != nil {
-        // Handle error
-    }
+	// Set a value
+	err = db.Set("key", []byte("value"))
+	if err != nil {
+	    // Handle error
+	}
 
-    // Retrieve a value
-    value, err := db.Get("key")
-    if err != nil {
-        // Handle error
-    }
+	// Retrieve a value
+	value, err := db.Get("key")
+	if err != nil {
+	    // Handle error
+	}
 */
 package nats
 

@@ -1,63 +1,63 @@
 /*
 Package hord provides a simple and extensible interface for interacting with various database systems in a uniform way.
 
-Overview
+# Overview
 
 Hord is designed to be a database-agnostic library that provides a common interface for interacting with different database systems. It allows developers to write code that is decoupled from the underlying database technology, making it easier to switch between databases or support multiple databases in the same application.
 
-Usage
+# Usage
 
 To use Hord, import it as follows:
 
-    import "github.com/madflojo/hord"
+	import "github.com/madflojo/hord"
 
-Creating a Database Client
+# Creating a Database Client
 
 To create a database client, you need to import and use the appropriate driver package along with the `hord` package.
 
 For example, to use the Redis driver:
 
-    import (
-        "github.com/madflojo/hord"
-        "github.com/madflojo/hord/redis"
-    )
+	import (
+	    "github.com/madflojo/hord"
+	    "github.com/madflojo/hord/redis"
+	)
 
-    func main() {
-        var db hord.Database
-        db, err := redis.Dial(redis.Config{})
-        if err != nil {
-            // Handle connection error
-        }
+	func main() {
+	    var db hord.Database
+	    db, err := redis.Dial(redis.Config{})
+	    if err != nil {
+	        // Handle connection error
+	    }
 
-        // Use the db client for database operations
-        // ...
-    }
+	    // Use the db client for database operations
+	    // ...
+	}
 
 Each driver provides its own `Dial` function to establish a connection to the database. Refer to the specific driver documentation for more details.
 
-Database Operations
+# Database Operations
 
 Once you have a database client, you can use it to perform various database operations. The API is consistent across different drivers.
 
-    // Set a value
-    err = db.Set("key", []byte("value"))
-    if err != nil {
-        // Handle error
-    }
+	// Set a value
+	err = db.Set("key", []byte("value"))
+	if err != nil {
+	    // Handle error
+	}
 
-    // Retrieve a value
-    value, err := db.Get("key")
-    if err != nil {
-        // Handle error
-    }
+	// Retrieve a value
+	value, err := db.Get("key")
+	if err != nil {
+	    // Handle error
+	}
 
 Refer to the `hord.Database` interface documentation for a complete list of available methods.
 
-Error Handling
+# Error Handling
 
 Hord provides common error types and constants for consistent error handling across drivers. Refer to the `hord` package documentation for more information on error handling.
 
-Contributing
+# Contributing
 
 Contributions to Hord are welcome! If you want to add support for a new database driver or improve the existing codebase, please refer to the contribution guidelines in the project's repository.
 */

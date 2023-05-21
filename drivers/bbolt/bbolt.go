@@ -3,56 +3,56 @@ Package bbolt provides a Hord database driver for BoltDB.
 
 BoltDB is an embedded key-value database that persists data on disk. To use this driver, import it as follows:
 
-    import (
-        "github.com/madflojo/hord"
-        "github.com/madflojo/hord/bbolt"
-    )
+	import (
+	    "github.com/madflojo/hord"
+	    "github.com/madflojo/hord/bbolt"
+	)
 
-Connecting to the Database
+# Connecting to the Database
 
 Use the Dial() function to create a new client for interacting with BoltDB.
 
-    var db hord.Database
-    db, err := bbolt.Dial(bbolt.Config{})
-    if err != nil {
-        // Handle connection error
-    }
+	var db hord.Database
+	db, err := bbolt.Dial(bbolt.Config{})
+	if err != nil {
+	    // Handle connection error
+	}
 
-Initialize database
+# Initialize database
 
 Hord provides a Setup() function for preparing a database. This function is safe to execute after every Dial().
 
-    err := db.Setup()
-    if err != nil {
-        // Handle setup error
-    }
+	err := db.Setup()
+	if err != nil {
+	    // Handle setup error
+	}
 
-Database Operations
+# Database Operations
 
 Hord provides a simple abstraction for working with BoltDB, with easy-to-use methods such as Get() and Set() to read and write values.
 
-    // Connect to the BoltDB database
-    db, err := bbolt.Dial(bbolt.Config{})
-    if err != nil {
-        // Handle connection error
-    }
+	// Connect to the BoltDB database
+	db, err := bbolt.Dial(bbolt.Config{})
+	if err != nil {
+	    // Handle connection error
+	}
 
-    err := db.Setup()
-    if err != nil {
-        // Handle setup error
-    }
+	err := db.Setup()
+	if err != nil {
+	    // Handle setup error
+	}
 
-    // Set a value
-    err = db.Set("key", []byte("value"))
-    if err != nil {
-        // Handle error
-    }
+	// Set a value
+	err = db.Set("key", []byte("value"))
+	if err != nil {
+	    // Handle error
+	}
 
-    // Retrieve a value
-    value, err := db.Get("key")
-    if err != nil {
-        // Handle error
-    }
+	// Retrieve a value
+	value, err := db.Get("key")
+	if err != nil {
+	    // Handle error
+	}
 */
 package bbolt
 
