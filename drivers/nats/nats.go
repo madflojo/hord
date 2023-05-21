@@ -29,7 +29,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"regexp"
-	"strings"
 	"sync"
 
 	"github.com/madflojo/hord"
