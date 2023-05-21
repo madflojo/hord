@@ -19,9 +19,9 @@ Additionally, to facilitate testing, Hord includes a mock driver package that en
 | DynamoDB | Pending ||
 | Hashmap | ✅ ||
 | Mock | ✅ | Mock Database interactions within unit tests |
-| NATS | Pending ||
+| NATS | ✅ | Experimental |
 | Redis | ✅ ||
-| ScyllaDB | ✅ | via Cassandra Driver | 
+| ScyllaDB | ✅ | Experimental | 
 
 ## Usage
 

@@ -2,14 +2,16 @@ package benchmarks
 
 import (
 	"fmt"
+	"os"
+	"testing"
+	"time"
+
 	"github.com/madflojo/hord"
 	"github.com/madflojo/hord/drivers/bbolt"
 	"github.com/madflojo/hord/drivers/cassandra"
 	"github.com/madflojo/hord/drivers/hashmap"
+	"github.com/madflojo/hord/drivers/nats"
 	"github.com/madflojo/hord/drivers/redis"
-	"os"
-	"testing"
-	"time"
 )
 
 func BenchmarkDrivers(b *testing.B) {
@@ -24,7 +26,7 @@ func BenchmarkDrivers(b *testing.B) {
   `)
 
 	// Create a Set of drivers to benchmark
-	drivers := []string{"Redis", "Cassandra", "Hashmap", "BoltDB"}
+	drivers := []string{"Redis", "Cassandra", "Hashmap", "BoltDB", "NATS"}
 
 	// Loop through the various DBs and TestData
 	for _, driver := range drivers {
@@ -51,6 +53,12 @@ func BenchmarkDrivers(b *testing.B) {
 				db, err = cassandra.Dial(cassandra.Config{Hosts: hosts, Keyspace: "hord"})
 				if err != nil {
 					b.Fatalf("Got unexpected error when connecting to a cassandra cluster - %s", err)
+				}
+
+			case "NATS":
+				db, err = nats.Dial(nats.Config{URL: "nats", Bucket: "hord"})
+				if err != nil {
+					b.Fatalf("Got unexpected error when connecting to nats - %s", err)
 				}
 
 			case "Hashmap":
