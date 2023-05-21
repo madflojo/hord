@@ -63,7 +63,7 @@ type Database struct {
 // Dial initializes and returns a new NATS database instance.
 func Dial(cfg Config) (*Database, error) {
 	var err error
-	db := &Database{}
+	db := &Database{bucket: cfg.Bucket}
 
 	// Connect to the NATS server
 	db.conn, err = nats.Connect(cfg.URL)
