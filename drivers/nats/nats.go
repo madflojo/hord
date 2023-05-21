@@ -102,7 +102,8 @@ func Dial(cfg Config) (*Database, error) {
 
 // Setup sets up the nats database. This function does nothing for the nats driver.
 func (db *Database) Setup() error {
-	if err := db.HealthCheck; err != nil {
+	err := db.HealthCheck()
+	if err != nil {
 		return fmt.Errorf("could not setup database, unhealthy - %s", err)
 	}
 	return nil

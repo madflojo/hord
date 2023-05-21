@@ -2,14 +2,16 @@ package benchmarks
 
 import (
 	"fmt"
+	"os"
+	"testing"
+	"time"
+
 	"github.com/madflojo/hord"
 	"github.com/madflojo/hord/drivers/bbolt"
 	"github.com/madflojo/hord/drivers/cassandra"
 	"github.com/madflojo/hord/drivers/hashmap"
+	"github.com/madflojo/hord/drivers/nats"
 	"github.com/madflojo/hord/drivers/redis"
-	"os"
-	"testing"
-	"time"
 )
 
 func BenchmarkDrivers(b *testing.B) {
