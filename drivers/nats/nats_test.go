@@ -29,7 +29,7 @@ func TestNATSConnectivity(t *testing.T) {
 			passSetup: true,
 			cfg: Config{
 				Bucket:  "test",
-				Servers: []string{"nats://nats:8222", "nats://nats:8222"},
+				Servers: []string{"nats://nats", "nats://nats"},
 			},
 		},
 		"No JetStream Config": {
