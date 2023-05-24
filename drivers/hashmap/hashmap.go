@@ -57,31 +57,83 @@ Hord provides a simple abstraction for working with the hashmap driver, with eas
 package hashmap
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
 	"sync"
 
 	"github.com/madflojo/hord"
+	"gopkg.in/yaml.v3"
 )
 
 // Config represents the configuration for the hashmap database.
-type Config struct{}
+type Config struct {
+	// Filename is an optional parameter that accepts the path to a YAML or JSON file to read/write data
+	Filename string
+}
 
 // Database is an in-memory hashmap implementation of the hord.Database interface.
 type Database struct {
 	sync.RWMutex
 
+	config Config
+
 	// data is used to store data in a simple map
-	data map[string][]byte
+	data map[string]ByteSlice
 }
 
 // Dial initializes and returns a new hashmap database instance.
-func Dial(_ Config) (*Database, error) {
-	db := &Database{}
-	db.data = make(map[string][]byte)
+func Dial(conf Config) (*Database, error) {
+	if conf.Filename != "" {
+		switch filepath.Ext(conf.Filename) {
+		case ".yaml", ".yml", ".json":
+		default:
+			return nil, errors.New("filename must have yaml, yml, or json extension")
+		}
+	}
+
+	db := &Database{config: conf}
+	db.data = make(map[string]ByteSlice)
 	return db, nil
 }
 
-// Setup sets up the hashmap database. This function does nothing for the hashmap driver.
+// Setup sets up the hashmap database. If file storage is enabled, this will load from the file or create it if it does not exist.
 func (db *Database) Setup() error {
+	if db.config.Filename == "" {
+		return nil
+	}
+
+	db.Lock()
+	defer db.Unlock()
+
+	// check file and create if it does not exist
+	file, err := os.OpenFile(db.config.Filename, os.O_RDONLY|os.O_CREATE, 0755)
+	if err != nil {
+		return fmt.Errorf("error checking file %q: %w", db.config.Filename, err)
+	}
+	defer file.Close()
+
+	data, err := io.ReadAll(file)
+	if err != nil {
+		return fmt.Errorf("unable to read local file: %w", err)
+	}
+
+	switch filepath.Ext(db.config.Filename) {
+	case ".json":
+		// json fails to read empty input
+		if len(data) != 0 {
+			err = json.Unmarshal(data, &db.data)
+		}
+	case ".yaml", ".yml":
+		err = yaml.Unmarshal(data, &db.data)
+	}
+	if err != nil {
+		return fmt.Errorf("unable to unmarshal data from file: %w", err)
+	}
+
 	return nil
 }
 
@@ -123,7 +175,7 @@ func (db *Database) Set(key string, data []byte) error {
 	}
 
 	db.data[key] = data
-	return nil
+	return db.saveToLocalFile()
 }
 
 // Delete removes data from the hashmap database based on the provided key.
@@ -140,7 +192,7 @@ func (db *Database) Delete(key string) error {
 	}
 
 	delete(db.data, key)
-	return nil
+	return db.saveToLocalFile()
 }
 
 // Keys retrieves a list of keys stored in the hashmap database.
@@ -167,12 +219,41 @@ func (db *Database) HealthCheck() error {
 		return hord.ErrNoDial
 	}
 
+	if db.config.Filename != "" {
+		_, err := os.Stat(db.config.Filename)
+		if err != nil {
+			return fmt.Errorf("error checking if file exists: %w", err)
+		}
+	}
+
 	return nil
 }
 
-// Close closes the hashmap database connection and clears all stored data.
+// Close closes the hashmap database connection and clears all stored data from memory (file remains if used).
 func (db *Database) Close() {
 	db.Lock()
 	defer db.Unlock()
 	db.data = nil
+}
+
+// saveToLocalFile is a helper function for methods that change the data (Set, Delete) and should
+// only be used after acquiring Write lock
+func (db *Database) saveToLocalFile() error {
+	if db.config.Filename == "" {
+		return nil
+	}
+
+	var err error
+	var content []byte
+	switch filepath.Ext(db.config.Filename) {
+	case ".json":
+		content, err = json.Marshal(db.data)
+	case ".yaml", ".yml":
+		content, err = yaml.Marshal(db.data)
+	}
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(db.config.Filename, content, 0755)
 }
