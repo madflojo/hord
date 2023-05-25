@@ -1,0 +1,15 @@
+data_json: '{"float":1.5,"integer":1,"integer_array":[1,2,3],"object":{"key":"value"},"string":"string","string_array":["a","b","c"]}'
+data_yaml: |
+    float: 1.5
+    integer: 1
+    integer_array:
+        - 1
+        - 2
+        - 3
+    object:
+        key: value
+    string: string
+    string_array:
+        - a
+        - b
+        - c

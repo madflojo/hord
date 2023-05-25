@@ -8,6 +8,7 @@ require (
 	github.com/gomodule/redigo v1.8.9
 	github.com/nats-io/nats.go v1.25.0
 	go.etcd.io/bbolt v1.3.7
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (

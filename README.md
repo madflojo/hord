@@ -25,7 +25,7 @@ Hord is designed to be a database-agnostic library that provides a common interf
 | [BoltDB](https://github.com/etcd-io/bbolt) | ✅ | | |
 | [Cassandra](https://cassandra.apache.org/) | ✅ | | [ScyllaDB](https://www.scylladb.com/), [YugabyteDB](https://www.yugabyte.com/), [Azure Cosmos DB](https://learn.microsoft.com/en-us/azure/cosmos-db/introduction) |
 | [Couchbase](https://www.couchbase.com/) | Pending |||
-| Hashmap | ✅ |||
+| Hashmap | ✅ | Optionally allows storing to YAML or JSON file ||
 | Mock | ✅ | Mock Database interactions within unit tests ||
 | [NATS](https://nats.io/) | ✅ | Experimental ||
 | [Redis](https://redis.io/) | ✅ || [Dragonfly](https://www.dragonflydb.io/), [KeyDB](https://docs.keydb.dev/) |

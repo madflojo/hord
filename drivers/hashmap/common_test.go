@@ -3,6 +3,7 @@ package hashmap
 import (
 	"context"
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -12,6 +13,14 @@ import (
 func TestInterfaceHappyPath(t *testing.T) {
 	cfgs := make(map[string]Config)
 	cfgs["Hashmap"] = Config{}
+	cfgs["HashmapWithJSONStorage"] = Config{
+		Filename: "testdata/common_test.json",
+	}
+	cfgs["HashmapWithYAMLStorage"] = Config{
+		Filename: "testdata/common_test.yml",
+	}
+	defer os.RemoveAll("testdata/common_test.json")
+	defer os.RemoveAll("testdata/common_test.yml")
 
 	// Loop through valid Configs and validate the driver adheres to the Hord interface
 	for name, cfg := range cfgs {
