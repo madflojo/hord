@@ -252,8 +252,13 @@ func (db *Database) saveToLocalFile() error {
 		content, err = yaml.Marshal(db.data)
 	}
 	if err != nil {
-		return err
+		return fmt.Errorf("error marshalling data: %w", err)
 	}
 
-	return os.WriteFile(db.config.Filename, content, 0755)
+	err = os.WriteFile(db.config.Filename, content, 0755)
+	if err != nil {
+		return fmt.Errorf("error writing data to file %q: %w", db.config.Filename, err)
+	}
+
+	return nil
 }
