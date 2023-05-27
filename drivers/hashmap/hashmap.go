@@ -110,7 +110,7 @@ func (db *Database) Setup() error {
 	defer db.Unlock()
 
 	// check file and create if it does not exist
-	file, err := os.OpenFile(db.config.Filename, os.O_RDONLY|os.O_CREATE, 0755)
+	file, err := os.OpenFile(db.config.Filename, os.O_RDONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return fmt.Errorf("error checking file %q: %w", db.config.Filename, err)
 	}
