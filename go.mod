@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/FZambia/sentinel v1.1.1
-	github.com/gocql/gocql v1.4.0
+	github.com/gocql/gocql v1.6.0
 	github.com/gomodule/redigo v1.8.9
 	github.com/nats-io/nats.go v1.31.0
 	go.etcd.io/bbolt v1.3.7
