@@ -34,7 +34,7 @@ func TestConnectivity(t *testing.T) {
 		}
 	})
 
-	t.Run("Fake TLS", func(t *testing.T) {
+	t.Run("Fake TLS", func(_ *testing.T) {
 		_, _ = Dial(Config{
 			ConnectTimeout: time.Duration(5) * time.Second,
 			Server:         "redis:6379",
