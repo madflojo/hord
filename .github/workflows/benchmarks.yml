@@ -41,7 +41,7 @@ jobs:
     # Using this instead of actions/setup-go to get around an issue with act
     - name: Install Go
       run: |
-           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+           curl -L https://go.dev/dl/go1.22.0.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Benchmarks
       run: |
         sleep 120
@@ -65,7 +65,7 @@ jobs:
     # Using this instead of actions/setup-go to get around an issue with act
     - name: Install Go
       run: |
-           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+           curl -L https://go.dev/dl/go1.22.0.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Benchmarks
       run: |
         sleep 60
@@ -82,7 +82,7 @@ jobs:
     # Using this instead of actions/setup-go to get around an issue with act
     - name: Install Go
       run: |
-           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+           curl -L https://go.dev/dl/go1.22.0.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Benchmarks
       run: |
         sleep 60
@@ -104,7 +104,7 @@ jobs:
     # Using this instead of actions/setup-go to get around an issue with act
     - name: Install Go
       run: |
-           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+           curl -L https://go.dev/dl/go1.22.0.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Benchmarks
       run: |
         sleep 60
@@ -118,7 +118,7 @@ jobs:
     # Using this instead of actions/setup-go to get around an issue with act
     - name: Install Go
       run: |
-           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+           curl -L https://go.dev/dl/go1.22.0.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Benchmarks
       run: /usr/local/go/bin/go test -run=Benchmark -bench "BenchmarkDrivers/Bench_Hashmap" ./...
 
@@ -130,6 +130,6 @@ jobs:
     # Using this instead of actions/setup-go to get around an issue with act
     - name: Install Go
       run: |
-           curl -L https://go.dev/dl/go1.19.9.linux-amd64.tar.gz | tar -C /usr/local -xzf -
+           curl -L https://go.dev/dl/go1.22.0.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Benchmarks
       run: /usr/local/go/bin/go test -run=Benchmark -bench "BenchmarkDrivers/Bench_BoltDB" ./...
