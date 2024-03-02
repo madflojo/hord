@@ -205,7 +205,7 @@ func Dial(conf Config) (*Database, error) {
 			return c, nil
 		},
 		// Used to Test the provided connection
-		TestOnBorrow: func(c redis.Conn, t time.Time) error {
+		TestOnBorrow: func(c redis.Conn, _ time.Time) error {
 			if !sentinel.TestRole(c, "master") {
 				return fmt.Errorf("server is not a master")
 			}

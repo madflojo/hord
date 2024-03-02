@@ -79,7 +79,7 @@ func TestMocking(t *testing.T) {
 			return []byte{}, hord.ErrNil
 		},
 		// Create a fake SET function
-		SetFunc: func(key string, data []byte) error {
+		SetFunc: func(key string, _ []byte) error {
 			if key == "works" {
 				return nil
 			}
