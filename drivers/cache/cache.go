@@ -80,7 +80,6 @@ Hord provides a simple abstraction for working with the cache, with easy-to-use 
 	    // Handle error
 	}
 */
-
 package cache
 
 import (
@@ -179,7 +178,12 @@ func (db *Cache) Get(key string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.cache.Set(key, data)
+
+	// Update the cache
+	err = db.cache.Set(key, data)
+	if err != nil {
+		return data, err
+	}
 
 	return data, nil
 }
