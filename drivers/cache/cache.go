@@ -127,6 +127,10 @@ func Dial(cfg Config) (*Cache, error) {
 
 // Setup will run the Setup function for both the database and the cache.
 func (db *Cache) Setup() error {
+	if db == nil || db.data == nil || db.cache == nil {
+		return hord.ErrNoDial
+	}
+
 	if err := db.data.Setup(); err != nil {
 		return err
 	}
@@ -140,6 +144,10 @@ func (db *Cache) Setup() error {
 
 // HealthCheck will run the HealthCheck function for both the database and the cache.
 func (db *Cache) HealthCheck() error {
+	if db == nil || db.data == nil || db.cache == nil {
+		return hord.ErrNoDial
+	}
+
 	dataErr := db.data.HealthCheck()
 	cacheErr := db.cache.HealthCheck()
 
@@ -154,6 +162,10 @@ func (db *Cache) HealthCheck() error {
 
 // Get will get the data from the database. It uses a look-aside pattern to store the data in the cache if it is not already there.
 func (db *Cache) Get(key string) ([]byte, error) {
+	if db == nil || db.data == nil || db.cache == nil {
+		return nil, hord.ErrNoDial
+	}
+
 	// Check the cache first
 	data, err := db.cache.Get(key)
 	if (err != nil) && !errors.Is(err, hord.ErrNil) {
@@ -174,6 +186,10 @@ func (db *Cache) Get(key string) ([]byte, error) {
 
 // Set will set the data in both the data and cache databases.
 func (db *Cache) Set(key string, data []byte) error {
+	if db == nil || db.data == nil || db.cache == nil {
+		return hord.ErrNoDial
+	}
+
 	err := db.data.Set(key, data)
 	if err != nil {
 		return err
@@ -190,6 +206,10 @@ func (db *Cache) Set(key string, data []byte) error {
 
 // Delete will delete the data from both the data and cache databases.
 func (db *Cache) Delete(key string) error {
+	if db == nil || db.data == nil || db.cache == nil {
+		return hord.ErrNoDial
+	}
+
 	dataErr := db.data.Delete(key)
 	cacheErr := db.cache.Delete(key)
 
@@ -204,11 +224,17 @@ func (db *Cache) Delete(key string) error {
 
 // Keys will return the keys from the data database.
 func (db *Cache) Keys() ([]string, error) {
+	if db == nil || db.data == nil || db.cache == nil {
+		return nil, hord.ErrNoDial
+	}
+
 	return db.data.Keys()
 }
 
 // Close will close the connections to both the database and the cache.
 func (db *Cache) Close() {
-	db.data.Close()
-	db.cache.Close()
+	if db != nil && db.data != nil && db.cache != nil {
+		db.data.Close()
+		db.cache.Close()
+	}
 }
