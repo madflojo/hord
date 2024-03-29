@@ -191,10 +191,18 @@ func TestGet(t *testing.T) {
 				return nil, hord.ErrNil
 			case "cache-error":
 				return nil, ErrCacheTest
+			case "cache-write-error":
+				return nil, hord.ErrNil
 			case "database-error":
 				return nil, hord.ErrNil
 			}
 			return nil, errors.New("Unexpected Cache Error")
+		},
+		SetFunc: func(key string, data []byte) error {
+			if key == "cache-write-error" {
+				return ErrCacheTest
+			}
+			return nil
 		},
 	}
 	databaseConfig := mock.Config{
@@ -206,6 +214,8 @@ func TestGet(t *testing.T) {
 				return []byte("database-data"), nil
 			case "cache-error":
 				return nil, errors.New("Expected Cache Error")
+			case "cache-write-error":
+				return nil, nil
 			case "database-error":
 				return nil, ErrDatabaseTest
 			}
@@ -230,6 +240,11 @@ func TestGet(t *testing.T) {
 		},
 		"Cache Error": {
 			key:           "cache-error",
+			expectedError: ErrCacheTest,
+			expectedData:  nil,
+		},
+		"Cache Write Error": {
+			key:           "cache-write-error",
 			expectedError: ErrCacheTest,
 			expectedData:  nil,
 		},
