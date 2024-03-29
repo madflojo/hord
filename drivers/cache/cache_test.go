@@ -198,7 +198,7 @@ func TestGet(t *testing.T) {
 			}
 			return nil, errors.New("Unexpected Cache Error")
 		},
-		SetFunc: func(key string, data []byte) error {
+		SetFunc: func(key string, _ []byte) error {
 			if key == "cache-write-error" {
 				return ErrCacheTest
 			}
