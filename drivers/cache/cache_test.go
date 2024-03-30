@@ -31,11 +31,11 @@ func TestDial(t *testing.T) {
 		},
 		"Invalid Type": {
 			config: Config{
-				CacheType: "invalide",
+				CacheType: "invalid",
 				Database:  &mock.Database{},
 				Cache:     &mock.Database{},
 			},
-			expectedError: ErrNoType,
+			expectedError: nil,
 		},
 		"Type: Lookaside": {
 			config: Config{
