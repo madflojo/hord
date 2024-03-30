@@ -34,16 +34,19 @@ func TestInterfaceHappyPath(t *testing.T) {
 
 	// Setup Configurations
 	cfgs := map[string]struct {
-		cacheType string
-		dbType    string
+		cacheType   string
+		dbType      string
+		cacheMethod Type
 	}{
 		"Redis + Cassandra": {
-			cacheType: "redis",
-			dbType:    "cassandra",
+			cacheType:   "redis",
+			dbType:      "cassandra",
+			cacheMethod: Lookaside,
 		},
 		"Redis + Hashmap": {
-			cacheType: "redis",
-			dbType:    "hashmap",
+			cacheType:   "redis",
+			dbType:      "hashmap",
+			cacheMethod: Lookaside,
 		},
 	}
 
@@ -63,8 +66,9 @@ func TestInterfaceHappyPath(t *testing.T) {
 
 			// Establish Connectivity
 			db, err := Dial(Config{
-				Cache:    cache,
-				Database: database,
+				Cache:     cache,
+				Database:  database,
+				CacheType: cfg.cacheMethod,
 			})
 			if err != nil {
 				t.Fatalf("Failed to connect to database - %s", err)
@@ -316,10 +320,17 @@ func TestInterfaceFail(t *testing.T) {
 	// Setup Invalid Configurations
 	cfgs := make(map[string]Config)
 	cfgs["Missing Cache"] = Config{
-		Database: cass,
+		Database:  cass,
+		CacheType: Lookaside,
 	}
 	cfgs["Missing Database"] = Config{
-		Cache: redis,
+		Cache:     redis,
+		CacheType: Lookaside,
+	}
+	cfgs["Invalid Type"] = Config{
+		Cache:     redis,
+		Database:  cass,
+		CacheType: "invalid",
 	}
 
 	// Loop through invalid Configs and validate the driver reacts appropriately

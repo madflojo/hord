@@ -1,5 +1,5 @@
 /*
-Package cache provides a Hord database driver for a look-aside cache. To use this driver, import it as follows:
+Package cache provides a Hord database driver for a variety of caching strategies. To use this driver, import it as follows:
 
 	import (
 	    "github.com/madflojo/hord"
@@ -22,6 +22,7 @@ Use the Dial() function to create a new client for interacting with the cache.
 	db, err := cache.Dial(cache.Config{
 		Database: database,
 		Cache: 	  cache,
+		Type:	 cache.Lookaside,
 	})
 	if err != nil {
 	    // Handle connection error
@@ -58,6 +59,7 @@ Hord provides a simple abstraction for working with the cache, with easy-to-use 
 	db, err := cache.Dial(cache.Config{
 		Database: database,
 		Cache: 	  cache,
+		Type:	 cache.Lookaside,
 	})
 	if err != nil {
 	    // Handle connection error
@@ -86,159 +88,44 @@ import (
 	"errors"
 
 	"github.com/madflojo/hord"
+	"github.com/madflojo/hord/drivers/cache/lookaside"
+)
+
+// CacheType is the type of cache to use.
+type Type string
+
+const (
+	Lookaside Type = "lookaside"
+	None      Type = "none"
 )
 
 // Config provides the configuration options for the Cache driver.
 type Config struct {
-	Database hord.Database
-	Cache    hord.Database
-}
-
-// Cache is used to store data in a look-aside caching pattern. It also satisfies the Hord database interface.
-type Cache struct {
-	data  hord.Database
-	cache hord.Database
+	CacheType Type
+	Database  hord.Database
+	Cache     hord.Database
 }
 
 var (
-	// ErrInvalidDatabase is returned when a database is nil.
-	ErrInvalidDatabase = errors.New("database cannot be nil")
-
-	// ErrInvalidCache is returned when a cache is nil.
-	ErrInvalidCache = errors.New("cache cannot be nil")
+	// ErrNoType is returned when the CacheType is invalid.
+	ErrNoType = errors.New("invalid CacheType")
 )
 
-// Dial will create a new Cache driver using the provided Config. It will return an error if either the Database or Cache values in Config are nil.
-func Dial(cfg Config) (*Cache, error) {
-	if cfg.Database == nil {
-		return nil, ErrInvalidDatabase
+// Dial will create a new Cache driver using the provided Config. It will return an error if either the Database or Cache values in Config are nil or if a CacheType is not specified.
+func Dial(cfg Config) (hord.Database, error) {
+	if (cfg.Database == nil) || (cfg.Cache == nil) {
+		return nil, hord.ErrInvalidDatabase
 	}
 
-	if cfg.Cache == nil {
-		return nil, ErrInvalidCache
-	}
-
-	return &Cache{
-		data:  cfg.Database,
-		cache: cfg.Cache,
-	}, nil
-}
-
-// Setup will run the Setup function for both the database and the cache.
-func (db *Cache) Setup() error {
-	if db == nil || db.data == nil || db.cache == nil {
-		return hord.ErrNoDial
-	}
-
-	if err := db.data.Setup(); err != nil {
-		return err
-	}
-
-	if err := db.cache.Setup(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// HealthCheck will run the HealthCheck function for both the database and the cache.
-func (db *Cache) HealthCheck() error {
-	if db == nil || db.data == nil || db.cache == nil {
-		return hord.ErrNoDial
-	}
-
-	dataErr := db.data.HealthCheck()
-	cacheErr := db.cache.HealthCheck()
-
-	if dataErr != nil {
-		return dataErr
-	} else if cacheErr != nil {
-		return cacheErr
-	}
-
-	return nil
-}
-
-// Get will get the data from the database. It uses a look-aside pattern to store the data in the cache if it is not already there.
-func (db *Cache) Get(key string) ([]byte, error) {
-	if db == nil || db.data == nil || db.cache == nil {
-		return nil, hord.ErrNoDial
-	}
-
-	// Check the cache first
-	data, err := db.cache.Get(key)
-	if (err != nil) && !errors.Is(err, hord.ErrNil) {
-		return nil, err
-	} else if !errors.Is(err, hord.ErrNil) {
-		return data, nil
-	}
-
-	// Check the data database
-	data, err = db.data.Get(key)
-	if err != nil {
-		return nil, err
-	}
-
-	// Update the cache
-	err = db.cache.Set(key, data)
-	if err != nil {
-		return data, err
-	}
-
-	return data, nil
-}
-
-// Set will set the data in both the data and cache databases.
-func (db *Cache) Set(key string, data []byte) error {
-	if db == nil || db.data == nil || db.cache == nil {
-		return hord.ErrNoDial
-	}
-
-	err := db.data.Set(key, data)
-	if err != nil {
-		return err
-	}
-
-	// Update cache only if database Set was successful
-	err = db.cache.Set(key, data)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// Delete will delete the data from both the data and cache databases.
-func (db *Cache) Delete(key string) error {
-	if db == nil || db.data == nil || db.cache == nil {
-		return hord.ErrNoDial
-	}
-
-	dataErr := db.data.Delete(key)
-	cacheErr := db.cache.Delete(key)
-
-	if dataErr != nil {
-		return dataErr
-	} else if cacheErr != nil {
-		return cacheErr
-	}
-
-	return nil
-}
-
-// Keys will return the keys from the data database.
-func (db *Cache) Keys() ([]string, error) {
-	if db == nil || db.data == nil || db.cache == nil {
-		return nil, hord.ErrNoDial
-	}
-
-	return db.data.Keys()
-}
-
-// Close will close the connections to both the database and the cache.
-func (db *Cache) Close() {
-	if db != nil && db.data != nil && db.cache != nil {
-		db.data.Close()
-		db.cache.Close()
+	switch cfg.CacheType {
+	case Lookaside:
+		return lookaside.Dial(lookaside.Config{
+			Database: cfg.Database,
+			Cache:    cfg.Cache,
+		})
+	case None:
+		return cfg.Database, nil
+	default:
+		return nil, ErrNoType
 	}
 }
