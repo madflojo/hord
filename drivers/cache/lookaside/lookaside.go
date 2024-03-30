@@ -84,6 +84,7 @@ package lookaside
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/madflojo/hord"
 )
@@ -169,7 +170,7 @@ func (db *Lookaside) Get(key string) ([]byte, error) {
 	// Update the cache
 	err = db.cache.Set(key, data)
 	if err != nil {
-		return data, err
+		return data, fmt.Errorf("%w: %w", hord.ErrCacheError, err)
 	}
 
 	return data, nil

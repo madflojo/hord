@@ -104,6 +104,7 @@ var (
 	ErrNil             = fmt.Errorf("Nil value returned from database")
 	ErrNoDial          = fmt.Errorf("No database connection defined, did you dial?")
 	ErrInvalidDatabase = fmt.Errorf("Database cannot be nil")
+	ErrCacheError      = fmt.Errorf("Cache error")
 )
 
 // ValidKey checks if a key is valid.

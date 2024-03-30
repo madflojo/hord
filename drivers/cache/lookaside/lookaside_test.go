@@ -248,6 +248,11 @@ func TestGet(t *testing.T) {
 			expectedError: ErrCacheTest,
 			expectedData:  nil,
 		},
+		"Cache Write Wrapper Error": {
+			key:           "cache-write-error",
+			expectedError: hord.ErrCacheError,
+			expectedData:  nil,
+		},
 		"Database Error": {
 			key:           "database-error",
 			expectedError: ErrDatabaseTest,
