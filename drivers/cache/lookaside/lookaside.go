@@ -101,7 +101,7 @@ type Lookaside struct {
 	cache hord.Database
 }
 
-func Dial(cfg Config) (hord.Database, error) {
+func Dial(cfg Config) (*Lookaside, error) {
 	if (cfg.Database == nil) || (cfg.Cache == nil) {
 		return nil, hord.ErrInvalidDatabase
 	}

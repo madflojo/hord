@@ -8,7 +8,6 @@ import (
 	"github.com/madflojo/hord"
 	"github.com/madflojo/hord/drivers/cassandra"
 	"github.com/madflojo/hord/drivers/hashmap"
-	"github.com/madflojo/hord/drivers/mock"
 	"github.com/madflojo/hord/drivers/redis"
 )
 
@@ -308,17 +307,15 @@ func TestInterfaceHappyPath(t *testing.T) {
 
 func TestInterfaceFail(t *testing.T) {
 	// Setup Redis, Cassandra Test Databases
-	redis := mock.Database{}
-	// redis, err := DialFromName("redis")
-	// if err != nil {
-	// 	t.Fatalf("Failed to connect to Redis - %s", err)
-	// }
+	redis, err := DialFromName("redis")
+	if err != nil {
+		t.Fatalf("Failed to connect to Redis - %s", err)
+	}
 
-	cass := mock.Database{}
-	// cass, err := DialFromName("cassandra")
-	// if err != nil {
-	// 	t.Fatalf("Failed to connect to Cassandra - %s", err)
-	// }
+	cass, err := DialFromName("cassandra")
+	if err != nil {
+		t.Fatalf("Failed to connect to Cassandra - %s", err)
+	}
 
 	// Setup Invalid Configurations
 	cfgs := make(map[string]Config)

@@ -16,7 +16,7 @@ var (
 )
 
 // setupCache is a helper function to create a new Cache driver using the provided database and cache Config.
-func setupCache(cacheConfig mock.Config, databaseConfig mock.Config) (hord.Database, error) {
+func setupCache(cacheConfig mock.Config, databaseConfig mock.Config) (*Lookaside, error) {
 	database, err := mock.Dial(databaseConfig)
 	if err != nil {
 		return nil, err
@@ -450,6 +450,74 @@ func TestKeys(t *testing.T) {
 	}
 	if keys[0] != "database-key" {
 		t.Errorf("Keys() returned data: %v, expected %v", keys, []string{"database-key"})
+	}
+}
+
+func TestCacheKeys(t *testing.T) {
+
+	t.Run("Happy Path", func(t *testing.T) {
+		databaseConfig := mock.Config{
+			KeysFunc: func() ([]string, error) {
+				return []string{"database-key"}, nil
+			},
+		}
+		cacheConfig := mock.Config{
+			KeysFunc: func() ([]string, error) {
+				return []string{"cache-key"}, nil
+			},
+		}
+
+		db, err := setupCache(cacheConfig, databaseConfig)
+		if err != nil {
+			t.Fatalf("Failed to connect to database - %s", err)
+		}
+
+		keys, err := db.CacheKeys()
+		if err != nil {
+			t.Errorf("Keys() returned error: %s", err)
+		}
+		if keys[0] != "cache-key" {
+			t.Errorf("Keys() returned data: %v, expected %v", keys, []string{"cache-key"})
+		}
+	})
+
+	t.Run("Nil Test", func(t *testing.T) {
+		var db *Lookaside
+
+		_, err := db.CacheKeys()
+		if err != hord.ErrNoDial {
+			t.Errorf("Keys() returned error: %s, expected %s", err, hord.ErrNoDial)
+		}
+	})
+}
+
+func TestGetCache(t *testing.T) {
+	databaseConfig := mock.Config{}
+	cacheConfig := mock.Config{}
+
+	db, err := setupCache(cacheConfig, databaseConfig)
+	if err != nil {
+		t.Fatalf("Failed to connect to database - %s", err)
+	}
+
+	cache := db.GetCache()
+	if cache == nil {
+		t.Fatalf("Failed to get cache")
+	}
+}
+
+func TestGetDatabase(t *testing.T) {
+	databaseConfig := mock.Config{}
+	cacheConfig := mock.Config{}
+
+	db, err := setupCache(cacheConfig, databaseConfig)
+	if err != nil {
+		t.Fatalf("Failed to connect to database - %s", err)
+	}
+
+	database := db.GetDatabase()
+	if database == nil {
+		t.Fatalf("Failed to get database")
 	}
 }
 

@@ -45,6 +45,14 @@ func TestDial(t *testing.T) {
 			},
 			expectedError: nil,
 		},
+		"Type: None": {
+			config: Config{
+				Type:     None,
+				Database: &mock.Database{},
+				Cache:    &mock.Database{},
+			},
+			expectedError: nil,
+		},
 	}
 
 	for name, test := range unitTests {
@@ -55,4 +63,27 @@ func TestDial(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestNilCache(t *testing.T) {
+	nc := &NilCache{}
+	if err := nc.Setup(); !errors.Is(err, hord.ErrNoDial) {
+		t.Errorf("NilCache.Setup() returned error: %s, expected %s", err, hord.ErrNoDial)
+	}
+	if err := nc.HealthCheck(); !errors.Is(err, hord.ErrNoDial) {
+		t.Errorf("NilCache.HealthCheck() returned error: %s, expected %s", err, hord.ErrNoDial)
+	}
+	if _, err := nc.Get(""); !errors.Is(err, hord.ErrNoDial) {
+		t.Errorf("NilCache.Get() returned error: %s, expected %s", err, hord.ErrNoDial)
+	}
+	if err := nc.Set("", nil); !errors.Is(err, hord.ErrNoDial) {
+		t.Errorf("NilCache.Set() returned error: %s, expected %s", err, hord.ErrNoDial)
+	}
+	if err := nc.Delete(""); !errors.Is(err, hord.ErrNoDial) {
+		t.Errorf("NilCache.Delete() returned error: %s, expected %s", err, hord.ErrNoDial)
+	}
+	if _, err := nc.Keys(); !errors.Is(err, hord.ErrNoDial) {
+		t.Errorf("NilCache.Keys() returned error: %s, expected %s", err, hord.ErrNoDial)
+	}
+	nc.Close()
 }
