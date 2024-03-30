@@ -114,7 +114,7 @@ func Dial(cfg Config) (hord.Database, error) {
 
 // Setup will run the Setup function for both the database and the cache.
 func (db *Lookaside) Setup() error {
-	if db == nil || db.data == nil || db.cache == nil {
+	if db.data == nil || db.cache == nil {
 		return hord.ErrNoDial
 	}
 
