@@ -8,6 +8,7 @@ import (
 	"github.com/madflojo/hord"
 	"github.com/madflojo/hord/drivers/cassandra"
 	"github.com/madflojo/hord/drivers/hashmap"
+	"github.com/madflojo/hord/drivers/mock"
 	"github.com/madflojo/hord/drivers/redis"
 )
 
@@ -66,9 +67,9 @@ func TestInterfaceHappyPath(t *testing.T) {
 
 			// Establish Connectivity
 			db, err := Dial(Config{
-				Cache:     cache,
-				Database:  database,
-				CacheType: cfg.cacheMethod,
+				Cache:    cache,
+				Database: database,
+				Type:     cfg.cacheMethod,
 			})
 			if err != nil {
 				t.Fatalf("Failed to connect to database - %s", err)
@@ -307,30 +308,32 @@ func TestInterfaceHappyPath(t *testing.T) {
 
 func TestInterfaceFail(t *testing.T) {
 	// Setup Redis, Cassandra Test Databases
-	redis, err := DialFromName("redis")
-	if err != nil {
-		t.Fatalf("Failed to connect to Redis - %s", err)
-	}
+	redis := mock.Database{}
+	// redis, err := DialFromName("redis")
+	// if err != nil {
+	// 	t.Fatalf("Failed to connect to Redis - %s", err)
+	// }
 
-	cass, err := DialFromName("cassandra")
-	if err != nil {
-		t.Fatalf("Failed to connect to Cassandra - %s", err)
-	}
+	cass := mock.Database{}
+	// cass, err := DialFromName("cassandra")
+	// if err != nil {
+	// 	t.Fatalf("Failed to connect to Cassandra - %s", err)
+	// }
 
 	// Setup Invalid Configurations
 	cfgs := make(map[string]Config)
 	cfgs["Missing Cache"] = Config{
-		Database:  cass,
-		CacheType: Lookaside,
+		Database: cass,
+		Type:     Lookaside,
 	}
 	cfgs["Missing Database"] = Config{
-		Cache:     redis,
-		CacheType: Lookaside,
+		Cache: redis,
+		Type:  Lookaside,
 	}
 	cfgs["Invalid Type"] = Config{
-		Cache:     redis,
-		Database:  cass,
-		CacheType: "invalid",
+		Cache:    redis,
+		Database: cass,
+		Type:     "invalid",
 	}
 
 	// Loop through invalid Configs and validate the driver reacts appropriately

@@ -101,10 +101,13 @@ const (
 
 // Config provides the configuration options for the Cache driver.
 type Config struct {
-	CacheType Type
-	Database  hord.Database
-	Cache     hord.Database
+	Type     Type
+	Database hord.Database
+	Cache    hord.Database
 }
+
+// NilCache is a nil cache driver that returns dial errors. It fixes the issue when the Dial function returns a nil hord.Database this prevents nil pointer errors.
+type NilCache struct{}
 
 var (
 	// ErrNoType is returned when the CacheType is invalid.
@@ -114,10 +117,10 @@ var (
 // Dial will create a new Cache driver using the provided Config. It will return an error if either the Database or Cache values in Config are nil or if a CacheType is not specified.
 func Dial(cfg Config) (hord.Database, error) {
 	if (cfg.Database == nil) || (cfg.Cache == nil) {
-		return nil, hord.ErrInvalidDatabase
+		return &NilCache{}, hord.ErrInvalidDatabase
 	}
 
-	switch cfg.CacheType {
+	switch cfg.Type {
 	case Lookaside:
 		return lookaside.Dial(lookaside.Config{
 			Database: cfg.Database,
@@ -126,6 +129,34 @@ func Dial(cfg Config) (hord.Database, error) {
 	case None:
 		return cfg.Database, nil
 	default:
-		return nil, ErrNoType
+		return &NilCache{}, ErrNoType
 	}
+}
+
+func (nc *NilCache) Setup() error {
+	return hord.ErrNoDial
+}
+
+func (nc *NilCache) HealthCheck() error {
+	return hord.ErrNoDial
+}
+
+func (nc *NilCache) Get(_ string) ([]byte, error) {
+	return nil, hord.ErrNoDial
+}
+
+func (nc *NilCache) Set(_ string, _ []byte) error {
+	return hord.ErrNoDial
+}
+
+func (nc *NilCache) Delete(_ string) error {
+	return hord.ErrNoDial
+}
+
+func (nc *NilCache) Keys() ([]string, error) {
+	return nil, hord.ErrNoDial
+}
+
+func (nc *NilCache) Close() {
+
 }
