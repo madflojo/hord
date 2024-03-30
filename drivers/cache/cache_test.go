@@ -35,7 +35,7 @@ func TestDial(t *testing.T) {
 				Database:  &mock.Database{},
 				Cache:     &mock.Database{},
 			},
-			expectedError: nil,
+			expectedError: ErrNoType,
 		},
 		"Type: Lookaside": {
 			config: Config{

@@ -85,6 +85,8 @@ Hord provides a simple abstraction for working with the cache, with easy-to-use 
 package cache
 
 import (
+	"errors"
+
 	"github.com/madflojo/hord"
 	"github.com/madflojo/hord/drivers/cache/lookaside"
 )
@@ -104,6 +106,11 @@ type Config struct {
 	Cache     hord.Database
 }
 
+var (
+	// ErrNoType is returned when the CacheType is invalid.
+	ErrNoType = errors.New("invalid CacheType")
+)
+
 // Dial will create a new Cache driver using the provided Config. It will return an error if either the Database or Cache values in Config are nil or if a CacheType is not specified.
 func Dial(cfg Config) (hord.Database, error) {
 	if (cfg.Database == nil) || (cfg.Cache == nil) {
@@ -111,12 +118,14 @@ func Dial(cfg Config) (hord.Database, error) {
 	}
 
 	switch cfg.CacheType {
-	case None:
-		return cfg.Database, nil
-	default:
+	case Lookaside:
 		return lookaside.Dial(lookaside.Config{
 			Database: cfg.Database,
 			Cache:    cfg.Cache,
 		})
+	case None:
+		return cfg.Database, nil
+	default:
+		return nil, ErrNoType
 	}
 }

@@ -114,7 +114,7 @@ func Dial(cfg Config) (hord.Database, error) {
 
 // Setup will run the Setup function for both the database and the cache.
 func (db *Lookaside) Setup() error {
-	if db.data == nil || db.cache == nil {
+	if db == nil || db.data == nil || db.cache == nil {
 		return hord.ErrNoDial
 	}
 
@@ -221,6 +221,25 @@ func (db *Lookaside) Keys() ([]string, error) {
 	}
 
 	return db.data.Keys()
+}
+
+// CacheKeys will return the keys from the cache database.
+func (db *Lookaside) CacheKeys() ([]string, error) {
+	if db == nil || db.data == nil || db.cache == nil {
+		return nil, hord.ErrNoDial
+	}
+
+	return db.cache.Keys()
+}
+
+// GetCache will return the cache database.
+func (db *Lookaside) GetCache() hord.Database {
+	return db.cache
+}
+
+// GetDatabase will return the data database.
+func (db *Lookaside) GetDatabase() hord.Database {
+	return db.data
 }
 
 // Close will close the connections to both the database and the cache.
