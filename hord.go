@@ -99,10 +99,12 @@ type Database interface {
 
 // Common Errors Used by Hord Drivers
 var (
-	ErrInvalidKey  = fmt.Errorf("Key cannot be nil")
-	ErrInvalidData = fmt.Errorf("Data cannot be empty")
-	ErrNil         = fmt.Errorf("Nil value returned from database")
-	ErrNoDial      = fmt.Errorf("No database connection defined, did you dial?")
+	ErrInvalidKey      = fmt.Errorf("Key cannot be nil")
+	ErrInvalidData     = fmt.Errorf("Data cannot be empty")
+	ErrNil             = fmt.Errorf("Nil value returned from database")
+	ErrNoDial          = fmt.Errorf("No database connection defined, did you dial?")
+	ErrInvalidDatabase = fmt.Errorf("Database cannot be nil")
+	ErrCacheError      = fmt.Errorf("Cache error")
 )
 
 // ValidKey checks if a key is valid.
