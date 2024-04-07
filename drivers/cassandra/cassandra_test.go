@@ -2,9 +2,10 @@ package cassandra
 
 import (
 	"fmt"
-	"github.com/madflojo/hord"
 	"testing"
 	"time"
+
+	"github.com/madflojo/hord"
 )
 
 func TestErrNoDial(t *testing.T) {

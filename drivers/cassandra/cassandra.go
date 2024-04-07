@@ -58,6 +58,7 @@ package cassandra
 
 import (
 	"fmt"
+
 	"github.com/gocql/gocql"
 	"github.com/madflojo/hord"
 )

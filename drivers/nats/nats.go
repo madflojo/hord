@@ -65,7 +65,6 @@ import (
 	"sync"
 
 	"github.com/madflojo/hord"
-	"github.com/nats-io/nats.go"
 )
 
 // Config represents the configuration for the NATS database connection.

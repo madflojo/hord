@@ -4,8 +4,6 @@ import (
 	"crypto/tls"
 	"testing"
 	"time"
-
-	"github.com/nats-io/nats.go"
 )
 
 type TestCase struct {

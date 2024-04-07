@@ -2,8 +2,6 @@ package hashmap
 
 import (
 	"testing"
-
-	"gopkg.in/yaml.v3"
 )
 
 func TestByteSliceMarshalYAML(t *testing.T) {

@@ -2,8 +2,9 @@ package mock
 
 import (
 	"fmt"
-	"github.com/madflojo/hord"
 	"testing"
+
+	"github.com/madflojo/hord"
 )
 
 func TestDefaults(t *testing.T) {
