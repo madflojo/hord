@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/madflojo/hord"
+	"github.com/nats-io/nats.go"
 )
 
 func TestInterfaceHappyPath(t *testing.T) {

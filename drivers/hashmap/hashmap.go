@@ -66,6 +66,7 @@ import (
 	"sync"
 
 	"github.com/madflojo/hord"
+	"gopkg.in/yaml.v3"
 )
 
 // Config represents the configuration for the hashmap database.

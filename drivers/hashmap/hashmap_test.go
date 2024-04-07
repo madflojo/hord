@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"os"
 	"testing"
+
+	"gopkg.in/yaml.v3"
 )
 
 var fileTypeCases = []struct {

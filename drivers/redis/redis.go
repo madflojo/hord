@@ -59,11 +59,10 @@ package redis
 import (
 	"crypto/tls"
 	"fmt"
-	"time"
-
 	"github.com/FZambia/sentinel"
 	"github.com/gomodule/redigo/redis"
 	"github.com/madflojo/hord"
+	"time"
 )
 
 // Config provides configuration options for connecting to and controlling the behavior of Redis.

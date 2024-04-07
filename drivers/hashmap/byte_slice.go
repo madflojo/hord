@@ -2,6 +2,8 @@ package hashmap
 
 import (
 	"fmt"
+
+	"gopkg.in/yaml.v3"
 )
 
 // ByteSlice is a struct that is used to implement custom YAML Marshal/Unmarshal because
