@@ -6,7 +6,7 @@ require (
 	github.com/FZambia/sentinel v1.1.1
 	github.com/gocql/gocql v1.6.0
 	github.com/gomodule/redigo v1.9.2
-	github.com/nats-io/nats.go v1.34.0
+	github.com/nats-io/nats.go v1.34.1
 	go.etcd.io/bbolt v1.3.9
 	gopkg.in/yaml.v3 v3.0.1
 )
