@@ -18,17 +18,26 @@ Hord is designed to be a database-agnostic library that provides a common interf
 - **Testing with Mock Driver**: Hord provides a mock driver in the `mock` package, which can be used for testing purposes. The `mock` driver allows users to define custom functions executed when calling the `Database` interface methods, making it easier to test code that relies on the Hord interface.
 - **Documentation**: Each driver comes with its own package documentation, providing guidance on how to use and configure the driver.
 
+### Evolving Features
+
+- **Cache Implementations**: Combine database drivers with pre-defined cache implementations.
+
 ## Database Drivers:
 
 | Database | Support | Comments | Protocol Compatible Alternatives |
 | -------- | ------- | -------- | -------------------------------- |
 | [BoltDB](https://github.com/etcd-io/bbolt) | ✅ | | |
 | [Cassandra](https://cassandra.apache.org/) | ✅ | | [ScyllaDB](https://www.scylladb.com/), [YugabyteDB](https://www.yugabyte.com/), [Azure Cosmos DB](https://learn.microsoft.com/en-us/azure/cosmos-db/introduction) |
-| [Couchbase](https://www.couchbase.com/) | Pending |||
 | Hashmap | ✅ | Optionally allows storing to YAML or JSON file ||
 | Mock | ✅ | Mock Database interactions within unit tests ||
 | [NATS](https://nats.io/) | ✅ | Experimental ||
 | [Redis](https://redis.io/) | ✅ || [Dragonfly](https://www.dragonflydb.io/), [KeyDB](https://docs.keydb.dev/) |
+
+## Caching Implementations
+
+| Cache Strategy | Comments |
+| -------------- | -------- |
+| Look Aside | Cache is checked before database, if not found in cache, database is checked and cache is updated |
 
 ## Usage
 

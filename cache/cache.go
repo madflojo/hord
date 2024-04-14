@@ -88,7 +88,7 @@ import (
 	"errors"
 
 	"github.com/madflojo/hord"
-	"github.com/madflojo/hord/drivers/cache/lookaside"
+	"github.com/madflojo/hord/cache/lookaside"
 )
 
 // CacheType is the type of cache to use.

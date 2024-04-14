@@ -71,6 +71,11 @@ jobs:
     services:
       dragonfly:
         image: docker.dragonflydb.io/dragonflydb/dragonfly
+        options: >-
+          --health-cmd "nc -z localhost 6379"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
       keydb:
         image: eqalpha/keydb
@@ -223,6 +228,6 @@ jobs:
            sleep 120 
            curl -L https://go.dev/dl/go1.22.0.linux-amd64.tar.gz | tar -C /usr/local -xzf -
     - name: Execute Tests
-      run: /usr/local/go/bin/go test -v -race -covermode=atomic -coverprofile=coverage.out ./drivers/cache
+      run: /usr/local/go/bin/go test -v -race -covermode=atomic -coverprofile=coverage.out ./cache
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
