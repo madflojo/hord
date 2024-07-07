@@ -5,6 +5,12 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/madflojo/hord)](https://goreportcard.com/report/github.com/madflojo/hord)
 [![Documentation](https://godoc.org/github.com/madflojo/hord?status.svg)](http://godoc.org/github.com/madflojo/hord)
 
+## This repository has moved to <https://github.com/tarmac-project/hord>
+
+Please use the new repository and update any references to this repository.
+
+## Overview
+
 Package hord provides a simple and extensible interface for interacting with various database systems in a uniform way.
 
 Hord is designed to be a database-agnostic library that provides a common interface for interacting with different database systems. It allows developers to write code that is decoupled from the underlying database technology, making it easier to switch between databases or support multiple databases in the same application.
